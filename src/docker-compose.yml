@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  patient.api:
+    image: ${DOCKER_REGISTRY-}patientapi
+    build:
+      context: .
+      dockerfile: Services/Patient/Patient.API/Dockerfile
