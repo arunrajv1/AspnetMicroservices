@@ -20,16 +20,20 @@ builder.Services.AddSingleton<IDocumentClient>(x => new DocumentClient(new Uri(b
 //builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 
 var app = builder.Build();
+builder.Services.AddCors(p => p.AddPolicy("corsPolicy", build =>
+{
+    build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+}));
+
+app.UseCors("corsPolicy");
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
 
-}
+//}
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Patient.API v1"));
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
