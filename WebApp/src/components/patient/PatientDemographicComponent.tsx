@@ -32,6 +32,10 @@ import {
   FormHelperText,
   InputLabel,
   FormControl,
+  AppBar,
+  Toolbar,
+  InputBase,
+  alpha,
 } from "@mui/material";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Col, Container, Form, Row, Stack } from "react-bootstrap";
@@ -41,8 +45,9 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PlusOneIcon from "@mui/icons-material/PlusOne";
 import { formatDate } from "../../services/CommonServices";
-import { postData } from "../../services/PatientServices";
+import { getDataById, postData } from "../../services/PatientServices";
 import AlertDialog from "../common/alert-popup/AlertDialog";
+import SearchIcon from "@mui/icons-material/Search";
 
 const re = /^[0-9\b]+$/;
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
@@ -114,6 +119,22 @@ const validate = (values: any) => {
   return errors;
 };
 
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: 0,
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(3),
+    width: "auto",
+  },
+}));
+
 const defaultValues = {
   address: {},
   mrn: [],
@@ -168,6 +189,8 @@ const PatientDemographicComponent = (props: any) => {
   const [formMRN, setFormMRN] = useState(defaultMRN);
   const [alertState, setAlertState] = useState(false);
   const [alertProps, updateAlertProps] = useState(defaultAlertProps);
+  const [searchId, setSearchId] = useState("");
+  const [isSaveDisable, setIsSaveDisable] = useState(false);
   // const [rowAction, setRowAction] = useState<IMedicalRecordNumber[]>([
   //   { recordNumber: "", facility: "" },
   // ]);
@@ -262,6 +285,68 @@ const PatientDemographicComponent = (props: any) => {
     }
   };
 
+  const bindPatientDetails = (formData: any) => {
+    setFormValues({
+      ...formValues,
+      address: {},
+      mrn: [],
+      birth_sex: formData.birth_sex,
+      date_of_birth: formData.date_of_birth,
+      ssn: formData.ssn,
+      race: formData.race,
+      marital_status: formData.marital_status,
+      employment_status: formData.employment_status,
+      student_status: formData.student_status,
+      deceased: formData.deceased,
+      id: formData.id,
+    });
+    handleDOBChange(formData.date_of_birth)
+    const patientNameData: any = {
+      FirstName: formData.first_name,
+      LastName: formData.last_name,
+      MiddleName: formData.middle_name,
+      Suffix: formData.suffix,
+    };
+    props.onSavePatientData(patientNameData);
+    console.log("incoming data", formData[0]);
+  };
+
+  const handleId = (event: any) => {
+    setSearchId(event.target.value);
+  };
+
+  const getPatientDetailsById = async () => {
+    await getDataById(searchId).then((response) => {
+      console.log(response);
+      if (
+        response.status == 200 &&
+        response.statusText == "OK" &&
+        response.data.length > 0
+      ) {
+        setAlertState(true);
+        updateAlertProps({
+          ...alertProps,
+          alertContent: "Patient Found",
+          alertType: "success",
+          alertTitle: "Success",
+          isAlertOpen: true,
+        });
+
+        setIsSaveDisable(true);
+        bindPatientDetails(response.data[0]);
+      } else {
+        setAlertState(true);
+        updateAlertProps({
+          ...alertProps,
+          alertContent: "Patient Not Found",
+          alertType: "error",
+          alertTitle: "Error",
+          isAlertOpen: true,
+        });
+      }
+    });
+  };
+
   const savePatientData = async () => {
     formValues.address = formContactValues;
     formValues.first_name = props.formData.FirstName;
@@ -270,7 +355,7 @@ const PatientDemographicComponent = (props: any) => {
     formValues.suffix = props.formData.Suffix;
     formValues.date_of_birth = formatDate(dateOfBirth);
     formValues.id = "";
-    console.log("json post body", formValues);
+    deceased ? (formValues.deceased = "Y") : (formValues.deceased = "N");
 
     await postData(formValues)
       .then((response) => {
@@ -314,13 +399,40 @@ const PatientDemographicComponent = (props: any) => {
       <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 1, md: 3 }}>
         <Container fluid>
           <Row>
-            <Col>1 of 3</Col>
-            <Col xs={5}>2 of 3 (wider)</Col>
+            <Col>
+              <AppBar position="static">
+                <Toolbar
+                  style={{
+                    padding: "0",
+                    marginRight: "0",
+                    position: "absolute",
+                  }}
+                >
+                  <Search>
+                    <SearchIcon />
+                    <InputBase
+                      onChange={handleId}
+                      type="text"
+                      placeholder="Search…"
+                      inputProps={{ "aria-label": "search" }}
+                    />
+                  </Search>
+                </Toolbar>
+              </AppBar>
+              <CustomButton
+                type="button"
+                onClick={getPatientDetailsById}
+                variant="contained"
+              >
+                Search
+              </CustomButton>
+            </Col>
             <Col>
               <CustomButton
                 type="button"
                 onClick={savePatientData}
                 variant="contained"
+                disabled={isSaveDisable}
               >
                 Save
               </CustomButton>
@@ -433,7 +545,7 @@ const PatientDemographicComponent = (props: any) => {
                     </Stack>
                   </FormControl>
                 </Col>
-                <Col className="col-md-3">
+                <Col className="col-md-4">
                   <Stack>
                     <FormLabel sx={formLabelStyling}>Date of birth:</FormLabel>
                   </Stack>
@@ -466,9 +578,24 @@ const PatientDemographicComponent = (props: any) => {
                     />
                   </Stack>
                 </Col>
-                <Col className="col-md-1">
+                <Col className="col-md-3">
                   <Stack>
-                    <Checkbox
+                    <FormControlLabel
+                      sx={{ paddingTop: "25px" }}
+                      control={
+                        <Checkbox
+                          defaultChecked
+                          size="small"
+                          onChange={handleDeceased}
+                          style={{
+                            paddingLeft: "7px",
+                            paddingBottom: "0px",
+                          }}
+                        />
+                      }
+                      label="Deceased"
+                    />
+                    {/* <Checkbox
                       {...label}
                       size="small"
                       id="chk_deceased"
@@ -478,17 +605,17 @@ const PatientDemographicComponent = (props: any) => {
                         paddingLeft: "7px",
                         paddingBottom: "0px",
                       }}
-                    />
+                    /> */}
                   </Stack>
                 </Col>
-                <Col className="col-md-3">
+                {/* <Col className="col-md-2">
                   <Stack>
                     <FormLabel sx={formLabelStyling}>Deceased:</FormLabel>
                   </Stack>
                   <Stack>
                     <Input id="txt_deceased" type="text" disabled={deceased} />
                   </Stack>
-                </Col>
+                </Col> */}
                 {/* <Col className="col-md-4">
                   <Stack>
                     <FormLabel sx={formLabelStyling}>Legal Sex</FormLabel>

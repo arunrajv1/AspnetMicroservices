@@ -58,7 +58,7 @@ const NavbarComponent = () => {
             }}
           >
             <CustomTab label="Desktop" value="1" />
-            <CustomTab label="Neighbourhood" value="2" />
+            <CustomTab label="Neighbourhood" defaultChecked value="2" />
             <CustomTab label="Find Case" value="3" />
           </TabList>
         </Box>

@@ -4,7 +4,7 @@ import axios from "axios";
 const patientBaseUrl = baseUrl + "Patient";
 
 export const getAllData = async () => {
-  return await axios.get(patientBaseUrl, options).then(response => response);
+  return await axios.get(patientBaseUrl, options);
 };
 
 export const postData = async (jsonPostBody: {}) => {
@@ -12,4 +12,9 @@ export const postData = async (jsonPostBody: {}) => {
   //let responseOK = response && response.status === 200 && response.data;
 
   return response;
+};
+
+export const getDataById = async (id: string) => {
+  let url = patientBaseUrl + `/${id}`;
+  return await axios.get(url, options);
 };

@@ -28,6 +28,11 @@ const NeighbourhoodComponent = () => {
     });
   };
 
+  const getPatientData = (inputData: any) => {
+    updateFormData({...inputData});
+    console.log('data from child', inputData, formData);
+  };
+
   const customStyles = {
     background: {
       display: "flex",
@@ -109,7 +114,12 @@ const NeighbourhoodComponent = () => {
             </TabList>
           </Box>
           <TabPanel sx={customStyles.background} value="0">
-            {<PatientDemographicComponent formData={formData}></PatientDemographicComponent>}
+            {
+              <PatientDemographicComponent
+                formData={formData}
+                onSavePatientData={getPatientData}
+              ></PatientDemographicComponent>
+            }
           </TabPanel>
           <TabPanel sx={customStyles.background} value="1">
             Item One
@@ -121,29 +131,6 @@ const NeighbourhoodComponent = () => {
             Item Three
           </TabPanel>
         </TabContext>
-        {/* 
-        <Box sx={{ maxWidth: { xs: 1000, sm: 900 } }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          textColor="secondary"
-          indicatorColor="secondary"
-          aria-label="secondary tabs example"
-          variant="scrollable"
-          scrollButtons
-          sx={{
-            [`& .${tabsClasses.scrollButtons}`]: {
-              "&.Mui-disabled": { opacity: 0.3 },
-            },
-          }}
-        >
-          {patientTabConstants.map((item, index) => {
-            return (
-              <Tab key={item.id} value={item.route} label={item.label}></Tab>
-            );
-          })}
-        </Tabs>
-        </Box> */}
       </Box>
     </>
   );
