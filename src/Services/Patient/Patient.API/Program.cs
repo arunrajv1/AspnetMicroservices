@@ -18,12 +18,12 @@ builder.Services.AddSwaggerGen(c=>
 builder.Services.AddSingleton<IDocumentClient>(x => new DocumentClient(new Uri(builder.Configuration["CosmosDB:URL"]), builder.Configuration["CosmosDB:PrimaryKey"]));
 //builder.Services.AddScoped<IPatientContext, PatientContext>();
 //builder.Services.AddScoped<IPatientRepository, PatientRepository>();
-
-var app = builder.Build();
 builder.Services.AddCors(p => p.AddPolicy("corsPolicy", build =>
 {
     build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
 }));
+
+var app = builder.Build();
 
 app.UseCors("corsPolicy");
 
