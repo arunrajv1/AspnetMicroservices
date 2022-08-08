@@ -466,26 +466,29 @@ const PatientDemographicComponent = (props: any) => {
                     />
                   </Stack>
                 </Col>
-                <Col className="col-md-4">
+                <Col className="col-md-1">
+                  <Stack>
+                    <Checkbox
+                      {...label}
+                      size="small"
+                      id="chk_deceased"
+                      onChange={handleDeceased}
+                      className="col-md-1"
+                      style={{
+                        paddingLeft: "7px",
+                        paddingBottom: "0px",
+                      }}
+                    />
+                  </Stack>
+                </Col>
+                <Col className="col-md-3">
                   <Stack>
                     <FormLabel sx={formLabelStyling}>Deceased:</FormLabel>
                   </Stack>
-                  <Checkbox
-                    {...label}
-                    size="small"
-                    id="chk_deceased"
-                    onChange={handleDeceased}
-                    className="col-md-1"
-                    style={{
-                      paddingLeft: "7px",
-                      paddingBottom: "0px",
-                    }}
-                  />
-                  <Input
-                    id="txt_deceased"
-                    type="text"
-                    disabled={deceased}
-                  />
+                  <Stack>
+                    {/*  */}
+                    <Input id="txt_deceased" type="text" disabled={deceased} />
+                  </Stack>
                 </Col>
                 {/* <Col className="col-md-4">
                   <Stack>
