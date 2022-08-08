@@ -486,7 +486,6 @@ const PatientDemographicComponent = (props: any) => {
                     <FormLabel sx={formLabelStyling}>Deceased:</FormLabel>
                   </Stack>
                   <Stack>
-                    {/*  */}
                     <Input id="txt_deceased" type="text" disabled={deceased} />
                   </Stack>
                 </Col>
@@ -537,10 +536,13 @@ const PatientDemographicComponent = (props: any) => {
                 </Col>
                 <Col className="col-md-3">
                   <Stack>
-                    <TextField
+                    <FormLabel sx={formLabelStyling}>
+                      Social security no:
+                    </FormLabel>
+                  </Stack>
+                  <Stack>
+                    <Input
                       id="txt_ssn"
-                      label="Social security no:"
-                      variant="standard"
                       type="text"
                       name="ssn"
                       value={formValues.ssn}
@@ -716,62 +718,70 @@ const PatientDemographicComponent = (props: any) => {
           <Card>
             <CustomCardHeader title="Medical Record Numbers"></CustomCardHeader>
             <CardContent>
-              <Tooltip title="Add Row">
-                <IconButton onClick={addRow}>
-                  <PlusOneIcon color="primary" />
-                </IconButton>
-              </Tooltip>
-              <TableContainer component={Paper}>
-                <Table size="small" aria-label="a dense table">
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell component="th">
-                        Record Number
-                      </StyledTableCell>
-                      <StyledTableCell component="th">Facility</StyledTableCell>
-                      <StyledTableCell component="th"></StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {formMRN.map((row, index) => (
-                      <StyledTableRow key={index}>
-                        <StyledTableCell scope="row">
-                          <TextField
-                            type="text"
-                            variant="standard"
-                            size="small"
-                            id={"txtRowNo_" + index}
-                            onChange={(e) => handleFormMRN(e, index)}
-                            name="recordNumber"
-                            value={row.recordNumber}
-                          />
-                        </StyledTableCell>
-                        <StyledTableCell scope="row">
-                          <TextField
-                            type="text"
-                            variant="standard"
-                            size="small"
-                            id={"txtFacility_" + index}
-                            onChange={(e) => handleFormMRN(e, index)}
-                            name="facility"
-                            value={row.facility}
-                          />
-                        </StyledTableCell>
-                        <StyledTableCell scope="row">
-                          <Tooltip title="Delete Row">
-                            <IconButton
-                              id={"btn" + index}
-                              onClick={(e) => removeRow(index)}
-                            >
-                              <DeleteIcon color="error" />
-                            </IconButton>
-                          </Tooltip>
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+              <Row className="col-md-12">
+                <Col className="col-md-10">
+                  <TableContainer component={Paper}>
+                    <Table size="small" aria-label="a dense table">
+                      <TableHead>
+                        <TableRow>
+                          <StyledTableCell component="th">
+                            Record Number
+                          </StyledTableCell>
+                          <StyledTableCell component="th">
+                            Facility
+                          </StyledTableCell>
+                          <StyledTableCell component="th"></StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {formMRN.map((row, index) => (
+                          <StyledTableRow key={index}>
+                            <StyledTableCell scope="row">
+                              <TextField
+                                type="text"
+                                variant="standard"
+                                size="small"
+                                id={"txtRowNo_" + index}
+                                onChange={(e) => handleFormMRN(e, index)}
+                                name="recordNumber"
+                                value={row.recordNumber}
+                              />
+                            </StyledTableCell>
+                            <StyledTableCell scope="row">
+                              <TextField
+                                type="text"
+                                variant="standard"
+                                size="small"
+                                id={"txtFacility_" + index}
+                                onChange={(e) => handleFormMRN(e, index)}
+                                name="facility"
+                                value={row.facility}
+                              />
+                            </StyledTableCell>
+                            <StyledTableCell scope="row">
+                              <Tooltip title="Delete Row">
+                                <IconButton
+                                  id={"btn" + index}
+                                  onClick={(e) => removeRow(index)}
+                                >
+                                  <DeleteIcon color="error" />
+                                </IconButton>
+                              </Tooltip>
+                            </StyledTableCell>
+                          </StyledTableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Col>
+                <Col className="col-md-2">
+                  <Tooltip title="Add Row">
+                    <IconButton onClick={addRow}>
+                      <PlusOneIcon color="primary" />
+                    </IconButton>
+                  </Tooltip>
+                </Col>
+              </Row>
             </CardContent>
           </Card>
         </Grid>
