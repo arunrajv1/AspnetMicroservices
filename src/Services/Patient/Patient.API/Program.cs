@@ -22,6 +22,8 @@ builder.Services.AddCors(p => p.AddPolicy("corsPolicy", build =>
 {
     build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
 }));
+var app = builder.Build();
+
 
 var app = builder.Build();
 

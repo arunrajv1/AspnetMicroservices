@@ -66,7 +66,8 @@ namespace Patient.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            await _documentClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId, collectionId, id));
+            await _documentClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId, collectionId, id),
+          new RequestOptions() { PartitionKey = new PartitionKey(id) });
             return Ok();
         }
 
