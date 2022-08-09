@@ -29,7 +29,12 @@ const NeighbourhoodComponent = () => {
   };
 
   const getPatientData = (inputData: any) => {
-    updateFormData({...inputData});
+    updateFormData({...formData,
+      MiddleName: inputData.MiddleName,
+      FirstName: inputData.FirstName,
+      LastName: inputData.LastName,
+      Suffix: inputData.Suffix
+    });
     console.log('data from child', inputData, formData);
   };
 
@@ -65,24 +70,28 @@ const NeighbourhoodComponent = () => {
           placeholder="Last Name"
           onChange={handleFormChange}
           inputProps={ariaLabel}
+          value={formData.LastName}
         />
         <Input
           name="FirstName"
           placeholder="First Name"
           onChange={handleFormChange}
           inputProps={ariaLabel}
+          value={formData.FirstName}
         />
         <Input
           name="MiddleName"
           placeholder="Middle Name"
           onChange={handleFormChange}
           inputProps={ariaLabel}
+          value={formData.MiddleName}
         />
         <Input
           name="Suffix"
           placeholder="Suffix"
           onChange={handleFormChange}
           inputProps={ariaLabel}
+          value={formData.Suffix}
         />
       </Box>
       <Box sx={customStyles.tabBackground}>

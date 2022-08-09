@@ -290,10 +290,10 @@ const PatientDemographicComponent = (props: any) => {
       ...formValues,
       mrn: [],
       birth_sex: formData.birth_sex,
-      date_of_birth: formData.date_of_birth,
+      date_of_birth: new Date(formData.date_of_birth).toDateString(),
       ssn: formData.ssn,
       race: formData.race,
-      marital_status: formData.marital_status,
+      marital_status: formData.marital_status.toUpperCase(),
       employment_status: formData.employment_status,
       student_status: formData.student_status,
       deceased: formData.deceased,
@@ -306,7 +306,7 @@ const PatientDemographicComponent = (props: any) => {
 
     setFormMRN(formData.mrn);
 
-    handleDOBChange(formData.date_of_birth);
+    handleDOBChange(new Date(formData.date_of_birth));
     const patientNameData: any = {
       FirstName: formData.first_name,
       LastName: formData.last_name,
@@ -399,7 +399,7 @@ const PatientDemographicComponent = (props: any) => {
       }}
       noValidate
       autoComplete="off"
-      onSubmit={savePatientData}
+      // onSubmit={savePatientData}
     >
       {alertState ? <AlertDialog alertProps={alertProps}></AlertDialog> : <></>}
       <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 1, md: 3 }}>
@@ -763,7 +763,7 @@ const PatientDemographicComponent = (props: any) => {
                         size="small"
                       >
                         <MenuItem value={"P"}>Part Time</MenuItem>
-                        <MenuItem value={"F"}>Full Time</MenuItem>
+                        <MenuItem value={"E"}>Full Time</MenuItem>
                         <MenuItem value={"R"}>Retired</MenuItem>
                         <MenuItem value={"S"}>Self Employed</MenuItem>
                       </Select>
