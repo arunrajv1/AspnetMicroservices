@@ -288,7 +288,6 @@ const PatientDemographicComponent = (props: any) => {
   const bindPatientDetails = (formData: any) => {
     setFormValues({
       ...formValues,
-      address: {},
       mrn: [],
       birth_sex: formData.birth_sex,
       date_of_birth: formData.date_of_birth,
@@ -300,7 +299,14 @@ const PatientDemographicComponent = (props: any) => {
       deceased: formData.deceased,
       id: formData.id,
     });
-    handleDOBChange(formData.date_of_birth)
+
+    setFormContactValues({
+      ...formData.address
+    });
+
+    setFormMRN(formData.mrn);
+
+    handleDOBChange(formData.date_of_birth);
     const patientNameData: any = {
       FirstName: formData.first_name,
       LastName: formData.last_name,
@@ -397,48 +403,57 @@ const PatientDemographicComponent = (props: any) => {
     >
       {alertState ? <AlertDialog alertProps={alertProps}></AlertDialog> : <></>}
       <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 1, md: 3 }}>
-        <Container fluid>
-          <Row>
-            <Col>
-              <AppBar position="static">
-                <Toolbar
-                  style={{
-                    padding: "0",
-                    marginRight: "0",
-                    position: "absolute",
-                  }}
-                >
-                  <Search>
-                    <SearchIcon />
-                    <InputBase
-                      onChange={handleId}
-                      type="text"
-                      placeholder="Search…"
-                      inputProps={{ "aria-label": "search" }}
-                    />
-                  </Search>
-                </Toolbar>
-              </AppBar>
-              <CustomButton
-                type="button"
-                onClick={getPatientDetailsById}
-                variant="contained"
+        <Grid container>
+          <Grid xs={6}>
+            <AppBar position="static">
+              <Toolbar
+                style={{
+                  padding: "0",
+                  marginRight: "0",
+                  position: "absolute",
+                }}
               >
-                Search
-              </CustomButton>
-            </Col>
-            <Col>
-              <CustomButton
-                type="button"
-                onClick={savePatientData}
-                variant="contained"
-                disabled={isSaveDisable}
-              >
-                Save
-              </CustomButton>
-            </Col>
-          </Row>
-        </Container>
+                <Search>
+                  <SearchIcon />
+                  <InputBase
+                    onChange={handleId}
+                    type="text"
+                    placeholder="Search…"
+                    inputProps={{ "aria-label": "search" }}
+                    sx={{ color: "white" }}
+                  />
+                </Search>
+              </Toolbar>
+            </AppBar>
+            <CustomButton
+              type="button"
+              onClick={getPatientDetailsById}
+              variant="contained"
+              style={{ marginTop: "15px" }}
+            >
+              Search
+            </CustomButton>
+            <CustomButton
+              style={{ marginLeft: "20px", marginTop: "15px" }}
+              type="button"
+              onClick={getPatientDetailsById}
+              variant="contained"
+            >
+              Edit
+            </CustomButton>
+          </Grid>
+          <Grid xs={6}>
+            <CustomButton
+              type="button"
+              onClick={savePatientData}
+              variant="contained"
+              disabled={isSaveDisable}
+              style={{ marginTop: "15px" }}
+            >
+              Save
+            </CustomButton>
+          </Grid>
+        </Grid>
         <Grid item xs={5}>
           <Card>
             <CardHeader
