@@ -11,6 +11,7 @@ const initialFormData: any = Object.freeze({
   FirstName: "",
   LastName: "",
   Suffix: "",
+  isDisabled: false
 });
 
 const NeighbourhoodComponent = () => {
@@ -33,9 +34,9 @@ const NeighbourhoodComponent = () => {
       MiddleName: inputData.MiddleName,
       FirstName: inputData.FirstName,
       LastName: inputData.LastName,
-      Suffix: inputData.Suffix
+      Suffix: inputData.Suffix,
+      isDisabled: inputData.isDisabled
     });
-    console.log('data from child', inputData, formData);
   };
 
   const customStyles = {
@@ -71,6 +72,7 @@ const NeighbourhoodComponent = () => {
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.LastName}
+          disabled={formData.isDisabled}
         />
         <Input
           name="FirstName"
@@ -78,6 +80,7 @@ const NeighbourhoodComponent = () => {
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.FirstName}
+          disabled={formData.isDisabled}
         />
         <Input
           name="MiddleName"
@@ -85,6 +88,7 @@ const NeighbourhoodComponent = () => {
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.MiddleName}
+          disabled={formData.isDisabled}
         />
         <Input
           name="Suffix"
@@ -92,6 +96,7 @@ const NeighbourhoodComponent = () => {
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.Suffix}
+          disabled={formData.isDisabled}
         />
       </Box>
       <Box sx={customStyles.tabBackground}>

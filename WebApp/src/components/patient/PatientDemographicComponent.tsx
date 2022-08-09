@@ -45,11 +45,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PlusOneIcon from "@mui/icons-material/PlusOne";
 import { formatDate } from "../../services/CommonServices";
-import { getDataById, postData } from "../../services/PatientServices";
+import { getDataById, postData, updateData } from "../../services/PatientServices";
 import AlertDialog from "../common/alert-popup/AlertDialog";
 import SearchIcon from "@mui/icons-material/Search";
 
-const re = /^[0-9\b]+$/;
+const re = /^[0-9-+\b]+$/;
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 const formLabelStyling = {
   color: "rgba(200, 132, 39, .8)",
@@ -166,8 +166,8 @@ const defaultContactValues = {
 
 const defaultMRN = [
   {
-    recordNumber: "",
-    facility: "",
+    med_rec_no: "",
+    medical_facility: "",
   },
 ];
 
@@ -191,6 +191,8 @@ const PatientDemographicComponent = (props: any) => {
   const [alertProps, updateAlertProps] = useState(defaultAlertProps);
   const [searchId, setSearchId] = useState("");
   const [isSaveDisable, setIsSaveDisable] = useState(false);
+  const [isAllDisable, setIsAllDisable] = useState(false);
+  const [submitButtonName, setSubmitButtonName] = useState("Save");
   // const [rowAction, setRowAction] = useState<IMedicalRecordNumber[]>([
   //   { recordNumber: "", facility: "" },
   // ]);
@@ -223,14 +225,14 @@ const PatientDemographicComponent = (props: any) => {
     // setFormMRN([...formMRN].at(index)?.facility = value
     // )
     console.log("before change", formMRN);
-    if (name == "facility")
+    if (name == "medical_facility")
       // setFormMRN(([...formMRN][index].facility = value));
       setFormMRN({
         ...formMRN,
         [name]: value,
       });
-    else if (name == "recordNumber")
-      setFormMRN(([...formMRN][index].recordNumber = value));
+    else if (name == "med_rec_no")
+      setFormMRN(([...formMRN][index].med_rec_no = value));
     console.log("after change", formMRN);
   };
 
@@ -248,8 +250,8 @@ const PatientDemographicComponent = (props: any) => {
     setDateOfBirth(newValue as Date);
   };
 
-  const createData = (recordNumber: string, facility: string) => {
-    return { recordNumber, facility };
+  const createData = (med_rec_no: string, medical_facility: string) => {
+    return { med_rec_no, medical_facility };
   };
 
   const addRow = () => {
@@ -267,21 +269,21 @@ const PatientDemographicComponent = (props: any) => {
 
   const handleHomePhoneNumber = (e: any) => {
     if (e.target.value === "" || re.test(e.target.value)) {
-      return Number(e.target.value);
+      return e.target.value;
     } else if (e.target.value.length == 1) {
       return "";
     } else {
-      return Number(e.target.value.slice(0, e.target.value.length - 1));
+      return e.target.value.slice(0, e.target.value.length - 1);
     }
   };
 
   const handleWorkPhoneNumber = (e: any) => {
     if (e.target.value === "" || re.test(e.target.value)) {
-      return Number(e.target.value);
+      return e.target.value;
     } else if (e.target.value.length == 1) {
       return "";
     } else {
-      return Number(e.target.value.slice(0, e.target.value.length - 1));
+      return e.target.value.slice(0, e.target.value.length - 1);
     }
   };
 
@@ -301,7 +303,7 @@ const PatientDemographicComponent = (props: any) => {
     });
 
     setFormContactValues({
-      ...formData.address
+      ...formData.address,
     });
 
     setFormMRN(formData.mrn);
@@ -312,8 +314,10 @@ const PatientDemographicComponent = (props: any) => {
       LastName: formData.last_name,
       MiddleName: formData.middle_name,
       Suffix: formData.suffix,
+      isDisabled: true,
     };
     props.onSavePatientData(patientNameData);
+    setIsAllDisable(true);
     console.log("incoming data", formData[0]);
   };
 
@@ -353,7 +357,17 @@ const PatientDemographicComponent = (props: any) => {
     });
   };
 
-  const savePatientData = async () => {
+  const editPatientDetails = () => {
+    const patientNameData: any = {
+      isDisabled: false,
+    };
+    props.onSavePatientData(patientNameData);
+    setIsAllDisable(false);
+    setIsSaveDisable(false);
+    setSubmitButtonName("Update");
+  };
+
+  const saveUpdatePatientData = async () => {
     formValues.address = formContactValues;
     formValues.first_name = props.formData.FirstName;
     formValues.last_name = props.formData.LastName;
@@ -363,31 +377,60 @@ const PatientDemographicComponent = (props: any) => {
     formValues.id = "";
     deceased ? (formValues.deceased = "Y") : (formValues.deceased = "N");
 
-    await postData(formValues)
-      .then((response) => {
-        if (response.status === 200 && response.statusText === "OK") {
-          setAlertState(true);
-          updateAlertProps({
-            ...alertProps,
-            alertContent: "Data Inserted Successfully",
-            alertType: "success",
-            alertTitle: "Success",
-            isAlertOpen: true,
-          });
-        } else {
-          setAlertState(true);
-          updateAlertProps({
-            ...alertProps,
-            alertContent: "Error Occured",
-            alertType: "error",
-            alertTitle: "Error",
-            isAlertOpen: true,
-          });
-        }
-      })
-      .catch((error) => {
-        alert(error);
-      });
+    if (submitButtonName == "Save") {
+      await postData(formValues)
+        .then((response) => {
+          if (response.status === 200 && response.statusText === "OK") {
+            setAlertState(true);
+            updateAlertProps({
+              ...alertProps,
+              alertContent: "Data Inserted Successfully",
+              alertType: "success",
+              alertTitle: "Success",
+              isAlertOpen: true,
+            });
+          } else {
+            setAlertState(true);
+            updateAlertProps({
+              ...alertProps,
+              alertContent: "Error Occured",
+              alertType: "error",
+              alertTitle: "Error",
+              isAlertOpen: true,
+            });
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    } else if (submitButtonName == "Update") {
+      formValues.id = searchId;
+      await updateData(formValues)
+        .then((response) => {
+          if (response.status === 200 && response.statusText === "OK") {
+            setAlertState(true);
+            updateAlertProps({
+              ...alertProps,
+              alertContent: "Data Updated Successfully",
+              alertType: "success",
+              alertTitle: "Success",
+              isAlertOpen: true,
+            });
+          } else {
+            setAlertState(true);
+            updateAlertProps({
+              ...alertProps,
+              alertContent: "Error Occured",
+              alertType: "error",
+              alertTitle: "Error",
+              isAlertOpen: true,
+            });
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    }
   };
 
   return (
@@ -417,6 +460,7 @@ const PatientDemographicComponent = (props: any) => {
                   <SearchIcon />
                   <InputBase
                     onChange={handleId}
+                    value={searchId}
                     type="text"
                     placeholder="Search…"
                     inputProps={{ "aria-label": "search" }}
@@ -436,7 +480,7 @@ const PatientDemographicComponent = (props: any) => {
             <CustomButton
               style={{ marginLeft: "20px", marginTop: "15px" }}
               type="button"
-              onClick={getPatientDetailsById}
+              onClick={editPatientDetails}
               variant="contained"
             >
               Edit
@@ -445,12 +489,12 @@ const PatientDemographicComponent = (props: any) => {
           <Grid xs={6}>
             <CustomButton
               type="button"
-              onClick={savePatientData}
+              onClick={saveUpdatePatientData}
               variant="contained"
               disabled={isSaveDisable}
               style={{ marginTop: "15px" }}
             >
-              Save
+              {submitButtonName}
             </CustomButton>
           </Grid>
         </Grid>
@@ -474,6 +518,7 @@ const PatientDemographicComponent = (props: any) => {
                   name="home_street1"
                   value={formContactValues.home_street1}
                   onChange={handleContactInputChange}
+                  disabled={isAllDisable}
                 />
               </Stack>
               <Stack>
@@ -485,6 +530,7 @@ const PatientDemographicComponent = (props: any) => {
                   name="home_street2"
                   value={formContactValues.home_street2}
                   onChange={handleContactInputChange}
+                  disabled={isAllDisable}
                 />
               </Stack>
               <Stack direction="horizontal" gap={3} className="col-md-12">
@@ -497,6 +543,7 @@ const PatientDemographicComponent = (props: any) => {
                   name="home_city"
                   value={formContactValues.home_city}
                   onChange={handleContactInputChange}
+                  disabled={isAllDisable}
                 />
                 <TextField
                   id="txtState"
@@ -507,6 +554,7 @@ const PatientDemographicComponent = (props: any) => {
                   name="home_state"
                   value={formContactValues.home_state}
                   onChange={handleContactInputChange}
+                  disabled={isAllDisable}
                 />
               </Stack>
               <Stack direction="horizontal" gap={3} className="col-md-12">
@@ -519,6 +567,7 @@ const PatientDemographicComponent = (props: any) => {
                   name="home_postal_code"
                   value={formContactValues.home_postal_code}
                   onChange={handleContactInputChange}
+                  disabled={isAllDisable}
                 />
                 <TextField
                   id="txtCountry"
@@ -529,6 +578,7 @@ const PatientDemographicComponent = (props: any) => {
                   name="home_country"
                   value={formContactValues.home_country}
                   onChange={handleContactInputChange}
+                  disabled={isAllDisable}
                 />
               </Stack>
             </CardContent>
@@ -552,6 +602,7 @@ const PatientDemographicComponent = (props: any) => {
                         label="Birth Sex"
                         onChange={handleInputChange}
                         size="small"
+                        disabled={isAllDisable}
                       >
                         <MenuItem value={"M"}>Male</MenuItem>
                         <MenuItem value={"F"}>Female</MenuItem>
@@ -572,6 +623,7 @@ const PatientDemographicComponent = (props: any) => {
                         value={dateOfBirth}
                         onChange={handleDOBChange}
                         maxDate={new Date()}
+                        disabled={isAllDisable}
                         renderInput={(params) => (
                           <TextField size="small" {...params} />
                         )}
@@ -599,6 +651,7 @@ const PatientDemographicComponent = (props: any) => {
                       sx={{ paddingTop: "25px" }}
                       control={
                         <Checkbox
+                          disabled={isAllDisable}
                           defaultChecked
                           size="small"
                           onChange={handleDeceased}
@@ -669,14 +722,14 @@ const PatientDemographicComponent = (props: any) => {
                 </Col> */}
               </Row>
               <Row className="col-md-12">
-                <Col className="col-md-3">
+                {/* <Col className="col-md-3">
                   <FormControlLabel
                     sx={{ paddingTop: "25px" }}
                     control={<Checkbox defaultChecked size="small" />}
                     label="High Risk"
                   />
-                </Col>
-                <Col className="col-md-3">
+                </Col> */}
+                <Col className="col-md-4">
                   <Stack>
                     <FormLabel sx={formLabelStyling}>
                       Social security no:
@@ -690,6 +743,7 @@ const PatientDemographicComponent = (props: any) => {
                       value={formValues.ssn}
                       onChange={handleInputChange}
                       inputProps={{ maxLength: 9 }}
+                      disabled={isAllDisable}
                     />
                   </Stack>
                 </Col>
@@ -709,6 +763,7 @@ const PatientDemographicComponent = (props: any) => {
                         label="Marital status: "
                         onChange={handleInputChange}
                         size="small"
+                        disabled={isAllDisable}
                       >
                         <MenuItem value={"M"}>Married</MenuItem>
                         <MenuItem value={"U"}>Unmarried</MenuItem>
@@ -718,8 +773,6 @@ const PatientDemographicComponent = (props: any) => {
                     </Stack>
                   </FormControl>
                 </Col>
-              </Row>
-              <Row className="col-md-12">
                 <Col className="col-md-4">
                   <FormControl sx={{ width: "100%" }} error={hasError}>
                     <Stack>
@@ -734,6 +787,7 @@ const PatientDemographicComponent = (props: any) => {
                         label="Race: "
                         onChange={handleInputChange}
                         size="small"
+                        disabled={isAllDisable}
                       >
                         <MenuItem value={"I"}>American Indian</MenuItem>
                         <MenuItem value={"A"}>Asian</MenuItem>
@@ -744,6 +798,8 @@ const PatientDemographicComponent = (props: any) => {
                     </Stack>
                   </FormControl>
                 </Col>
+              </Row>
+              <Row className="col-md-12">
 
                 <Col className="col-md-4">
                   <FormControl sx={{ width: "100%" }} error={hasError}>
@@ -761,6 +817,7 @@ const PatientDemographicComponent = (props: any) => {
                         label="Employmet status: "
                         onChange={handleInputChange}
                         size="small"
+                        disabled={isAllDisable}
                       >
                         <MenuItem value={"P"}>Part Time</MenuItem>
                         <MenuItem value={"E"}>Full Time</MenuItem>
@@ -788,6 +845,7 @@ const PatientDemographicComponent = (props: any) => {
                         label="Student status: "
                         onChange={handleInputChange}
                         size="small"
+                        disabled={isAllDisable}
                       >
                         <MenuItem value={"F"}>Full Time Student</MenuItem>
                         <MenuItem value={"N"}>Not a student</MenuItem>
@@ -816,6 +874,7 @@ const PatientDemographicComponent = (props: any) => {
                   inputProps={{ maxLength: 10 }}
                   value={formContactValues.home_phone}
                   onChange={handleContactInputChange}
+                  disabled={isAllDisable}
                 />
               </Stack>
               <Stack>
@@ -828,6 +887,7 @@ const PatientDemographicComponent = (props: any) => {
                   inputProps={{ maxLength: 10 }}
                   value={formContactValues.work_phone}
                   onChange={handleContactInputChange}
+                  disabled={isAllDisable}
                 />
               </Stack>
             </CardContent>
@@ -843,6 +903,7 @@ const PatientDemographicComponent = (props: any) => {
                   label="Enterprise Identifier"
                   variant="standard"
                   type="text"
+                        disabled={isAllDisable}
                 />
               </Stack>
               <Stack>
@@ -851,6 +912,7 @@ const PatientDemographicComponent = (props: any) => {
                   label="Alternate Identifier:"
                   variant="standard"
                   type="text"
+                        disabled={isAllDisable}
                 />
               </Stack>
             </CardContent>
@@ -885,8 +947,9 @@ const PatientDemographicComponent = (props: any) => {
                                 size="small"
                                 id={"txtRowNo_" + index}
                                 onChange={(e) => handleFormMRN(e, index)}
-                                name="recordNumber"
-                                value={row.recordNumber}
+                                name="med_rec_no"
+                                value={row.med_rec_no}
+                                disabled={isAllDisable}
                               />
                             </StyledTableCell>
                             <StyledTableCell scope="row">
@@ -896,8 +959,9 @@ const PatientDemographicComponent = (props: any) => {
                                 size="small"
                                 id={"txtFacility_" + index}
                                 onChange={(e) => handleFormMRN(e, index)}
-                                name="facility"
-                                value={row.facility}
+                                name="medical_facility"
+                                value={row.medical_facility}
+                                disabled={isAllDisable}
                               />
                             </StyledTableCell>
                             <StyledTableCell scope="row">
@@ -905,6 +969,7 @@ const PatientDemographicComponent = (props: any) => {
                                 <IconButton
                                   id={"btn" + index}
                                   onClick={(e) => removeRow(index)}
+                                  disabled={isAllDisable}
                                 >
                                   <DeleteIcon color="error" />
                                 </IconButton>
@@ -918,7 +983,7 @@ const PatientDemographicComponent = (props: any) => {
                 </Col>
                 <Col className="col-md-2">
                   <Tooltip title="Add Row">
-                    <IconButton onClick={addRow}>
+                    <IconButton disabled={isAllDisable} onClick={addRow}>
                       <PlusOneIcon color="primary" />
                     </IconButton>
                   </Tooltip>
