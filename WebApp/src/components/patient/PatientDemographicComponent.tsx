@@ -45,7 +45,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PlusOneIcon from "@mui/icons-material/PlusOne";
 import { formatDate } from "../../services/CommonServices";
-import { getDataById, postData, updateData } from "../../services/PatientServices";
+import {
+  getDataById,
+  postData,
+  updateData,
+} from "../../services/PatientServices";
 import AlertDialog from "../common/alert-popup/AlertDialog";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -169,7 +173,7 @@ let defaultMRN = [
     index: 0,
     med_rec_no: "",
     medical_facility: "",
-  }
+  },
 ];
 
 const defaultAlertProps: any = Object.freeze({
@@ -225,18 +229,14 @@ const PatientDemographicComponent = (props: any) => {
 
   const handleFormMRN = (e: any, index: number) => {
     const { name, value } = e.target;
-    // setFormMRN([...formMRN].at(index)?.facility = value
-    // )
-    console.log("before change", formMRN);
+    let updatedRows = [...formMRN];
+
     if (name == "medical_facility")
-      // setFormMRN(([...formMRN][index].facility = value));
-      setFormMRN({
-        ...formMRN,
-        [name]: value,
-      });
+      updatedRows.filter((x) => x.index == index)[0].medical_facility = value;
     else if (name == "med_rec_no")
-      setFormMRN(([...formMRN][index].med_rec_no = value));
-    console.log("after change", formMRN);
+      updatedRows.filter((x) => x.index == index)[0].med_rec_no = value;
+
+    setFormMRN(updatedRows);
   };
 
   const handleDeceased = (event: ChangeEvent<HTMLInputElement>) => {
@@ -253,26 +253,26 @@ const PatientDemographicComponent = (props: any) => {
     setDateOfBirth(newValue as Date);
   };
 
-  const createData = (med_rec_no: string, medical_facility: string) => {
-    return { med_rec_no, medical_facility };
-  };
-
   const addRow = () => {
     tableRowIndex = tableRowIndex + 1;
-    let updatedRows = [...formMRN]
-    updatedRows[tableRowIndex] = {index: tableRowIndex, med_rec_no: "", medical_facility: ""}
+    let updatedRows = [...formMRN];
+    updatedRows[tableRowIndex] = {
+      index: tableRowIndex,
+      med_rec_no: "",
+      medical_facility: "",
+    };
     setFormMRN(updatedRows);
   };
-  
+
   const removeRow = (index: number) => {
-    if(formMRN.length > 1){
-      let updatedRows = [...formMRN]
-      let indexToRemove = updatedRows.findIndex(x => x.index == index);
-      if(indexToRemove > -1){
-         updatedRows.splice(indexToRemove, 1)
-         setFormMRN(updatedRows);
+    if (formMRN.length > 1) {
+      let updatedRows = [...formMRN];
+      let indexToRemove = updatedRows.findIndex((x) => x.index == index);
+      if (indexToRemove > -1) {
+        updatedRows.splice(indexToRemove, 1);
+        setFormMRN(updatedRows);
       }
-   }
+    }
   };
 
   const handleHomePhoneNumber = (e: any) => {
@@ -307,9 +307,9 @@ const PatientDemographicComponent = (props: any) => {
       employment_status: formData.employment_status,
       student_status: formData.student_status,
       deceased: formData.deceased,
-      id: formData.id, 
+      id: formData.id,
     });
-    formData.deceased == "N"? setDeceased(false) :  setDeceased(true);
+    formData.deceased == "N" ? setDeceased(false) : setDeceased(true);
     setFormContactValues({
       ...formData.address,
     });
@@ -809,7 +809,6 @@ const PatientDemographicComponent = (props: any) => {
                 </Col>
               </Row>
               <Row className="col-md-12">
-
                 <Col className="col-md-4">
                   <FormControl sx={{ width: "100%" }} error={hasError}>
                     <Stack>
