@@ -205,6 +205,21 @@ const PatientDemographicComponent = (props: any) => {
   //   { recordNumber: "", facility: "" },
   // ]);
 
+  const resetForm = () => {
+    setDateOfBirth(new Date());
+    setHasError(false);
+    setFormValues(defaultValues);
+    setFormContactValues(defaultContactValues);
+    setFormMRN(defaultMRN);
+    setAlertState(false);
+    updateAlertProps(defaultAlertProps);
+    setSearchId("");
+    setIsAllDisable(false);
+    setIsSaveDisable(false);
+    setDisableEditButton(true);
+    setSubmitButtonName("Save");
+  };
+
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormValues({
@@ -327,7 +342,7 @@ const PatientDemographicComponent = (props: any) => {
     };
     props.onSavePatientData(patientNameData);
     setIsAllDisable(true);
-    console.log("incoming data", formData[0]);
+    console.log("incoming data", formData);
   };
 
   const handleId = (event: any) => {
@@ -387,7 +402,15 @@ const PatientDemographicComponent = (props: any) => {
       formContactValues.home_city.length == 0 ||
       formContactValues.home_state.length == 0 ||
       formContactValues.home_postal_code.length == 0 ||
-      formContactValues.home_country.length == 0
+      formContactValues.home_country.length == 0 ||
+      props.formData.FirstName == undefined ||
+      props.formData.FirstName.length == 0 ||
+      props.formData.LastName == undefined ||
+      props.formData.LastName.length == 0 ||
+      props.formData.MiddleName == undefined ||
+      props.formData.MiddleName.length == 0 ||
+      props.formData.Suffix == undefined ||
+      props.formData.Suffix.length == 0
     ) {
       setHasError(true);
       return;
@@ -414,6 +437,7 @@ const PatientDemographicComponent = (props: any) => {
                 alertTitle: "Success",
                 isAlertOpen: true,
               });
+              resetForm();
             } else {
               setAlertState(true);
               updateAlertProps({
@@ -441,6 +465,7 @@ const PatientDemographicComponent = (props: any) => {
                 alertTitle: "Success",
                 isAlertOpen: true,
               });
+              resetForm();
             } else {
               setAlertState(true);
               updateAlertProps({
@@ -473,7 +498,7 @@ const PatientDemographicComponent = (props: any) => {
       {alertState ? <AlertDialog alertProps={alertProps}></AlertDialog> : <></>}
       <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 1, md: 3 }}>
         <Grid container>
-          <Grid xs={6}>
+          <Grid item xs={6}>
             <AppBar position="static">
               <Toolbar
                 style={{
@@ -515,7 +540,7 @@ const PatientDemographicComponent = (props: any) => {
               Edit
             </CustomButton>
           </Grid>
-          <Grid xs={6}>
+          <Grid item xs={6}>
             <CustomButton
               type="button"
               onClick={saveUpdatePatientData}
@@ -1018,13 +1043,15 @@ const PatientDemographicComponent = (props: any) => {
                             </StyledTableCell>
                             <StyledTableCell scope="row">
                               <Tooltip title="Delete Row">
-                                <IconButton
-                                  id={"btn" + index}
-                                  onClick={(e) => removeRow(index)}
-                                  disabled={isAllDisable}
-                                >
-                                  <DeleteIcon color="error" />
-                                </IconButton>
+                                <div>
+                                  <IconButton
+                                    id={"btn" + index}
+                                    onClick={(e) => removeRow(index)}
+                                    disabled={isAllDisable}
+                                  >
+                                    <DeleteIcon color="error" />
+                                  </IconButton>
+                                </div>
                               </Tooltip>
                             </StyledTableCell>
                           </StyledTableRow>
@@ -1035,9 +1062,11 @@ const PatientDemographicComponent = (props: any) => {
                 </Col>
                 <Col className="col-md-2">
                   <Tooltip title="Add Row">
-                    <IconButton disabled={isAllDisable} onClick={addRow}>
-                      <PlusOneIcon color="primary" />
-                    </IconButton>
+                    <div>
+                      <IconButton disabled={isAllDisable} onClick={addRow}>
+                        <PlusOneIcon color="primary" />
+                      </IconButton>
+                    </div>
                   </Tooltip>
                 </Col>
               </Row>

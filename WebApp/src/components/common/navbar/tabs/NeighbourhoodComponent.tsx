@@ -1,5 +1,5 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Input, Tab } from "@mui/material";
+import { Box, Tab, TextField } from "@mui/material";
 import React, { SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { patientTabConstants } from "../../../patient/patient-tabs";
@@ -11,7 +11,7 @@ const initialFormData: any = Object.freeze({
   FirstName: "",
   LastName: "",
   Suffix: "",
-  isDisabled: false
+  isDisabled: false,
 });
 
 const NeighbourhoodComponent = () => {
@@ -30,13 +30,10 @@ const NeighbourhoodComponent = () => {
   };
 
   const getPatientData = (inputData: any) => {
-    updateFormData({...formData,
-      MiddleName: inputData.MiddleName,
-      FirstName: inputData.FirstName,
-      LastName: inputData.LastName,
-      Suffix: inputData.Suffix,
-      isDisabled: inputData.isDisabled
-    });
+    let tempFormData = formData;
+    console.log("before binding", formData);
+    updateFormData(inputData);
+    console.log("after binding", formData);
   };
 
   const customStyles = {
@@ -66,33 +63,37 @@ const NeighbourhoodComponent = () => {
         noValidate
         autoComplete="off"
       >
-        <Input
+        <TextField
           name="LastName"
           placeholder="Last Name"
+          variant="standard"
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.LastName}
           disabled={formData.isDisabled}
         />
-        <Input
+        <TextField
           name="FirstName"
           placeholder="First Name"
+          variant="standard"
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.FirstName}
           disabled={formData.isDisabled}
         />
-        <Input
+        <TextField
           name="MiddleName"
           placeholder="Middle Name"
+          variant="standard"
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.MiddleName}
           disabled={formData.isDisabled}
         />
-        <Input
+        <TextField
           name="Suffix"
           placeholder="Suffix"
+          variant="standard"
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.Suffix}
