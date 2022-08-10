@@ -30,9 +30,9 @@ const NeighbourhoodComponent = () => {
   };
 
   const getPatientData = (inputData: any) => {
-    let tempFormData = formData;
+    let tempFormData = {...inputData};
     console.log("before binding", formData);
-    updateFormData(inputData);
+    updateFormData(tempFormData);
     console.log("after binding", formData);
   };
 
@@ -65,6 +65,7 @@ const NeighbourhoodComponent = () => {
       >
         <TextField
           name="LastName"
+          // label="Last Name"
           placeholder="Last Name"
           variant="standard"
           onChange={handleFormChange}
@@ -74,6 +75,7 @@ const NeighbourhoodComponent = () => {
         />
         <TextField
           name="FirstName"
+          // label="First Name"
           placeholder="First Name"
           variant="standard"
           onChange={handleFormChange}
@@ -83,6 +85,7 @@ const NeighbourhoodComponent = () => {
         />
         <TextField
           name="MiddleName"
+          // label="Middle Name"
           placeholder="Middle Name"
           variant="standard"
           onChange={handleFormChange}
@@ -92,6 +95,7 @@ const NeighbourhoodComponent = () => {
         />
         <TextField
           name="Suffix"
+          // label="Suffix"
           placeholder="Suffix"
           variant="standard"
           onChange={handleFormChange}

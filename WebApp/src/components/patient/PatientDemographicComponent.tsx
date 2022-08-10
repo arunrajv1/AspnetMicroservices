@@ -247,10 +247,13 @@ const PatientDemographicComponent = (props: any) => {
     const { name, value } = e.target;
     let updatedRows = [...formMRN];
 
-    if (name == "medical_facility")
-      updatedRows.filter((x) => x.index == index)[0].medical_facility = value;
-    else if (name == "med_rec_no")
-      updatedRows.filter((x) => x.index == index)[0].med_rec_no = value;
+    if (name == "medical_facility") {
+      updatedRows[index].medical_facility = value;
+      //updatedRows.filter((x) => x.index == index)[0].medical_facility = value;
+    } else if (name == "med_rec_no") {
+      updatedRows[index].med_rec_no = value;
+      //updatedRows.filter((x) => x.index == index)[0].med_rec_no = value;
+    }
 
     setFormMRN(updatedRows);
   };
@@ -407,8 +410,6 @@ const PatientDemographicComponent = (props: any) => {
       props.formData.FirstName.length == 0 ||
       props.formData.LastName == undefined ||
       props.formData.LastName.length == 0 ||
-      props.formData.MiddleName == undefined ||
-      props.formData.MiddleName.length == 0 ||
       props.formData.Suffix == undefined ||
       props.formData.Suffix.length == 0
     ) {
