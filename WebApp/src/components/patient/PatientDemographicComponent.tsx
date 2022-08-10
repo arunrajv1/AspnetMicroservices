@@ -199,6 +199,7 @@ const PatientDemographicComponent = (props: any) => {
   const [searchId, setSearchId] = useState("");
   const [isSaveDisable, setIsSaveDisable] = useState(false);
   const [isAllDisable, setIsAllDisable] = useState(false);
+  const [disableEditButton, setDisableEditButton] = useState(true);
   const [submitButtonName, setSubmitButtonName] = useState("Save");
   // const [rowAction, setRowAction] = useState<IMedicalRecordNumber[]>([
   //   { recordNumber: "", facility: "" },
@@ -349,7 +350,7 @@ const PatientDemographicComponent = (props: any) => {
           alertTitle: "Success",
           isAlertOpen: true,
         });
-
+        setDisableEditButton(false);
         setIsSaveDisable(true);
         bindPatientDetails(response.data[0]);
       } else {
@@ -376,68 +377,85 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const saveUpdatePatientData = async () => {
-    formValues.address = formContactValues;
-    formValues.first_name = props.formData.FirstName;
-    formValues.last_name = props.formData.LastName;
-    formValues.middle_name = props.formData.MiddleName;
-    formValues.suffix = props.formData.Suffix;
-    formValues.date_of_birth = formatDate(dateOfBirth);
-    formValues.id = "";
-    deceased ? (formValues.deceased = "Y") : (formValues.deceased = "N");
+    if (
+      formValues.student_status.length == 0 ||
+      formValues.employment_status.length == 0 ||
+      formValues.marital_status.length == 0 ||
+      formValues.birth_sex.length == 0 ||
+      formValues.race.length == 0 ||
+      formContactValues.home_street1.length == 0 ||
+      formContactValues.home_city.length == 0 ||
+      formContactValues.home_state.length == 0 ||
+      formContactValues.home_postal_code.length == 0 ||
+      formContactValues.home_country.length == 0
+    ) {
+      setHasError(true);
+      return;
+    } else {
+      setHasError(false);
+      formValues.address = formContactValues;
+      formValues.first_name = props.formData.FirstName;
+      formValues.last_name = props.formData.LastName;
+      formValues.middle_name = props.formData.MiddleName;
+      formValues.suffix = props.formData.Suffix;
+      formValues.date_of_birth = formatDate(dateOfBirth);
+      formValues.id = "";
+      deceased ? (formValues.deceased = "Y") : (formValues.deceased = "N");
 
-    if (submitButtonName == "Save") {
-      await postData(formValues)
-        .then((response) => {
-          if (response.status === 200 && response.statusText === "OK") {
-            setAlertState(true);
-            updateAlertProps({
-              ...alertProps,
-              alertContent: "Data Inserted Successfully",
-              alertType: "success",
-              alertTitle: "Success",
-              isAlertOpen: true,
-            });
-          } else {
-            setAlertState(true);
-            updateAlertProps({
-              ...alertProps,
-              alertContent: "Error occured while saving data",
-              alertType: "error",
-              alertTitle: "Error",
-              isAlertOpen: true,
-            });
-          }
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    } else if (submitButtonName == "Update") {
-      formValues.id = searchId;
-      await updateData(formValues)
-        .then((response) => {
-          if (response.status === 200 && response.statusText === "OK") {
-            setAlertState(true);
-            updateAlertProps({
-              ...alertProps,
-              alertContent: "Data Updated Successfully",
-              alertType: "success",
-              alertTitle: "Success",
-              isAlertOpen: true,
-            });
-          } else {
-            setAlertState(true);
-            updateAlertProps({
-              ...alertProps,
-              alertContent: "Error occured while updating record",
-              alertType: "error",
-              alertTitle: "Error",
-              isAlertOpen: true,
-            });
-          }
-        })
-        .catch((error) => {
-          alert(error);
-        });
+      if (submitButtonName == "Save") {
+        await postData(formValues)
+          .then((response) => {
+            if (response.status === 200 && response.statusText === "OK") {
+              setAlertState(true);
+              updateAlertProps({
+                ...alertProps,
+                alertContent: "Data Inserted Successfully",
+                alertType: "success",
+                alertTitle: "Success",
+                isAlertOpen: true,
+              });
+            } else {
+              setAlertState(true);
+              updateAlertProps({
+                ...alertProps,
+                alertContent: "Error occured while saving data",
+                alertType: "error",
+                alertTitle: "Error",
+                isAlertOpen: true,
+              });
+            }
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      } else if (submitButtonName == "Update") {
+        formValues.id = searchId;
+        await updateData(formValues)
+          .then((response) => {
+            if (response.status === 200 && response.statusText === "OK") {
+              setAlertState(true);
+              updateAlertProps({
+                ...alertProps,
+                alertContent: "Data Updated Successfully",
+                alertType: "success",
+                alertTitle: "Success",
+                isAlertOpen: true,
+              });
+            } else {
+              setAlertState(true);
+              updateAlertProps({
+                ...alertProps,
+                alertContent: "Error occured while updating record",
+                alertType: "error",
+                alertTitle: "Error",
+                isAlertOpen: true,
+              });
+            }
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      }
     }
   };
 
@@ -482,6 +500,7 @@ const PatientDemographicComponent = (props: any) => {
               onClick={getPatientDetailsById}
               variant="contained"
               style={{ marginTop: "15px" }}
+              id="btn_search"
             >
               Search
             </CustomButton>
@@ -490,6 +509,8 @@ const PatientDemographicComponent = (props: any) => {
               type="button"
               onClick={editPatientDetails}
               variant="contained"
+              id="btn_edit"
+              disabled={disableEditButton}
             >
               Edit
             </CustomButton>
@@ -518,16 +539,21 @@ const PatientDemographicComponent = (props: any) => {
             />
             <CardContent>
               <Stack>
-                <TextField
-                  id="txtStreet1"
-                  label="Street 1"
-                  variant="standard"
-                  type="text"
-                  name="home_street1"
-                  value={formContactValues.home_street1}
-                  onChange={handleContactInputChange}
-                  disabled={isAllDisable}
-                />
+                <FormControl sx={{ width: "100%" }} error={hasError}>
+                  <TextField
+                    id="txtStreet1"
+                    label="Street 1"
+                    variant="standard"
+                    type="text"
+                    name="home_street1"
+                    value={formContactValues.home_street1}
+                    onChange={handleContactInputChange}
+                    disabled={isAllDisable}
+                  />
+                  {hasError && !formContactValues.home_street1 && (
+                    <FormHelperText>*Required!</FormHelperText>
+                  )}
+                </FormControl>
               </Stack>
               <Stack>
                 <TextField
@@ -617,6 +643,9 @@ const PatientDemographicComponent = (props: any) => {
                         <MenuItem value={"O"}>Other</MenuItem>
                       </Select>
                     </Stack>
+                    {hasError && !formValues.birth_sex && (
+                      <FormHelperText>*Required!</FormHelperText>
+                    )}
                   </FormControl>
                 </Col>
                 <Col className="col-md-4">
@@ -780,6 +809,9 @@ const PatientDemographicComponent = (props: any) => {
                         <MenuItem value={"S"}>Separated</MenuItem>
                       </Select>
                     </Stack>
+                    {hasError && !formValues.marital_status && (
+                      <FormHelperText>*Required!</FormHelperText>
+                    )}
                   </FormControl>
                 </Col>
                 <Col className="col-md-4">
@@ -805,6 +837,9 @@ const PatientDemographicComponent = (props: any) => {
                         <MenuItem value={"O"}>Other</MenuItem>
                       </Select>
                     </Stack>
+                    {hasError && !formValues.race && (
+                      <FormHelperText>*Required!</FormHelperText>
+                    )}
                   </FormControl>
                 </Col>
               </Row>
@@ -833,6 +868,9 @@ const PatientDemographicComponent = (props: any) => {
                         <MenuItem value={"S"}>Self Employed</MenuItem>
                       </Select>
                     </Stack>
+                    {hasError && !formValues.employment_status && (
+                      <FormHelperText>*Required!</FormHelperText>
+                    )}
                   </FormControl>
                 </Col>
                 <Col className="col-md-4">
@@ -843,7 +881,6 @@ const PatientDemographicComponent = (props: any) => {
                         Student status:
                       </FormLabel>
                     </Stack>
-                    {/* <InputLabel htmlFor="name">Student status:</InputLabel> */}
                     <Stack>
                       <Select
                         labelId="demo-simple-select-label"
@@ -860,7 +897,9 @@ const PatientDemographicComponent = (props: any) => {
                         <MenuItem value={"P"}>Part Time Student</MenuItem>
                       </Select>
                     </Stack>
-                    {hasError && <FormHelperText>*Required!</FormHelperText>}
+                    {hasError && !formValues.student_status && (
+                      <FormHelperText>*Required!</FormHelperText>
+                    )}
                   </FormControl>
                 </Col>
               </Row>
@@ -873,17 +912,22 @@ const PatientDemographicComponent = (props: any) => {
             <CustomCardHeader title="Phone Numbers"></CustomCardHeader>
             <CardContent>
               <Stack>
-                <TextField
-                  id="standard-basic"
-                  label="Home"
-                  variant="standard"
-                  type="text"
-                  name="home_phone"
-                  inputProps={{ maxLength: 10 }}
-                  value={formContactValues.home_phone}
-                  onChange={handleContactInputChange}
-                  disabled={isAllDisable}
-                />
+                <FormControl sx={{ width: "100%" }} error={hasError}>
+                  <TextField
+                    id="standard-basic"
+                    label="Home"
+                    variant="standard"
+                    type="text"
+                    name="home_phone"
+                    inputProps={{ maxLength: 10 }}
+                    value={formContactValues.home_phone}
+                    onChange={handleContactInputChange}
+                    disabled={isAllDisable}
+                  />
+                  {hasError && !formContactValues.home_state && (
+                    <FormHelperText>*Required!</FormHelperText>
+                  )}
+                </FormControl>
               </Stack>
               <Stack>
                 <TextField
