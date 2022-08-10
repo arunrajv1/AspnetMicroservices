@@ -21,7 +21,7 @@ export const getDataById = async (id: string) => {
 
 export const updateData = async (jsonPostBody: any) => {
   let url = patientBaseUrl + `/${jsonPostBody['id']}`;
-  let response = await axios.put(url, options);
+  let response = await axios.put(url, jsonPostBody);
   //let responseOK = response && response.status === 200 && response.data;
 
   return response;

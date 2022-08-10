@@ -164,11 +164,12 @@ const defaultContactValues = {
   work_phone: "",
 };
 
-const defaultMRN = [
+let defaultMRN = [
   {
+    index: 0,
     med_rec_no: "",
     medical_facility: "",
-  },
+  }
 ];
 
 const defaultAlertProps: any = Object.freeze({
@@ -178,8 +179,10 @@ const defaultAlertProps: any = Object.freeze({
   isAlertOpen: false,
 });
 
+let tableRowIndex: number = 0;
+
 const PatientDemographicComponent = (props: any) => {
-  const [deceased, setDeceased] = useState(true);
+  const [deceased, setDeceased] = useState(false);
   const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
   const [age, setAge] = useState<number>();
   const [hasError, setHasError] = useState(false);
@@ -237,8 +240,8 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const handleDeceased = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) setDeceased(false);
-    else setDeceased(true);
+    if (event.target.checked) setDeceased(true);
+    else setDeceased(false);
   };
   const handleDOBChange = (newValue: Date | null) => {
     if (newValue) {
@@ -255,16 +258,21 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const addRow = () => {
-    let rows = formMRN;
-    rows.push(createData("", ""));
-    setFormMRN(rows);
-    console.log(formMRN);
+    tableRowIndex = tableRowIndex + 1;
+    let updatedRows = [...formMRN]
+    updatedRows[tableRowIndex] = {index: tableRowIndex, med_rec_no: "", medical_facility: ""}
+    setFormMRN(updatedRows);
   };
+  
   const removeRow = (index: number) => {
-    let rows = formMRN;
-    rows.splice(index, 1);
-    setFormMRN(rows);
-    console.log("row deleted", formMRN);
+    if(formMRN.length > 1){
+      let updatedRows = [...formMRN]
+      let indexToRemove = updatedRows.findIndex(x => x.index == index);
+      if(indexToRemove > -1){
+         updatedRows.splice(indexToRemove, 1)
+         setFormMRN(updatedRows);
+      }
+   }
   };
 
   const handleHomePhoneNumber = (e: any) => {
@@ -299,9 +307,9 @@ const PatientDemographicComponent = (props: any) => {
       employment_status: formData.employment_status,
       student_status: formData.student_status,
       deceased: formData.deceased,
-      id: formData.id,
+      id: formData.id, 
     });
-
+    formData.deceased == "N"? setDeceased(false) :  setDeceased(true);
     setFormContactValues({
       ...formData.address,
     });
@@ -393,7 +401,7 @@ const PatientDemographicComponent = (props: any) => {
             setAlertState(true);
             updateAlertProps({
               ...alertProps,
-              alertContent: "Error Occured",
+              alertContent: "Error occured while saving data",
               alertType: "error",
               alertTitle: "Error",
               isAlertOpen: true,
@@ -420,7 +428,7 @@ const PatientDemographicComponent = (props: any) => {
             setAlertState(true);
             updateAlertProps({
               ...alertProps,
-              alertContent: "Error Occured",
+              alertContent: "Error occured while updating record",
               alertType: "error",
               alertTitle: "Error",
               isAlertOpen: true,
@@ -652,8 +660,9 @@ const PatientDemographicComponent = (props: any) => {
                       control={
                         <Checkbox
                           disabled={isAllDisable}
-                          defaultChecked
+                          // defaultChecked
                           size="small"
+                          value={deceased}
                           onChange={handleDeceased}
                           style={{
                             paddingLeft: "7px",
