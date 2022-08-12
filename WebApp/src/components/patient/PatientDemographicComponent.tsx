@@ -233,6 +233,7 @@ const PatientDemographicComponent = (props: any) => {
       isDisabled: false,
     };
     props.onSavePatientData(patientNameData);
+    props.onChangeDisable(false);
   };
 
   const handleInputChange = (e: any) => {
@@ -356,9 +357,9 @@ const PatientDemographicComponent = (props: any) => {
       LastName: formData.last_name,
       MiddleName: formData.middle_name,
       Suffix: formData.suffix,
-      isDisabled: true,
     };
     props.onSavePatientData(patientNameData);
+    props.onChangeDisable(true);
     setIsAllDisable(true);
     console.log("incoming data", formData);
   };
@@ -400,10 +401,7 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const editPatientDetails = () => {
-    const patientNameData: any = {
-      isDisabled: false,
-    };
-    props.onSavePatientData(patientNameData);
+    props.onChangeDisable(false);
     setIsAllDisable(false);
     setIsSaveDisable(false);
     setSubmitButtonName("Update");
@@ -417,6 +415,7 @@ const PatientDemographicComponent = (props: any) => {
       formValues.birth_sex.length == 0 ||
       formValues.race.length == 0 ||
       formContactValues.home_street1.length == 0 ||
+      formContactValues.home_street2.length == 0 ||
       formContactValues.home_city.length == 0 ||
       formContactValues.home_state.length == 0 ||
       formContactValues.home_postal_code.length == 0 ||
@@ -608,16 +607,21 @@ const PatientDemographicComponent = (props: any) => {
                 </FormControl>
               </Stack>
               <Stack>
-                <TextField
-                  id="txtStreet2"
-                  label="Street 2"
-                  variant="standard"
-                  type="text"
-                  name="home_street2"
-                  value={formContactValues.home_street2}
-                  onChange={handleContactInputChange}
-                  disabled={isAllDisable}
-                />
+                <FormControl sx={{ width: "100%" }} error={hasError}>
+                  <TextField
+                    id="txtStreet2"
+                    label="Street 2"
+                    variant="standard"
+                    type="text"
+                    name="home_street2"
+                    value={formContactValues.home_street2}
+                    onChange={handleContactInputChange}
+                    disabled={isAllDisable}
+                  />
+                  {hasError && !formContactValues.home_street2 && (
+                    <FormHelperText>*Required!</FormHelperText>
+                  )}
+                </FormControl>
               </Stack>
               <Stack direction="horizontal" gap={3} className="col-md-12">
                 <TextField

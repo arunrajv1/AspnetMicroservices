@@ -11,12 +11,12 @@ const initialFormData: any = Object.freeze({
   MiddleName: "",
   FirstName: "",
   LastName: "",
-  Suffix: "",
-  isDisabled: false,
+  Suffix: ""
 });
 
 const NeighbourhoodComponent = () => {
   const [value, setValue] = useState("0");
+  const [isDisable, setIsDisable] = useState(false);
   const [formData, updateFormData] = useState(initialFormData);
   //const navigate = useNavigate();
   const handleChange = (event: SyntheticEvent, newValue: string) => {
@@ -32,10 +32,12 @@ const NeighbourhoodComponent = () => {
 
   const getPatientData = (inputData: any) => {
     let tempFormData = { ...inputData };
-    console.log("before binding", formData);
     updateFormData(tempFormData);
-    console.log("after binding", formData);
   };
+
+  const changeFieldDisable = (inputData: any) =>{
+    setIsDisable(inputData)
+  }
 
   const customStyles = {
     background: {
@@ -72,7 +74,7 @@ const NeighbourhoodComponent = () => {
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.LastName}
-          disabled={formData.isDisabled}
+          disabled={isDisable}
         />
         <TextField
           name="FirstName"
@@ -82,7 +84,7 @@ const NeighbourhoodComponent = () => {
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.FirstName}
-          disabled={formData.isDisabled}
+          disabled={isDisable}
         />
         <TextField
           name="MiddleName"
@@ -92,7 +94,7 @@ const NeighbourhoodComponent = () => {
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.MiddleName}
-          disabled={formData.isDisabled}
+          disabled={isDisable}
         />
         <TextField
           name="Suffix"
@@ -102,7 +104,7 @@ const NeighbourhoodComponent = () => {
           onChange={handleFormChange}
           inputProps={ariaLabel}
           value={formData.Suffix}
-          disabled={formData.isDisabled}
+          disabled={isDisable}
         />
       </Box>
       <Box sx={customStyles.tabBackground}>
@@ -138,6 +140,7 @@ const NeighbourhoodComponent = () => {
               <PatientDemographicComponent
                 formData={formData}
                 onSavePatientData={getPatientData}
+                onChangeDisable={changeFieldDisable}
               ></PatientDemographicComponent>
             }
           </TabPanel>
