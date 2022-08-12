@@ -1,61 +1,29 @@
 import {
-  Input,
   Box,
-  Tabs,
-  Tab,
-  FormLabel,
   TextField,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-  Checkbox,
-  FormControlLabel,
   Card,
   CardHeader,
   CardContent,
-  Typography,
   Grid,
-  TableContainer,
-  Paper,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
   styled,
-  tableCellClasses,
   ButtonProps,
   Button,
-  IconButton,
-  Tooltip,
-  FormHelperText,
-  InputLabel,
-  FormControl,
 } from "@mui/material";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { Col, Container, Form, Row, Stack } from "react-bootstrap";
+import { useState } from "react";
+import { Col, Container, Row, Stack } from "react-bootstrap";
 import { postData } from "../../services/PatientServices";
 import AlertDialog from "../common/alert-popup/AlertDialog";
 import "./patientEmployerComponent.css";
 
-const re = /^[0-9\b]+$/;
-
 const defaultEmployerValues = {
   emp_name: "",
   emp_id: "",
-  //address: {},
   home_street1: "",
   home_street2: "",
   home_city: "",
   home_state: "",
   home_postal_code: "",
   home_country: "",
-  first_name: "",
-  last_name: "",
-  middle_name: "",
-  suffix: "",
-  id: "",
-  date_of_birth: "",
 };
 
 const defaultAlertProps: any = Object.freeze({
@@ -67,9 +35,6 @@ const defaultAlertProps: any = Object.freeze({
 
 const PatientEmployerComponent = (props: any) => {
   const [formValues, setFormValues] = useState(defaultEmployerValues);
-  // const [formContactValues, setFormContactValues] = useState(
-  //   defaultEmpContactValues
-  // );
   const [alertState, setAlertState] = useState(false);
   const [alertProps, updateAlertProps] = useState(defaultAlertProps);
 
@@ -104,13 +69,7 @@ const PatientEmployerComponent = (props: any) => {
     formValues.home_postal_code = props.formData.home_postal_code;
     formValues.home_state= props.formData.home_state;
     formValues.home_street1= props.formData.home_street1;
-    formValues.home_street2= props.formData.home_street2;
-    formValues.first_name = props.formData.FirstName;
-    formValues.last_name = props.formData.LastName;
-    formValues.middle_name = props.formData.MiddleName;
-    formValues.suffix = props.formData.Suffix;
-    formValues.id = "";
-   
+    formValues.home_street2= props.formData.home_street2;   
 
     console.log("json post body", formValues);
 
@@ -147,7 +106,6 @@ const PatientEmployerComponent = (props: any) => {
       sx={{
         "& > :not(style)": { m: 1 },
         flexGrow: 1
-        // width: "95%",
       }}
       noValidate
       autoComplete="off"
