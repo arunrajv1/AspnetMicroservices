@@ -141,7 +141,7 @@ const Search = styled("div")(({ theme }) => ({
 
 const defaultValues = {
   address: {},
-  mrn: [],
+  mrn: [{}],
   birth_sex: "",
   date_of_birth: "",
   ssn: "",
@@ -210,7 +210,6 @@ const PatientDemographicComponent = (props: any) => {
     setHasError(false);
     setFormValues(defaultValues);
     setFormContactValues(defaultContactValues);
-    setFormMRN(defaultMRN);
     setAlertState(false);
     updateAlertProps(defaultAlertProps);
     setSearchId("");
@@ -218,6 +217,15 @@ const PatientDemographicComponent = (props: any) => {
     setIsSaveDisable(false);
     setDisableEditButton(true);
     setSubmitButtonName("Save");
+    setFormMRN(defaultMRN);
+    const patientNameData: any = {
+      FirstName: "",
+      LastName: "",
+      MiddleName: "",
+      Suffix: "",
+      isDisabled: false,
+    };
+    props.onSavePatientData(patientNameData);
   };
 
   const handleInputChange = (e: any) => {
@@ -417,6 +425,16 @@ const PatientDemographicComponent = (props: any) => {
       return;
     } else {
       setHasError(false);
+      formValues.mrn = []
+      formMRN.forEach((e) => {
+        if (e.med_rec_no.length>0 && e.medical_facility.length>0) {
+          let obj = {
+            med_rec_no: e.med_rec_no,
+            medical_facility: e.medical_facility,
+          };
+          formValues.mrn.push(obj);
+        }
+      });
       formValues.address = formContactValues;
       formValues.first_name = props.formData.FirstName;
       formValues.last_name = props.formData.LastName;
@@ -425,6 +443,7 @@ const PatientDemographicComponent = (props: any) => {
       formValues.date_of_birth = formatDate(dateOfBirth);
       formValues.id = "";
       deceased ? (formValues.deceased = "Y") : (formValues.deceased = "N");
+      console.log("form data", formValues);
 
       if (submitButtonName == "Save") {
         await postData(formValues)
