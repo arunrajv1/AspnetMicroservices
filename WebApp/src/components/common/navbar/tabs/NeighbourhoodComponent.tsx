@@ -1,10 +1,10 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Input, Tab } from "@mui/material";
+import { Box, Tab, TextField } from "@mui/material";
 import React, { SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { patientTabConstants } from "../../../patient/patient-tabs";
 import PatientDemographicComponent from "../../../patient/PatientDemographicComponent";
-import PatientEmployerComponent  from "../../../patient/patientEmployerComponent";
+import PatientEmployerComponent from "../../../patient/patientEmployerComponent";
 
 const ariaLabel = { "aria-label": "description" };
 const initialFormData: any = Object.freeze({
@@ -12,6 +12,7 @@ const initialFormData: any = Object.freeze({
   FirstName: "",
   LastName: "",
   Suffix: "",
+  isDisabled: false,
 });
 
 const NeighbourhoodComponent = () => {
@@ -27,6 +28,13 @@ const NeighbourhoodComponent = () => {
       // Trimming any whitespace
       [e.target.name]: e.target.value.trim(),
     });
+  };
+
+  const getPatientData = (inputData: any) => {
+    let tempFormData = { ...inputData };
+    console.log("before binding", formData);
+    updateFormData(tempFormData);
+    console.log("after binding", formData);
   };
 
   const customStyles = {
@@ -56,29 +64,45 @@ const NeighbourhoodComponent = () => {
         noValidate
         autoComplete="off"
       >
-        <Input
+        <TextField
           name="LastName"
+          // label="Last Name"
           placeholder="Last Name"
+          variant="standard"
           onChange={handleFormChange}
           inputProps={ariaLabel}
+          value={formData.LastName}
+          disabled={formData.isDisabled}
         />
-        <Input
+        <TextField
           name="FirstName"
+          // label="First Name"
           placeholder="First Name"
+          variant="standard"
           onChange={handleFormChange}
           inputProps={ariaLabel}
+          value={formData.FirstName}
+          disabled={formData.isDisabled}
         />
-        <Input
+        <TextField
           name="MiddleName"
+          // label="Middle Name"
           placeholder="Middle Name"
+          variant="standard"
           onChange={handleFormChange}
           inputProps={ariaLabel}
+          value={formData.MiddleName}
+          disabled={formData.isDisabled}
         />
-        <Input
+        <TextField
           name="Suffix"
+          // label="Suffix"
           placeholder="Suffix"
+          variant="standard"
           onChange={handleFormChange}
           inputProps={ariaLabel}
+          value={formData.Suffix}
+          disabled={formData.isDisabled}
         />
       </Box>
       <Box sx={customStyles.tabBackground}>
@@ -110,7 +134,12 @@ const NeighbourhoodComponent = () => {
             </TabList>
           </Box>
           <TabPanel sx={customStyles.background} value="0">
-            {<PatientDemographicComponent formData={formData}></PatientDemographicComponent>}            
+            {
+              <PatientDemographicComponent
+                formData={formData}
+                onSavePatientData={getPatientData}
+              ></PatientDemographicComponent>
+            }
           </TabPanel>
           <TabPanel sx={customStyles.background} value="1">
             Item One
@@ -119,32 +148,13 @@ const NeighbourhoodComponent = () => {
             Item Two
           </TabPanel>
           <TabPanel sx={customStyles.background} value="3">
-          {<PatientEmployerComponent formData = {formData}></PatientEmployerComponent>}
+            {
+              <PatientEmployerComponent
+                formData={formData}
+              ></PatientEmployerComponent>
+            }
           </TabPanel>
         </TabContext>
-        {/* 
-        <Box sx={{ maxWidth: { xs: 1000, sm: 900 } }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          textColor="secondary"
-          indicatorColor="secondary"
-          aria-label="secondary tabs example"
-          variant="scrollable"
-          scrollButtons
-          sx={{
-            [`& .${tabsClasses.scrollButtons}`]: {
-              "&.Mui-disabled": { opacity: 0.3 },
-            },
-          }}
-        >
-          {patientTabConstants.map((item, index) => {
-            return (
-              <Tab key={item.id} value={item.route} label={item.label}></Tab>
-            );
-          })}
-        </Tabs>
-        </Box> */}
       </Box>
     </>
   );
