@@ -4,6 +4,7 @@ import React, { SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { patientTabConstants } from "../../../patient/patient-tabs";
 import PatientDemographicComponent from "../../../patient/PatientDemographicComponent";
+import PatientEmployerComponent  from "../../../patient/patientEmployerComponent";
 
 const ariaLabel = { "aria-label": "description" };
 const initialFormData: any = Object.freeze({
@@ -109,7 +110,7 @@ const NeighbourhoodComponent = () => {
             </TabList>
           </Box>
           <TabPanel sx={customStyles.background} value="0">
-            {<PatientDemographicComponent formData={formData}></PatientDemographicComponent>}
+            {<PatientDemographicComponent formData={formData}></PatientDemographicComponent>}            
           </TabPanel>
           <TabPanel sx={customStyles.background} value="1">
             Item One
@@ -118,7 +119,7 @@ const NeighbourhoodComponent = () => {
             Item Two
           </TabPanel>
           <TabPanel sx={customStyles.background} value="3">
-            Item Three
+          {<PatientEmployerComponent formData = {formData}></PatientEmployerComponent>}
           </TabPanel>
         </TabContext>
         {/* 
