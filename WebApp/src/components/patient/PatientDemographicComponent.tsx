@@ -168,7 +168,7 @@ const defaultContactValues = {
   work_phone: "",
 };
 
-let defaultMRN = [
+const defaultMRN = [
   {
     index: 0,
     med_rec_no: "",
@@ -217,7 +217,14 @@ const PatientDemographicComponent = (props: any) => {
     setIsSaveDisable(false);
     setDisableEditButton(true);
     setSubmitButtonName("Save");
-    setFormMRN(defaultMRN);
+    let updatedRows = [
+      {
+        index: 0,
+        med_rec_no: "",
+        medical_facility: "",
+      },
+    ];
+    setFormMRN(updatedRows);
     const patientNameData: any = {
       FirstName: "",
       LastName: "",
@@ -425,9 +432,9 @@ const PatientDemographicComponent = (props: any) => {
       return;
     } else {
       setHasError(false);
-      formValues.mrn = []
+      formValues.mrn = [];
       formMRN.forEach((e) => {
-        if (e.med_rec_no.length>0 && e.medical_facility.length>0) {
+        if (e.med_rec_no.length > 0 && e.medical_facility.length > 0) {
           let obj = {
             med_rec_no: e.med_rec_no,
             medical_facility: e.medical_facility,
