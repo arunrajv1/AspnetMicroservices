@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { PatientDemographicInitialState } from "../../model/PatientDemographicInitialState";
 
 const defaultState = {
   address: {
@@ -39,8 +40,9 @@ const tabSwitchSlice = createSlice({
     setId(state, action: PayloadAction<number>) {
       state.id = action.payload;
     },
-    setPatientDemographicDetails(state, action: PayloadAction<any>) {
-      state.array = action.payload;
+    setPatientDemographicDetails(state, action: PayloadAction<PatientDemographicInitialState>) {
+        console.log('array in the reducer', action.payload);
+        state.array = action.payload;
     },
     /*
     setBlankDetails(state, action: PayloadAction<any>) {

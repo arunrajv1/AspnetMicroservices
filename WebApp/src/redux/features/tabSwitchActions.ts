@@ -1,13 +1,14 @@
 import tabSwitchSlice from "./tabSwitchSlice";
 import { AnyAction } from '@reduxjs/toolkit';
 import { ThunkAction } from '@reduxjs/toolkit';
-import { RootState } from "..";
+import { RootState } from "../store";
+import { PatientDemographicInitialState } from "../../model/PatientDemographicInitialState";
 
 export const postActions = tabSwitchSlice.actions;
 
-export const setPatientDetailsAction = (arr: any):ThunkAction<void, RootState, unknown, AnyAction> => {
+export const setPatientDetailsAction = (arr: PatientDemographicInitialState):ThunkAction<void, RootState, unknown, AnyAction> => {
     return async(dispatch, getState)=>{  
-        console.log('array in ta action', arr);
+        console.log('array in the action', arr);
         dispatch(postActions.setPatientDemographicDetails(arr))  
     }
 }

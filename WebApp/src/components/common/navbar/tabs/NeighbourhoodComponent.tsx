@@ -6,7 +6,7 @@ import {
   Tab,
   TextField,
 } from "@mui/material";
-import React, { SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { setPatientDetailsAction } from "../../../../redux/features/tabSwitchActions";
 import { useAppSelector, useAppDispatch } from "../../../../redux/hooks/reduxHooks";
@@ -29,7 +29,7 @@ const NeighbourhoodComponent = () => {
   const [hasError, setHasError] = useState(false);
 
   const dispatch = useAppDispatch();
-  const patientDemographicSelector = useAppSelector((state) => state);
+  const patientDemographicSelector = useAppSelector((state) => state.data.array);
   //const navigate = useNavigate();
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -52,10 +52,14 @@ const NeighbourhoodComponent = () => {
   };
 
   const setDataOnTabChange = (inputData: any) =>{
-    console.log('parent data', inputData)
     dispatch(setPatientDetailsAction(inputData));
-    console.log("patientDemographicSelector", patientDemographicSelector.data.array);
+    onChangeSelector();
+    //console.log("patientDemographicSelector", patientDemographicSelector);
   }
+
+  const onChangeSelector = useCallback(() => {
+    console.log('after store update', patientDemographicSelector)
+  }, [patientDemographicSelector]);
 
   const customStyles = {
     background: {
