@@ -36,7 +36,13 @@ import {
   InputBase,
   alpha,
 } from "@mui/material";
-import React, { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { Col, Container, Form, Row, Stack } from "react-bootstrap";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -45,6 +51,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PlusOneIcon from "@mui/icons-material/PlusOne";
 import { formatDate } from "../../services/CommonServices";
 import {
+  deletePatient,
   getDataById,
   postData,
   updateData,
@@ -390,39 +397,47 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const getPatientDetailsById = async () => {
-    await getDataById(searchId).then((response) => {
-      if (
-        response.status == 200 &&
-        response.statusText == "OK" &&
-        response.data.length > 0
-      ) {
-        setAlertState(true);
-        updateAlertProps({
-          ...alertProps,
-          alertContent: "Patient Found",
-          alertType: "success",
-          alertTitle: "Success",
-          isAlertOpen: true,
-        });
-        setDisableEditButton(false);
-        setIsSaveDisable(true);
-        bindPatientDetails(response.data[0]);
-      } else {
-        setAlertState(true);
-        updateAlertProps({
-          ...alertProps,
-          alertContent: "Patient Not Found",
-          alertType: "error",
-          alertTitle: "Error",
-          isAlertOpen: true,
-        });
-      }
-    });
+    if (!searchId) {
+      window.alert("Enter Patient Id");
+      return;
+    } else {
+      await getDataById(searchId).then((response) => {
+        if (
+          response.status == 200 &&
+          response.statusText == "OK" &&
+          response.data.length > 0
+        ) {
+          setAlertState(true);
+          updateAlertProps({
+            ...alertProps,
+            alertContent: "Patient Found",
+            alertType: "success",
+            alertTitle: "Success",
+            isAlertOpen: true,
+          });
+          setDisableEditButton(false);
+          setIsSaveDisable(true);
+          bindPatientDetails(response.data[0]);
+        } else {
+          setAlertState(true);
+          updateAlertProps({
+            ...alertProps,
+            alertContent: "Patient Not Found",
+            alertType: "error",
+            alertTitle: "Error",
+            isAlertOpen: true,
+          });
+        }
+      });
+    }
   };
 
-  const handleStateChange = useCallback((formData: any) => {
-    props.onTabChange(formData);
-  }, [formValues]);
+  const handleStateChange = useCallback(
+    (formData: any) => {
+      props.onTabChange(formData);
+    },
+    [formValues]
+  );
 
   const editPatientDetails = () => {
     props.onChangeDisable(false);
@@ -487,6 +502,7 @@ const PatientDemographicComponent = (props: any) => {
                 alertTitle: "Success",
                 isAlertOpen: true,
               });
+              window.alert("Data Inserted Successfully");
               resetForm();
             } else {
               setAlertState(true);
@@ -515,6 +531,7 @@ const PatientDemographicComponent = (props: any) => {
                 alertTitle: "Success",
                 isAlertOpen: true,
               });
+              window.alert("Data Updated Successfully");
               resetForm();
             } else {
               setAlertState(true);
@@ -533,6 +550,38 @@ const PatientDemographicComponent = (props: any) => {
       }
     }
   };
+
+  const deletePatientData = async()=>{
+    await deletePatient(searchId).then((response) => {
+      if (
+        response.status == 200 &&
+        response.statusText == "OK"
+      ) {
+        setAlertState(true);
+        updateAlertProps({
+          ...alertProps,
+          alertContent: "Record Delete Successfully",
+          alertType: "success",
+          alertTitle: "Success",
+          isAlertOpen: true,
+        });
+        setDisableEditButton(false);
+        setIsSaveDisable(true);
+        window.alert("Record Delete Successfully");
+        resetForm();
+      } else {
+        setAlertState(true);
+        updateAlertProps({
+          ...alertProps,
+          alertContent: "Delete operation failed",
+          alertType: "error",
+          alertTitle: "Error",
+          isAlertOpen: true,
+        });
+        window.alert("Delete operation failed");
+      }
+    });
+  }
 
   return (
     <Box
@@ -600,6 +649,17 @@ const PatientDemographicComponent = (props: any) => {
             >
               {submitButtonName}
             </CustomButton>
+            <Button
+              type="button"
+              onClick={deletePatientData}
+              variant="contained"
+              id="btn_delete"
+              color="error"
+              disabled={disableEditButton}
+              style={{ marginLeft: "20px", marginTop: "15px" }}
+            >
+              Delete
+            </Button>
           </Grid>
         </Grid>
         <Grid item xs={5}>

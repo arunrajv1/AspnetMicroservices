@@ -7,9 +7,11 @@ import {
   TextField,
 } from "@mui/material";
 import React, { SyntheticEvent, useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setPatientDetailsAction } from "../../../../redux/features/tabSwitchActions";
+import { setPatientDemographicDetails } from "../../../../redux/features/tabSwitchSlice";
 import { useAppSelector, useAppDispatch } from "../../../../redux/hooks/reduxHooks";
+import { RootState } from "../../../../redux/store";
 import { patientTabConstants } from "../../../patient/patient-tabs";
 import PatientDemographicComponent from "../../../patient/PatientDemographicComponent";
 import PatientEmployerComponent from "../../../patient/patientEmployerComponent";
@@ -28,8 +30,9 @@ const NeighbourhoodComponent = () => {
   const [formData, updateFormData] = useState(initialFormData);
   const [hasError, setHasError] = useState(false);
 
-  const dispatch = useAppDispatch();
-  const patientDemographicSelector = useAppSelector((state) => state.data.array);
+  const dispatch = useDispatch();
+  //const patientDemographicSelector = useAppSelector((state) => state.data.array);
+  const patientDemographics = useSelector((state: RootState)=>state.patientDemographics.array)
   //const navigate = useNavigate();
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -52,14 +55,9 @@ const NeighbourhoodComponent = () => {
   };
 
   const setDataOnTabChange = (inputData: any) =>{
-    dispatch(setPatientDetailsAction(inputData));
-    onChangeSelector();
-    //console.log("patientDemographicSelector", patientDemographicSelector);
+    dispatch(setPatientDemographicDetails(inputData));
+    console.log("patientDemographicSelector", patientDemographics);
   }
-
-  const onChangeSelector = useCallback(() => {
-    console.log('after store update', patientDemographicSelector)
-  }, [patientDemographicSelector]);
 
   const customStyles = {
     background: {

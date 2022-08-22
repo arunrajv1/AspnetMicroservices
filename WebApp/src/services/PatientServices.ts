@@ -26,3 +26,11 @@ export const updateData = async (jsonPostBody: any) => {
 
   return response;
 };
+
+export const deletePatient = async (id: string) => {
+  let url = patientBaseUrl + `/${id}`;
+  let response = await axios.delete(url, options);
+  //let responseOK = response && response.status === 200 && response.data;
+
+  return response;
+};

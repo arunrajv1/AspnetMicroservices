@@ -29,20 +29,14 @@ const defaultState = {
 };
 
 const tabSwitchSlice = createSlice({
-  name: "get",
+  name: "patientDemographics",
   initialState: {
-    loading: false,
-    id: 0,
-    array: defaultState,
-    error: null,
+    array: defaultState
   },
   reducers: {
-    setId(state, action: PayloadAction<number>) {
-      state.id = action.payload;
-    },
     setPatientDemographicDetails(state, action: PayloadAction<PatientDemographicInitialState>) {
-        console.log('array in the reducer', action.payload);
         state.array = action.payload;
+        console.log('array in the reducer', state.array);
     },
     /*
     setBlankDetails(state, action: PayloadAction<any>) {
@@ -52,4 +46,6 @@ const tabSwitchSlice = createSlice({
   },
 });
 
-export default tabSwitchSlice;
+export const {setPatientDemographicDetails} = tabSwitchSlice.actions;
+
+export default tabSwitchSlice.reducer;

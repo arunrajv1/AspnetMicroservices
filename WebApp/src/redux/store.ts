@@ -1,12 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import tabSwitchSlice from "./features/tabSwitchSlice";
+import tabSwitchReducer from "./features/tabSwitchSlice";
 
-const store = configureStore({
+export const store = configureStore({
   reducer: { 
-    data: tabSwitchSlice.reducer 
+    patientDemographics: tabSwitchReducer
   },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-export default store;
