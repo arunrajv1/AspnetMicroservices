@@ -52,6 +52,8 @@ import {
 } from "../../services/PatientServices";
 import AlertDialog from "../common/alert-popup/AlertDialog";
 import SearchIcon from "@mui/icons-material/Search";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/reduxHooks";
+import { setPatientDetailsAction } from "../../redux/features/tabSwitchActions";
 
 const re = /^[0-9-+\b]+$/;
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
@@ -205,6 +207,9 @@ const PatientDemographicComponent = (props: any) => {
   //   { recordNumber: "", facility: "" },
   // ]);
 
+  const dispatch = useAppDispatch();
+  const getSuperHeroData = useAppSelector((state) => state);
+
   const resetForm = () => {
     setDateOfBirth(new Date());
     setHasError(false);
@@ -242,6 +247,8 @@ const PatientDemographicComponent = (props: any) => {
       ...formValues,
       [name]: value,
     });
+
+    dispatch(setPatientDetailsAction(formValues));
   };
 
   const handleContactInputChange = (e: any) => {
@@ -257,6 +264,9 @@ const PatientDemographicComponent = (props: any) => {
       ...formContactValues,
       [name]: value,
     });
+
+    // formValues.address = formContactValues;
+    // dispatch(setPatientDetailsAction(formValues));
   };
 
   const handleFormMRN = (e: any, index: number) => {
