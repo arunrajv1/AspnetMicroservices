@@ -1,5 +1,11 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Tab, TextField } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  FormHelperText,
+  Tab,
+  TextField,
+} from "@mui/material";
 import React, { SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { patientTabConstants } from "../../../patient/patient-tabs";
@@ -11,13 +17,14 @@ const initialFormData: any = Object.freeze({
   MiddleName: "",
   FirstName: "",
   LastName: "",
-  Suffix: ""
+  Suffix: "",
 });
 
 const NeighbourhoodComponent = () => {
   const [value, setValue] = useState("0");
   const [isDisable, setIsDisable] = useState(false);
   const [formData, updateFormData] = useState(initialFormData);
+  const [hasError, setHasError] = useState(false);
   //const navigate = useNavigate();
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -35,9 +42,9 @@ const NeighbourhoodComponent = () => {
     updateFormData(tempFormData);
   };
 
-  const changeFieldDisable = (inputData: any) =>{
-    setIsDisable(inputData)
-  }
+  const changeFieldDisable = (inputData: any) => {
+    setIsDisable(inputData);
+  };
 
   const customStyles = {
     background: {
@@ -66,26 +73,36 @@ const NeighbourhoodComponent = () => {
         noValidate
         autoComplete="off"
       >
-        <TextField
-          name="LastName"
-          // label="Last Name"
-          placeholder="Last Name"
-          variant="standard"
-          onChange={handleFormChange}
-          inputProps={ariaLabel}
-          value={formData.LastName}
-          disabled={isDisable}
-        />
-        <TextField
-          name="FirstName"
-          // label="First Name"
-          placeholder="First Name"
-          variant="standard"
-          onChange={handleFormChange}
-          inputProps={ariaLabel}
-          value={formData.FirstName}
-          disabled={isDisable}
-        />
+        <FormControl error={hasError}>
+          <TextField
+            name="LastName"
+            // label="Last Name"
+            placeholder="Last Name"
+            variant="standard"
+            onChange={handleFormChange}
+            inputProps={ariaLabel}
+            value={formData.LastName}
+            disabled={isDisable}
+          />
+          {hasError && !formData.LastName && (
+            <FormHelperText>*Required!</FormHelperText>
+          )}
+        </FormControl>
+        <FormControl error={hasError}>
+          <TextField
+            name="FirstName"
+            // label="First Name"
+            placeholder="First Name"
+            variant="standard"
+            onChange={handleFormChange}
+            inputProps={ariaLabel}
+            value={formData.FirstName}
+            disabled={isDisable}
+          />
+          {hasError && !formData.LastName && (
+            <FormHelperText>*Required!</FormHelperText>
+          )}
+        </FormControl>
         <TextField
           name="MiddleName"
           // label="Middle Name"
@@ -96,16 +113,21 @@ const NeighbourhoodComponent = () => {
           value={formData.MiddleName}
           disabled={isDisable}
         />
-        <TextField
-          name="Suffix"
-          // label="Suffix"
-          placeholder="Suffix"
-          variant="standard"
-          onChange={handleFormChange}
-          inputProps={ariaLabel}
-          value={formData.Suffix}
-          disabled={isDisable}
-        />
+        <FormControl error={hasError}>
+          <TextField
+            name="Suffix"
+            // label="Suffix"
+            placeholder="Suffix"
+            variant="standard"
+            onChange={handleFormChange}
+            inputProps={ariaLabel}
+            value={formData.Suffix}
+            disabled={isDisable}
+          />
+          {hasError && !formData.LastName && (
+            <FormHelperText>*Required!</FormHelperText>
+          )}
+        </FormControl>
       </Box>
       <Box sx={customStyles.tabBackground}>
         <TabContext value={value}>

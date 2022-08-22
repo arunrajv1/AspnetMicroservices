@@ -651,6 +651,7 @@ const PatientDemographicComponent = (props: any) => {
                 <TextField
                   id="txtPostalCode"
                   label="Postal Code"
+                  inputProps={{ maxLength: 10 }}
                   variant="standard"
                   type="text"
                   className="col-md-3"
