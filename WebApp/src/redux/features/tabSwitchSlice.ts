@@ -1,7 +1,16 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 const defaultState = {
-  address: {},
+  address: {
+    home_street1: "",
+    home_street2: "",
+    home_city: "",
+    home_state: "",
+    home_postal_code: "",
+    home_country: "",
+    home_phone: "",
+    work_phone: "",
+  },
   mrn: [{}],
   birth_sex: "",
   date_of_birth: "",

@@ -1,4 +1,3 @@
-import { TabContext, TabList, TabPanel } from "@mui/lab";
 import {
   Input,
   Box,
@@ -37,7 +36,7 @@ import {
   InputBase,
   alpha,
 } from "@mui/material";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
 import { Col, Container, Form, Row, Stack } from "react-bootstrap";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -53,10 +52,8 @@ import {
 import AlertDialog from "../common/alert-popup/AlertDialog";
 import SearchIcon from "@mui/icons-material/Search";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/reduxHooks";
-import { setPatientDetailsAction } from "../../redux/features/tabSwitchActions";
 
 const re = /^[0-9-+\b]+$/;
-const label = { inputProps: { "aria-label": "Checkbox demo" } };
 const formLabelStyling = {
   color: "rgba(200, 132, 39, .8)",
   maxWidth: 200,
@@ -142,7 +139,16 @@ const Search = styled("div")(({ theme }) => ({
 }));
 
 const defaultValues = {
-  address: {},
+  address: {
+    home_street1: "",
+    home_street2: "",
+    home_city: "",
+    home_state: "",
+    home_postal_code: "",
+    home_country: "",
+    home_phone: "",
+    work_phone: "",
+  },
   mrn: [{}],
   birth_sex: "",
   date_of_birth: "",
@@ -207,9 +213,6 @@ const PatientDemographicComponent = (props: any) => {
   //   { recordNumber: "", facility: "" },
   // ]);
 
-  const dispatch = useAppDispatch();
-  const getSuperHeroData = useAppSelector((state) => state);
-
   const resetForm = () => {
     setDateOfBirth(new Date());
     setHasError(false);
@@ -239,16 +242,17 @@ const PatientDemographicComponent = (props: any) => {
     };
     props.onSavePatientData(patientNameData);
     props.onChangeDisable(false);
+    props.onTabChange(defaultValues);
   };
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
+    let obj: any = { ...formValues, [name]: value };
     setFormValues({
       ...formValues,
       [name]: value,
     });
-
-    dispatch(setPatientDetailsAction(formValues));
+    handleStateChange(obj);
   };
 
   const handleContactInputChange = (e: any) => {
@@ -260,13 +264,20 @@ const PatientDemographicComponent = (props: any) => {
       let returnData = handleWorkPhoneNumber(e);
       value = returnData.toString();
     }
+    let obj = { ...formContactValues, [name]: value };
+    let mainArr = { ...formValues, address: obj };
+
     setFormContactValues({
       ...formContactValues,
       [name]: value,
     });
 
-    // formValues.address = formContactValues;
-    // dispatch(setPatientDetailsAction(formValues));
+    setFormValues({
+      ...formValues,
+      address: obj,
+    });
+
+    handleStateChange(mainArr);
   };
 
   const handleFormMRN = (e: any, index: number) => {
@@ -380,7 +391,6 @@ const PatientDemographicComponent = (props: any) => {
 
   const getPatientDetailsById = async () => {
     await getDataById(searchId).then((response) => {
-      console.log(response);
       if (
         response.status == 200 &&
         response.statusText == "OK" &&
@@ -409,6 +419,10 @@ const PatientDemographicComponent = (props: any) => {
       }
     });
   };
+
+  const handleStateChange = useCallback((formData: any) => {
+    props.onTabChange(formData);
+  }, [formValues]);
 
   const editPatientDetails = () => {
     props.onChangeDisable(false);
@@ -451,7 +465,7 @@ const PatientDemographicComponent = (props: any) => {
           formValues.mrn.push(obj);
         }
       });
-      formValues.address = formContactValues;
+      // formValues.address = formContactValues;
       formValues.first_name = props.formData.FirstName;
       formValues.last_name = props.formData.LastName;
       formValues.middle_name = props.formData.MiddleName;
@@ -459,7 +473,7 @@ const PatientDemographicComponent = (props: any) => {
       formValues.date_of_birth = formatDate(dateOfBirth);
       formValues.id = "";
       deceased ? (formValues.deceased = "Y") : (formValues.deceased = "N");
-      console.log("form data", formValues);
+      console.log("form data before save", formValues);
 
       if (submitButtonName == "Save") {
         await postData(formValues)
@@ -1164,4 +1178,4 @@ const PatientDemographicComponent = (props: any) => {
   );
 };
 
-export default PatientDemographicComponent;
+export default memo(PatientDemographicComponent);

@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import React, { SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { setPatientDetailsAction } from "../../../../redux/features/tabSwitchActions";
+import { useAppSelector, useAppDispatch } from "../../../../redux/hooks/reduxHooks";
 import { patientTabConstants } from "../../../patient/patient-tabs";
 import PatientDemographicComponent from "../../../patient/PatientDemographicComponent";
 import PatientEmployerComponent from "../../../patient/patientEmployerComponent";
@@ -25,6 +27,9 @@ const NeighbourhoodComponent = () => {
   const [isDisable, setIsDisable] = useState(false);
   const [formData, updateFormData] = useState(initialFormData);
   const [hasError, setHasError] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const patientDemographicSelector = useAppSelector((state) => state);
   //const navigate = useNavigate();
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -45,6 +50,12 @@ const NeighbourhoodComponent = () => {
   const changeFieldDisable = (inputData: any) => {
     setIsDisable(inputData);
   };
+
+  const setDataOnTabChange = (inputData: any) =>{
+    console.log('parent data', inputData)
+    dispatch(setPatientDetailsAction(inputData));
+    console.log("patientDemographicSelector", patientDemographicSelector.data.array);
+  }
 
   const customStyles = {
     background: {
@@ -163,6 +174,7 @@ const NeighbourhoodComponent = () => {
                 formData={formData}
                 onSavePatientData={getPatientData}
                 onChangeDisable={changeFieldDisable}
+                onTabChange={setDataOnTabChange}
               ></PatientDemographicComponent>
             }
           </TabPanel>
