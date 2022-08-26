@@ -58,7 +58,7 @@ import {
 } from "../../services/PatientServices";
 import AlertDialog from "../common/alert-popup/AlertDialog";
 import SearchIcon from "@mui/icons-material/Search";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks/reduxHooks";
+import FullPageLoader from "../common/Loader/FullPageLoader";
 
 const re = /^[0-9-+\b]+$/;
 const formLabelStyling = {
@@ -216,6 +216,7 @@ const PatientDemographicComponent = (props: any) => {
   const [isAllDisable, setIsAllDisable] = useState(false);
   const [disableEditButton, setDisableEditButton] = useState(true);
   const [submitButtonName, setSubmitButtonName] = useState("Save");
+  const [loading, setLoading] = useState(false);
   // const [rowAction, setRowAction] = useState<IMedicalRecordNumber[]>([
   //   { recordNumber: "", facility: "" },
   // ]);
@@ -401,12 +402,14 @@ const PatientDemographicComponent = (props: any) => {
       window.alert("Enter Patient Id");
       return;
     } else {
+      setLoading(true);
       await getDataById(searchId).then((response) => {
         if (
           response.status == 200 &&
           response.statusText == "OK" &&
           response.data.length > 0
         ) {
+          setLoading(false);
           setAlertState(true);
           updateAlertProps({
             ...alertProps,
@@ -419,6 +422,7 @@ const PatientDemographicComponent = (props: any) => {
           setIsSaveDisable(true);
           bindPatientDetails(response.data[0]);
         } else {
+          setLoading(false);
           setAlertState(true);
           updateAlertProps({
             ...alertProps,
@@ -551,12 +555,9 @@ const PatientDemographicComponent = (props: any) => {
     }
   };
 
-  const deletePatientData = async()=>{
+  const deletePatientData = async () => {
     await deletePatient(searchId).then((response) => {
-      if (
-        response.status == 200 &&
-        response.statusText == "OK"
-      ) {
+      if (response.status == 200 && response.statusText == "OK") {
         setAlertState(true);
         updateAlertProps({
           ...alertProps,
@@ -581,7 +582,7 @@ const PatientDemographicComponent = (props: any) => {
         window.alert("Delete operation failed");
       }
     });
-  }
+  };
 
   return (
     <Box
@@ -595,6 +596,13 @@ const PatientDemographicComponent = (props: any) => {
       // onSubmit={savePatientData}
     >
       {alertState ? <AlertDialog alertProps={alertProps}></AlertDialog> : <></>}
+      {loading ? (
+        <div style={{ textAlign: "center", width: "100%" }}>
+          <FullPageLoader></FullPageLoader>
+        </div>
+      ) : (
+        <></>
+      )}
       <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 1, md: 3 }}>
         <Grid container>
           <Grid item xs={6}>
