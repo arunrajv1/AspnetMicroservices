@@ -1,0 +1,34 @@
+$lightGreenHover: #81b800;
+$lightGreen: #97d700;
+$lightGrey: #828282;
+$deepGrey: #242424;
+$white: #ededed;
+
+.containerResponsiveAllignment {
+    @apply grid md:grid-cols-2 lg:grid-cols-2 sm:grid-cols-1 gap-4 m-auto pt-4;
+}
+
+.cardHeader {
+    background-color: $lightGrey;
+    color: $white;
+    font-size: large;
+    @apply flex py-4
+}
+
+// button
+@mixin buttonShadow() {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.28);
+}
+
+.buttonDanger {
+    @include buttonShadow();
+    @apply relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500;
+}
+
+.buttonPrimary {
+    @include buttonShadow();
+    background-color: $lightGrey;
+    @apply relative flex justify-center py-2 px-4 
+}
+
+// border border-transparent text-sm font-medium rounded-md text-white bg-lime-500 hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500;

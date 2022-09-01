@@ -12,7 +12,6 @@ import {
 import { useState } from "react";
 import { Col, Container, Row, Stack } from "react-bootstrap";
 import { postData } from "../../services/PatientServices";
-import AlertDialog from "../common/alert-popup/AlertDialog";
 import "./patientEmployerComponent.css";
 
 const defaultEmployerValues = {
@@ -111,8 +110,6 @@ const PatientEmployerComponent = (props: any) => {
       autoComplete="off"
       onSubmit={saveEmpData}
     >
-      {alertState ? <AlertDialog alertProps={alertProps}></AlertDialog> : <></>}
-
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 1, md: 3 }} spacing={2} columns={16}>
         <Container fluid  >
           <Row>
@@ -240,6 +237,7 @@ const PatientEmployerComponent = (props: any) => {
         </Grid>
         
       </Grid>
+      {/* {alertState ? <AlertDialog alertProps={alertProps}></AlertDialog> : <></>} */}
       
     </Box>
   );

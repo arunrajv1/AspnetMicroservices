@@ -1,22 +1,18 @@
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import {
-  Box,
-  FormControl,
-  FormHelperText,
-  Tab,
-  TextField,
-} from "@mui/material";
+
+import { Input, makeStyles, SelectTabData, SelectTabEvent, shorthands, Tab, TabList, TabValue, tokens } from "@fluentui/react-components";
+import { Overflow, OverflowItem } from "@fluentui/react-components/unstable";
 import React, { SyntheticEvent, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { patientNameFields } from "../../../../constant/formFields";
 import { setPatientDemographicDetails } from "../../../../redux/features/tabSwitchSlice";
 import { useAppSelector, useAppDispatch } from "../../../../redux/hooks/reduxHooks";
 import { RootState } from "../../../../redux/store";
 import { patientTabConstants } from "../../../patient/patient-tabs";
 import PatientDemographicComponent from "../../../patient/PatientDemographicComponent";
 import PatientEmployerComponent from "../../../patient/patientEmployerComponent";
+import InputBox from "../../ElementsUI/InputBox";
 
-const ariaLabel = { "aria-label": "description" };
 const initialFormData: any = Object.freeze({
   MiddleName: "",
   FirstName: "",
@@ -25,6 +21,12 @@ const initialFormData: any = Object.freeze({
 });
 
 const NeighbourhoodComponent = () => {
+
+  const [selectedValue, setSelectedValue] = React.useState<TabValue>('demographic');
+
+  const onTabSelect = (event: SelectTabEvent, data: SelectTabData) => {
+    setSelectedValue(data.value);
+  };
   const [value, setValue] = useState("0");
   const [isDisable, setIsDisable] = useState(false);
   const [formData, updateFormData] = useState(initialFormData);
@@ -32,11 +34,7 @@ const NeighbourhoodComponent = () => {
 
   const dispatch = useDispatch();
   //const patientDemographicSelector = useAppSelector((state) => state.data.array);
-  const patientDemographics = useSelector((state: RootState)=>state.patientDemographics.array)
-  //const navigate = useNavigate();
-  const handleChange = (event: SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+  const patientDemographics = useSelector((state: RootState) => state.patientDemographics.array)
   const handleFormChange = (e: any) => {
     updateFormData({
       ...formData,
@@ -54,147 +52,71 @@ const NeighbourhoodComponent = () => {
     setIsDisable(inputData);
   };
 
-  const setDataOnTabChange = (inputData: any) =>{
+  const setDataOnTabChange = (inputData: any) => {
     dispatch(setPatientDemographicDetails(inputData));
     console.log("patientDemographicSelector", patientDemographics);
   }
 
-  const customStyles = {
-    background: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      paddingLeft: "0px",
-      paddingRight: "0px",
-      backgroundColor: "#242424",
-    },
-    tabBackground: {
-      backgroundColor: "#4a4a4a",
-      width: "100%",
-      display: "flex",
-      flexDirection: "column",
-      "& button": { color: "#ededed" },
-    },
-  };
   return (
     <>
-      <Box
-        component="form"
-        sx={{
-          "& > :not(style)": { m: 1 },
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        <FormControl error={hasError}>
-          <TextField
-            name="LastName"
-            // label="Last Name"
-            placeholder="Last Name"
-            variant="standard"
-            onChange={handleFormChange}
-            inputProps={ariaLabel}
-            value={formData.LastName}
-            disabled={isDisable}
-          />
-          {hasError && !formData.LastName && (
-            <FormHelperText>*Required!</FormHelperText>
-          )}
-        </FormControl>
-        <FormControl error={hasError}>
-          <TextField
-            name="FirstName"
-            // label="First Name"
-            placeholder="First Name"
-            variant="standard"
-            onChange={handleFormChange}
-            inputProps={ariaLabel}
-            value={formData.FirstName}
-            disabled={isDisable}
-          />
-          {hasError && !formData.LastName && (
-            <FormHelperText>*Required!</FormHelperText>
-          )}
-        </FormControl>
-        <TextField
-          name="MiddleName"
-          // label="Middle Name"
-          placeholder="Middle Name"
-          variant="standard"
-          onChange={handleFormChange}
-          inputProps={ariaLabel}
-          value={formData.MiddleName}
-          disabled={isDisable}
-        />
-        <FormControl error={hasError}>
-          <TextField
-            name="Suffix"
-            // label="Suffix"
-            placeholder="Suffix"
-            variant="standard"
-            onChange={handleFormChange}
-            inputProps={ariaLabel}
-            value={formData.Suffix}
-            disabled={isDisable}
-          />
-          {hasError && !formData.LastName && (
-            <FormHelperText>*Required!</FormHelperText>
-          )}
-        </FormControl>
-      </Box>
-      <Box sx={customStyles.tabBackground}>
-        <TabContext value={value}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList
-              onChange={handleChange}
-              aria-label="lab API tabs example"
-              textColor="secondary"
-              indicatorColor="secondary"
-              variant="scrollable"
-              scrollButtons
-              TabIndicatorProps={{
-                sx: { backgroundColor: "#97d700" },
-              }}
-              sx={{
-                "& button.Mui-selected": { color: "#97d700" },
-              }}
-            >
-              {patientTabConstants.map((item, index) => {
-                return (
-                  <Tab
-                    key={item.id}
-                    value={item.value}
-                    label={item.label}
-                  ></Tab>
-                );
-              })}
-            </TabList>
-          </Box>
-          <TabPanel sx={customStyles.background} value="0">
-            {
-              <PatientDemographicComponent
-                formData={formData}
-                onSavePatientData={getPatientData}
-                onChangeDisable={changeFieldDisable}
-                onTabChange={setDataOnTabChange}
-              ></PatientDemographicComponent>
-            }
-          </TabPanel>
-          <TabPanel sx={customStyles.background} value="1">
-            Item One
-          </TabPanel>
-          <TabPanel sx={customStyles.background} value="2">
-            Item Two
-          </TabPanel>
-          <TabPanel sx={customStyles.background} value="3">
-            {
-              <PatientEmployerComponent
-                formData={formData}
-              ></PatientEmployerComponent>
-            }
-          </TabPanel>
-        </TabContext>
-      </Box>
+      <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
+        {patientNameFields.map((field: any, i: number) => (
+          <div className="lg:col-span-1 md:col-span-4 sm:col-span-4" key={i}>
+            <InputBox
+              handleChange={handleFormChange}
+              value={formData[field.name]}
+              labelText={field.labelText}
+              labelFor={field.labelFor}
+              id={field.id}
+              name={field.name}
+              type={field.type}
+              isRequired={field.isRequired}
+              placeholder={field.placeholder}
+              isDisabled={isDisable}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-center bg-lime-500">
+        <Overflow minimumVisible={6}>
+          <TabList selectedValue={selectedValue} onTabSelect={onTabSelect}>
+            <OverflowItem id="demographic">
+              <Tab id="Demographic" value="demographic" >
+                DEMOGRAPHIC
+              </Tab>
+            </OverflowItem>
+            <OverflowItem id="billingAccounts">
+              <Tab id="BillingAccounts" value="billingAccounts">
+                BILLING ACCOUNTS
+              </Tab>
+            </OverflowItem>
+            <OverflowItem id="otherInfo">
+              <Tab id="OtherInfo" value="otherInfo">
+                OTHER INFO
+              </Tab></OverflowItem>
+            <OverflowItem id="employer">
+              <Tab id="Employer" value="employer">
+                EMPLOYER
+              </Tab></OverflowItem>
+            <OverflowItem id="names">
+              <Tab id="Names" value="names">
+                NAMES
+              </Tab></OverflowItem>
+            <OverflowItem id="history">
+              <Tab id="History" value="history">
+                HISTORY
+              </Tab></OverflowItem>
+          </TabList>
+        </Overflow>
+      </div>
+      <div className="">
+        {selectedValue === 'demographic' && <PatientDemographicComponent formData={formData}
+          onSavePatientData={getPatientData}
+          onChangeDisable={changeFieldDisable}
+          onTabChange={setDataOnTabChange} />}
+
+        {selectedValue === 'employer' && <PatientEmployerComponent />}
+      </div>
     </>
   );
 };

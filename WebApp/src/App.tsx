@@ -1,11 +1,15 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import "./App.css";
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NoPageFoundComponent from "./components/NoPageFoundComponent";
-import LandingPageComponent from "./components/common/LandingPageComponent";
 import NavbarComponent from "./components/common/navbar/NavbarComponent";
-import 'bootstrap/dist/css/bootstrap.min.css';
+
+const LandingPageComponent = lazy(
+  () => import("./components/common/LandingPageComponent")
+);
+const NoPageFoundComponent = lazy(
+  () => import("./components/NoPageFoundComponent")
+);
 
 const App: React.FC = () => {
   const handleAdd = (e: React.FormEvent) => {
@@ -16,12 +20,14 @@ const App: React.FC = () => {
     <div className="App">
       <NavbarComponent></NavbarComponent>
       <BrowserRouter>
-        <Routes>
-          {/* <Route path="list-superheroes" element={<SuperHeroListDetails />} /> */}
-          <Route path="/" element={<LandingPageComponent />} />
-          {/* <Route path="new-superhero" element={<SuperHeroNewComponent />} /> */}
-          <Route path="*" element={<NoPageFoundComponent />} />
-        </Routes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            {/* <Route path="list-superheroes" element={<SuperHeroListDetails />} /> */}
+            <Route path="/" element={<LandingPageComponent />} />
+            {/* <Route path="new-superhero" element={<SuperHeroNewComponent />} /> */}
+            <Route path="*" element={<NoPageFoundComponent />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </div>
   );
