@@ -11,7 +11,9 @@ import { RootState } from "../../../../redux/store";
 import { patientTabConstants } from "../../../patient/patient-tabs";
 import PatientDemographicComponent from "../../../patient/PatientDemographicComponent";
 import PatientEmployerComponent from "../../../patient/patientEmployerComponent";
+import PatientSearchComponent from "../../../patient/PatientSearchComponent";
 import InputBox from "../../ElementsUI/InputBox";
+import "../../../../style/CommonStyle.scss";
 
 const initialFormData: any = Object.freeze({
   MiddleName: "",
@@ -59,7 +61,8 @@ const NeighbourhoodComponent = () => {
 
   return (
     <>
-      <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
+      <PatientSearchComponent></PatientSearchComponent>
+      <div className="containerResponsiveAllignment">
         {patientNameFields.map((field: any, i: number) => (
           <div className="lg:col-span-1 md:col-span-4 sm:col-span-4" key={i}>
             <InputBox

@@ -127,5 +127,46 @@ const patientNameFields = [
   }
 ];
 
-
-export { patientAddressFields, patientContactFields, patientNameFields };
+const patientSearchFields = [
+  {
+    labelText: "Name",
+    labelFor: "txtName",
+    id: "txtName",
+    name: "name",
+    type: "text",
+    autoComplete: "name",
+    isRequired: false,
+    placeholder: "Name",
+  },
+  {
+    labelText: "MRN",
+    labelFor: "txtMRN",
+    id: "txtMRN",
+    name: "mrn",
+    type: "text",
+    autoComplete: "mrn",
+    isRequired: false,
+    placeholder: "MRN",
+  },
+  {
+    labelText: "Gender",
+    labelFor: "txtGender",
+    id: "txtGender",
+    name: "gender",
+    type: "text",
+    autoComplete: "gender",
+    isRequired: false,
+    placeholder: "Gender",
+  },
+  {
+    labelText: "Id",
+    labelFor: "txtId",
+    id: "txtId",
+    name: "id",
+    type: "text",
+    autoComplete: "id",
+    isRequired: false,
+    placeholder: "Id",
+  }
+]
+export { patientAddressFields, patientContactFields, patientNameFields, patientSearchFields };

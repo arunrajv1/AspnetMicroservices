@@ -516,7 +516,7 @@ const PatientDemographicComponent = (props: any) => {
           </div>
         </div>
       </div>
-      <div className="containerResponsiveAllignment">
+      <div className="containerCardResponsiveAllignment">
         <Card>
           <CardHeader
             className="cardHeader"
@@ -682,8 +682,8 @@ const PatientDemographicComponent = (props: any) => {
           </Card>
         </div>
       </div>
-      <div className="containerResponsiveAllignment">
-        <div className="grid grid-cols-1">
+      <div className="containerCardResponsiveAllignment">
+        <div className="grid col-span-1 my-auto">
           <Card>
             <CardHeader
               className="cardHeader"
@@ -712,7 +712,7 @@ const PatientDemographicComponent = (props: any) => {
             </div>
           </Card>
         </div>
-        <div className="grid grid-cols-1">
+        <div className="grid col-span-1">
           <Card>
             <CardHeader
               className="cardHeader"

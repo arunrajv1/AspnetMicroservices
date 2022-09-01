@@ -1,5 +1,5 @@
-export const baseUrl: string = "http://nextgenappoc-patientapi.hghgaddrabd4h2hv.southindia.azurecontainer.io/api/v1/";
-
+// export const baseUrl: string = "http://nextgenappoc-patientapi.hghgaddrabd4h2hv.southindia.azurecontainer.io/api/v1/";
+export const baseUrl: string = "https://nectgenap-invictus-patientapi2.azurewebsites.net/api/v1/";
 export const options = {
   mode: "no-cors",
   headers: {

@@ -34,3 +34,20 @@ export const deletePatient = async (id: string) => {
 
   return response;
 };
+
+export const getPatientDetails = async (params: any) => {
+  let url = patientBaseUrl;
+  if (params.name) {
+    url = url + `/${params.name}`
+  }
+  if (params.mrn) {
+    url = url + `/${params.mrn}`
+  }
+  if (params.gender) {
+    url = url + `/${params.gender}`
+  }
+  if (params.id) {
+    url = url + `/${params.id}`
+  }
+  console.log('api url', url);
+}
