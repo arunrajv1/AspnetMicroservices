@@ -11,6 +11,8 @@ import FullPageLoader from '../common/Loader/FullPageLoader';
 import AlertPopup from '../common/popup/AlertPopup';
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../AuthConfig";
+import { useDispatch } from 'react-redux';
+import { setPatientDetails } from "../../redux/features/patientDemographicSlice";
 
 const initialFormData: any = Object.freeze({
     name: "",
@@ -28,28 +30,30 @@ const PatientSearchComponent = () => {
     const [alertBoxText, setAlertBoxText] = useState("");
     const [loading, setLoading] = useState(false);
     const [searchResult, setSearchResults] = useState([]);
-    const { instance,accounts, inProgress } = useMsal();
+    const { instance, accounts, inProgress } = useMsal();
+
+    const dispatch = useDispatch();
 
     const changeFieldDisable = (inputData: any) => {
         setIsDisable(inputData);
     };
-    var accessToken:string;
-   
-  async function RequestAccessToken()  {
-    const request = {
-        ...loginRequest,
-        account: accounts[0]
-    };
-    // Silently acquires an access token which is then attached to a request for Microsoft Graph data
-    await instance.acquireTokenSilent(request).then((response) => {
-      accessToken =response.accessToken;
-    }).catch((e) => {
-         instance.acquireTokenPopup(request).then((response) => {
-          accessToken=response.accessToken;
+    var accessToken: string;
+
+    async function RequestAccessToken() {
+        const request = {
+            ...loginRequest,
+            account: accounts[0]
+        };
+        // Silently acquires an access token which is then attached to a request for Microsoft Graph data
+        await instance.acquireTokenSilent(request).then((response) => {
+            accessToken = response.accessToken;
+        }).catch((e) => {
+            instance.acquireTokenPopup(request).then((response) => {
+                accessToken = response.accessToken;
+            });
         });
-    });
-    return accessToken;
-  }
+        return accessToken;
+    }
 
     const handleFormChange = (e: any, option?: any) => {
         if (e.target.id === "gender") {
@@ -69,19 +73,25 @@ const PatientSearchComponent = () => {
     };
     const getDetails = async () => {
         setLoading(true);
-        accessToken= await RequestAccessToken();
-        await getPatientDetails(formData,accessToken).then((response) => {
+        accessToken = await RequestAccessToken();
+        await getPatientDetails(formData, accessToken).then((response) => {
             console.log('get the details', response);
             if (response.status === 200 && response.statusText === "OK" && response.data) {
                 setLoading(false);
                 setAlertState(true);
                 setAlertBoxText("Records Found");
                 setSearchResults([]);
-                setSearchResults(response.data)
-            } else {
+                setSearchResults(response.data);
+                dispatch(setPatientDetails(response.data));
+            } else if (response.status === 200 && response.statusText === "OK" && !response.data) {
                 setLoading(false);
                 setAlertState(true);
                 setAlertBoxText("No Records Found");
+            }
+            else {
+                setLoading(false);
+                setAlertState(true);
+                setAlertBoxText(`Some Error Occured, Status Code ${response.status}`);
             }
         })
     }

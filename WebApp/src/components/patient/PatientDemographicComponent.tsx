@@ -17,6 +17,8 @@ import { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, st
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../AuthConfig";
 import { resolveNs } from "dns";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 
 const addressFields = patientAddressFields;
@@ -150,6 +152,9 @@ const PatientDemographicComponent = (props: any) => {
   // const [rowAction, setRowAction] = useState<IMedicalRecordNumber[]>([
   //   { recordNumber: "", facility: "" },
   // ]);
+
+  const patientDemographics = useSelector((state: RootState) => state.patientDetails)
+  console.log('redux patient details', patientDemographics)
 
   const resetForm = () => {
     setDateOfBirth(new Date());
