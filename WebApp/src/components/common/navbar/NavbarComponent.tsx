@@ -7,6 +7,9 @@ import LandingPageComponent from "../LandingPageComponent";
 import NeighbourhoodComponent from "./tabs/NeighbourhoodComponent";
 import LogoutSharpIcon from '@mui/icons-material/LogoutSharp';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import { loginRequest } from "../../../AuthConfig";
+import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -33,12 +36,15 @@ const iconStyle = makeStyles(iconStylePrimary)
 
 const NavbarComponent = () => {
   const [selectedValue, setSelectedValue] = React.useState<TabValue>('neighbourhood');
+  const { instance,accounts, inProgress } = useMsal();
   const onTabSelect = (event: SelectTabEvent, data: SelectTabData) => {
     setSelectedValue(data.value);
   };
 
   const handleLogout = () => {
-    //logout code logic
+    instance.logoutRedirect().catch(e => {
+      console.error(e);
+  })
   }
 
   return (

@@ -3,6 +3,8 @@ import "./App.css";
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavbarComponent from "./components/common/navbar/NavbarComponent";
+import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
+import LoginComponent from "./components/LoginComponent"
 
 const LandingPageComponent = lazy(
   () => import("./components/common/LandingPageComponent")
@@ -18,17 +20,23 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <NavbarComponent></NavbarComponent>
-      <BrowserRouter>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Routes>
-            {/* <Route path="list-superheroes" element={<SuperHeroListDetails />} /> */}
-            <Route path="/" element={<LandingPageComponent />} />
-            {/* <Route path="new-superhero" element={<SuperHeroNewComponent />} /> */}
-            <Route path="*" element={<NoPageFoundComponent />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+      <UnauthenticatedTemplate>
+        <LoginComponent />
+      </UnauthenticatedTemplate>
+      <AuthenticatedTemplate>
+        <NavbarComponent></NavbarComponent>
+        <BrowserRouter>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              {/* <Route path="list-superheroes" element={<SuperHeroListDetails />} /> */}
+              <Route path="/" element={<LandingPageComponent />} />
+              {/* <Route path="new-superhero" element={<SuperHeroNewComponent />} /> */}
+              <Route path="*" element={<NoPageFoundComponent />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </AuthenticatedTemplate>
+
     </div>
   );
 };
