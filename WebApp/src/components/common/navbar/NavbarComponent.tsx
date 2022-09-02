@@ -1,10 +1,12 @@
-import { TabList, TabValue, Tab, SelectTabEvent, SelectTabData, makeStyles } from "@fluentui/react-components";
+import { TabList, TabValue, Tab, SelectTabEvent, SelectTabData, makeStyles, Tooltip, Button } from "@fluentui/react-components";
 import { OverflowItem } from "@fluentui/react-components/unstable";
 import { Desktop16Regular, Earth16Regular, DocumentSearch16Regular } from "@fluentui/react-icons";
 import React, { useState } from "react";
 import { iconStylePrimary } from "../../../constant/fluentUIStyles";
 import LandingPageComponent from "../LandingPageComponent";
 import NeighbourhoodComponent from "./tabs/NeighbourhoodComponent";
+import LogoutSharpIcon from '@mui/icons-material/LogoutSharp';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -35,10 +37,15 @@ const NavbarComponent = () => {
     setSelectedValue(data.value);
   };
 
+  const handleLogout = () => {
+    //logout code logic
+  }
+
   return (
     <div>
-      <div className="flex justify-center cardHeader">
-
+      <div className="flex justify-between cardHeader grid-cols-12">
+        <div className="grid col-span-1"></div>
+        <div className="grid col-span-10">
         <TabList selectedValue={selectedValue} onTabSelect={onTabSelect}>
           {/* {tabs.map(tab => {
             <OverflowItem key={tab.id} id={tab.id}>
@@ -53,7 +60,7 @@ const NavbarComponent = () => {
             </Tab>
           </OverflowItem>
           <OverflowItem id="neighbourhood">
-            <Tab id="Neighbourhood" value="neighbourhood" icon={<span><Earth16Regular/></span>}>
+            <Tab id="Neighbourhood" value="neighbourhood" icon={<span><Earth16Regular /></span>}>
               NEIGHBOURHOOD
             </Tab>
           </OverflowItem>
@@ -63,6 +70,13 @@ const NavbarComponent = () => {
             </Tab>
           </OverflowItem>
         </TabList>
+        </div>
+
+        <div className="grid col-span-1">
+          <Tooltip content="Logout" relationship="label">
+            <Button icon={<LogoutSharpIcon />} id="btnLogout" type="button" onClick={handleLogout} >Logout </Button>
+          </Tooltip>
+        </div>
       </div>
       <div className="pt-4">
         {selectedValue === 'neighbourhood' && <NeighbourhoodComponent />}
