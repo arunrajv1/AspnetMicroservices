@@ -66,11 +66,11 @@ const PatientSearchComponent = () => {
     return (
         <>
             <div className='grid grid-rows-12 grid-flow-col justify-center pb-8'>
-                <div className='flex'>
+                <div className='flex gap-4'>
                     <label>Search By: </label>
                     <div className='grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1'>
                         {patientSearchFields.map((field: any, i: number) => (
-                            <div className="lg:col-span-1 md:col-span-4 sm:col-span-4" key={i}>
+                            <div className="lg:col-span-1 md:col-span-3 sm:col-span-3" key={i}>
                                 <InputBox
                                     handleChange={handleFormChange}
                                     value={formData[field.name]}
@@ -84,15 +84,16 @@ const PatientSearchComponent = () => {
                                 />
                             </div>
                         ))}
-                        <DropdownComponent
-                            handleChange={handleFormChange}
-                            value={formData.gender}
-                            optionsArray={genderArray}
-                            id="gender"
-                            isRequired={true}
-                            placeholder="Select Gender"
-                        //isDisabled={isAllDisable} 
-                        />
+                        <div>
+                            <DropdownComponent
+                                handleChange={handleFormChange}
+                                value={formData.gender}
+                                optionsArray={genderArray}
+                                id="gender"
+                                isRequired={false}
+                                placeholder="Select Gender"
+                            //isDisabled={isAllDisable} 
+                            /></div>
                     </div>
                     <ButtonComponent
                         handleClick={getDetails}
@@ -106,7 +107,7 @@ const PatientSearchComponent = () => {
                         <Table sortable={true}>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHeaderCell style={{maxWidth: "80px"}}>Id</TableHeaderCell>
+                                    <TableHeaderCell style={{ maxWidth: "80px" }}>Id</TableHeaderCell>
                                     <TableHeaderCell>First Name</TableHeaderCell>
                                     <TableHeaderCell>Last Name</TableHeaderCell>
                                     <TableHeaderCell>Country</TableHeaderCell>
@@ -118,8 +119,8 @@ const PatientSearchComponent = () => {
                             <TableBody>
                                 <div style={{ maxHeight: "200px", overflowY: "scroll" }}>
                                     {searchResult.map((row: any, index: number) => (
-                                        <TableRow key={index} onDoubleClick={()=>console.log(`row clicked id ${row.id} name ${row.first_name}`)}>
-                                            <TableCell style={{maxWidth: "80px"}}>{row.id}</TableCell>
+                                        <TableRow key={index} onDoubleClick={() => console.log(`row clicked id ${row.id} name ${row.first_name}`)}>
+                                            <TableCell style={{ maxWidth: "80px" }}>{row.id}</TableCell>
                                             <TableCell>{row.first_name}</TableCell>
                                             <TableCell>{row.last_name}</TableCell>
                                             <TableCell>{row.home_country}</TableCell>
