@@ -14,9 +14,14 @@ import { DatePicker, defaultDatePickerStrings, IDropdownOption, Dropdown, Stack,
 import ButtonComponent from "../common/ElementsUI/ButtonComponent";
 import DropdownComponent from "../common/ElementsUI/DropdownComponent";
 import { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions } from "../../constant/optionsArray";
+import { useMsal } from "@azure/msal-react";
+import { loginRequest } from "../../AuthConfig";
+import { resolveNs } from "dns";
+
 
 const addressFields = patientAddressFields;
 const contactFields = patientContactFields;
+var accessToken:string;
 const re = /^[0-9-+\b]+$/;
 const onFormatDate = (date?: Date): string => {
   return !date
@@ -141,6 +146,7 @@ const PatientDemographicComponent = (props: any) => {
   const [submitButtonName, setSubmitButtonName] = useState("Save");
   const [loading, setLoading] = useState(false);
   const [alertBoxText, setAlertBoxText] = useState("");
+  const { instance,accounts, inProgress } = useMsal();
   // const [rowAction, setRowAction] = useState<IMedicalRecordNumber[]>([
   //   { recordNumber: "", facility: "" },
   // ]);
@@ -332,6 +338,23 @@ const PatientDemographicComponent = (props: any) => {
     setSearchId(event.target.value);
   };
 
+  async function RequestAccessToken()  {
+    const request = {
+        ...loginRequest,
+        account: accounts[0]
+    };
+    // Silently acquires an access token which is then attached to a request for Microsoft Graph data
+    await instance.acquireTokenSilent(request).then((response) => {
+      accessToken =response.accessToken;
+    }).catch((e) => {
+         instance.acquireTokenPopup(request).then((response) => {
+          accessToken=response.accessToken;
+        });
+    });
+    return accessToken;
+  }
+
+
   const getPatientDetailsById = async () => {
     if (!searchId) {
       setAlertState(true);
@@ -339,7 +362,8 @@ const PatientDemographicComponent = (props: any) => {
       //return;
     } else {
       setLoading(true);
-      await getDataById(searchId).then((response) => {
+      accessToken= await RequestAccessToken();
+      await getDataById(searchId,accessToken).then((response) => {
         if (
           response.status == 200 &&
           response.statusText == "OK" &&
