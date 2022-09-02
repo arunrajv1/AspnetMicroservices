@@ -13,8 +13,8 @@ const DropdownComponent = ({
     isRequired = false,
     placeholder,
     isDisabled }: any) => {
-    console.log(`from parent value: ${value}`);
-    console.table('from parent optionsArray', optionsArray)
+    // console.log(`from parent value: ${value}`);
+    // console.table('from parent optionsArray', optionsArray)
     return (
         <div>
             <label htmlFor={id}>{labelText}</label>
@@ -26,7 +26,7 @@ const DropdownComponent = ({
                 onChange={(e, opt) => handleChange(e, opt)}
                 disabled={isDisabled}
                 required={isRequired}
-                
+
                 onRenderCaretDown={() => {
                     return (
                         <ChevronDown16Filled />

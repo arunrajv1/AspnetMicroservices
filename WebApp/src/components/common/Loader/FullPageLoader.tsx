@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Spinner from "react-bootstrap/Spinner";
 
 const FullPageLoader = () => {
   const [loading, setLoading] = useState(false);
@@ -13,8 +12,12 @@ const FullPageLoader = () => {
   //   () => setLoading(false),
   // ];
   return (
-    <div style={{ textAlign: 'center', width: "100%" }}>
-      <Spinner animation="grow" variant="success" />
+    <div id='container' className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
+      <div className="text-center">
+        <div className="spinner-border text-info" style={{ width: "3rem", height: "3rem" }} role="status">
+          <span className="sr-only"></span>
+        </div>
+      </div>
     </div>
   );
 };

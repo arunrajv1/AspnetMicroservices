@@ -149,16 +149,6 @@ const patientSearchFields = [
     placeholder: "MRN",
   },
   {
-    labelText: "Gender",
-    labelFor: "txtGender",
-    id: "txtGender",
-    name: "gender",
-    type: "text",
-    autoComplete: "gender",
-    isRequired: false,
-    placeholder: "Gender",
-  },
-  {
     labelText: "Id",
     labelFor: "txtId",
     id: "txtId",
