@@ -14,8 +14,9 @@ export const postData = async (jsonPostBody: {}) => {
   return response;
 };
 
-export const getDataById = async (id: string) => {
+export const getDataById = async (id: string,accessToken:string) => {
   let url = patientBaseUrl + `/${id}`;
+  options.headers.Authorization='Bearer'+accessToken;
   return await axios.get(url, options);
 };
 
@@ -35,8 +36,9 @@ export const deletePatient = async (id: string) => {
   return response;
 };
 
-export const getPatientDetails = async (inputParams: any) => {
+export const getPatientDetails = async (inputParams: any,accessToken:String) => {
   let url = patientBaseUrl + `?name=${inputParams.name}&mrn=${inputParams.mrn}&gender=${inputParams.gender}&id=${inputParams.id}`
+  options.headers.Authorization=`Bearer ${accessToken}`
   let response = await axios.get(url, options);
   return response;
 }

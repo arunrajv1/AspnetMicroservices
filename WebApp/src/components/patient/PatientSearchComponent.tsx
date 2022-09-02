@@ -9,6 +9,8 @@ import DropdownComponent from '../common/ElementsUI/DropdownComponent';
 import { genderOptions } from '../../constant/optionsArray';
 import FullPageLoader from '../common/Loader/FullPageLoader';
 import AlertPopup from '../common/popup/AlertPopup';
+import { useMsal } from "@azure/msal-react";
+import { loginRequest } from "../../AuthConfig";
 
 const initialFormData: any = Object.freeze({
     name: "",
@@ -26,10 +28,29 @@ const PatientSearchComponent = () => {
     const [alertBoxText, setAlertBoxText] = useState("");
     const [loading, setLoading] = useState(false);
     const [searchResult, setSearchResults] = useState([]);
+    const { instance,accounts, inProgress } = useMsal();
 
     const changeFieldDisable = (inputData: any) => {
         setIsDisable(inputData);
     };
+    var accessToken:string;
+   
+  async function RequestAccessToken()  {
+    const request = {
+        ...loginRequest,
+        account: accounts[0]
+    };
+    // Silently acquires an access token which is then attached to a request for Microsoft Graph data
+    await instance.acquireTokenSilent(request).then((response) => {
+      accessToken =response.accessToken;
+    }).catch((e) => {
+         instance.acquireTokenPopup(request).then((response) => {
+          accessToken=response.accessToken;
+        });
+    });
+    return accessToken;
+  }
+
     const handleFormChange = (e: any, option?: any) => {
         if (e.target.id === "gender") {
             updateFormData({
@@ -48,7 +69,8 @@ const PatientSearchComponent = () => {
     };
     const getDetails = async () => {
         setLoading(true);
-        await getPatientDetails(formData).then((response) => {
+        accessToken= await RequestAccessToken();
+        await getPatientDetails(formData,accessToken).then((response) => {
             console.log('get the details', response);
             if (response.status === 200 && response.statusText === "OK" && response.data) {
                 setLoading(false);
