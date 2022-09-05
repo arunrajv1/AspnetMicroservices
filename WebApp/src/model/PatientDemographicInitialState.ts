@@ -1,14 +1,12 @@
 export type PatientDemographicInitialState = {
-  address: {
-    home_street1: string;
-    home_street2: string;
-    home_city: string;
-    home_state: string;
-    home_postal_code: string;
-    home_country: string;
-    home_phone: string;
-    work_phone: string;
-  };
+  home_street1: string;
+  home_street2: string;
+  home_city: string;
+  home_state: string;
+  home_postal_code: string;
+  home_country: string;
+  home_phone: string;
+  work_phone: string;
   mrn: [{}];
   birth_sex: string;
   date_of_birth: string;

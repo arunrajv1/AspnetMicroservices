@@ -35,7 +35,7 @@ const NeighbourhoodComponent = () => {
 
   const dispatch = useDispatch();
   //const patientDemographicSelector = useAppSelector((state) => state.data.array);
-  const patientDemographics = useSelector((state: RootState) => state.patientDemographics.array)
+  // const patientDemographics = useSelector((state: RootState) => state.patientDemographics.array)
   const singlePatientDemographics = useSelector((state: RootState) => state);
 /*
   const onCallbackFunction  = useCallback(() => {
@@ -67,7 +67,7 @@ const NeighbourhoodComponent = () => {
 
   const setDataOnTabChange = (inputData: any) => {
     dispatch(setPatientDemographicDetails(inputData));
-    console.log("patientDemographicSelector", patientDemographics);
+    //console.log("patientDemographicSelector", patientDemographics);
   }
 
   const selectedPatientData = (inputData: any) =>{
@@ -92,6 +92,7 @@ const NeighbourhoodComponent = () => {
               id={field.id}
               name={field.name}
               type={field.type}
+              maxLength={field.maxLength}
               isRequired={field.isRequired}
               placeholder={field.placeholder}
               isDisabled={isDisable}

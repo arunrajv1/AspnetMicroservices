@@ -2,16 +2,14 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { PatientDemographicInitialState } from "../../model/PatientDemographicInitialState";
 
 const defaultState = {
-    address: {
-        home_street1: "",
-        home_street2: "",
-        home_city: "",
-        home_state: "",
-        home_postal_code: "",
-        home_country: "",
-        home_phone: "",
-        work_phone: "",
-    },
+    home_street1: "",
+    home_street2: "",
+    home_city: "",
+    home_state: "",
+    home_postal_code: "",
+    home_country: "",
+    home_phone: "",
+    work_phone: "",
     mrn: [{}],
     birth_sex: "",
     date_of_birth: "",
@@ -30,15 +28,17 @@ const defaultState = {
 
 const patientDemographicSlice = createSlice({
     name: 'patientDetails',
-    initialState: defaultState,
+    initialState: {
+        data: defaultState
+    },
     reducers: {
         setAllPatientDetails(state, action: PayloadAction<PatientDemographicInitialState>) {
-            state = action.payload
+            state.data = action.payload
             console.log('all patient data state', state);
         },
         setSinglePatientDetails(state, action: PayloadAction<any>) {
-            state = action.payload
-            console.log('single patient data slice', state);
+            console.log('single patient data slice', action.payload);
+            return state.data = action.payload
         }
     }
 });

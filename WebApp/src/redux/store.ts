@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import tabSwitchReducer from "./features/tabSwitchSlice";
-import patientDemographicReducer from "./features/patientDemographicSlice"
+import patientDemographicSliceReducer from "./features/patientDemographicSlice"
 
 export const store = configureStore({
   reducer: { 
-    patientDemographics: tabSwitchReducer,
-    patientDetails: patientDemographicReducer
+    //patientDemographics: tabSwitchReducer,
+    patientDetails: patientDemographicSliceReducer
   },
 });
 

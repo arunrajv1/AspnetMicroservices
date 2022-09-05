@@ -53,40 +53,15 @@ export interface IMedicalRecordNumber {
   facility: string;
 }
 
-const validate = (values: any) => {
-  let errors: any = {};
-  const requiredFields = [
-    "firstName",
-    "lastName",
-    "email",
-    "favoriteColor",
-    "notes",
-  ];
-  requiredFields.forEach((field) => {
-    if (!values[field]) {
-      errors[field] = "Required";
-    }
-  });
-  if (
-    values.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-  ) {
-    errors.email = "Invalid email address";
-  }
-  return errors;
-};
-
 const defaultValues = {
-  address: {
-    home_street1: "",
-    home_street2: "",
-    home_city: "",
-    home_state: "",
-    home_postal_code: "",
-    home_country: "",
-    home_phone: "",
-    work_phone: "",
-  },
+  home_street1: "",
+  home_street2: "",
+  home_city: "",
+  home_state: "",
+  home_postal_code: "",
+  home_country: "",
+  home_phone: "",
+  work_phone: "",
   mrn: [{}],
   birth_sex: "",
   date_of_birth: "",
@@ -154,7 +129,7 @@ const PatientDemographicComponent = (props: any) => {
   //   { recordNumber: "", facility: "" },
   // ]);
 
-  const patientDemographics = useSelector((state: RootState) => state.patientDetails)
+  const patientDemographics = useSelector((state: RootState) => state)
   // console.log('redux patient details', patientDemographics);
 
   useEffect(() => {
@@ -164,6 +139,7 @@ const PatientDemographicComponent = (props: any) => {
     //   setDisableEditButton(false);
     // }
     console.log('redux patient details', patientDemographics);
+    getPatientDetailsById();
   }, [])
 
   const resetForm = () => {
@@ -237,7 +213,7 @@ const PatientDemographicComponent = (props: any) => {
 
     setFormValues({
       ...formValues,
-      address: obj,
+      [name]: value,
     });
 
     handleStateChange(mainArr);
@@ -357,40 +333,9 @@ const PatientDemographicComponent = (props: any) => {
     console.log("incoming data", formData);
   };
 
-  const handleId = (event: any) => {
-    setSearchId(event.target.value);
-  };
-
-
-
-  const getPatientDetailsById = async () => {
-    if (!searchId) {
-      setAlertState(true);
-      setAlertBoxText("Enter Patient Id");
-      //return;
-    } else {
-      setLoading(true);
-      accessToken = await RequestAccessToken();
-      await getDataById(searchId, accessToken).then((response) => {
-        if (
-          response.status == 200 &&
-          response.statusText == "OK" &&
-          response.data.length > 0
-        ) {
-          setLoading(false);
-          setAlertState(true);
-          setAlertBoxText("Patient Found");
-          setDisableEditButton(false);
-          setIsSaveDisable(true);
-          bindPatientDetails(response.data[0]);
-        } else {
-          setLoading(false);
-          setAlertState(true);
-          setAlertBoxText("Patient Not Found");
-        }
-      });
-    }
-  };
+  const getPatientDetailsById = useCallback(() => {
+    console.log('redux patient details', patientDemographics);
+  }, [patientDemographics])
 
   const handleStateChange = useCallback(
     (formData: any) => {
@@ -581,7 +526,6 @@ const PatientDemographicComponent = (props: any) => {
             {addressFields.map((field: any, i: number) => (
               <div key={i} className="col-span-1">
                 <InputBox
-
                   handleChange={handleContactInputChange}
                   value={formContactValues[field.name]}
                   labelText={field.labelText}
@@ -589,6 +533,7 @@ const PatientDemographicComponent = (props: any) => {
                   id={field.id}
                   name={field.name}
                   type={field.type}
+                  maxLength={20}
                   isRequired={field.isRequired}
                   placeholder={field.placeholder}
                   isDisabled={isAllDisable}
@@ -797,6 +742,7 @@ const PatientDemographicComponent = (props: any) => {
                             id={"txtRowNo_" + index}
                             name="med_rec_no"
                             size="small"
+                            maxLength={20}
                             isDisabled={isAllDisable}
                             value={row.med_rec_no}
                           />
@@ -807,6 +753,7 @@ const PatientDemographicComponent = (props: any) => {
                             id={"txtFacility_" + index}
                             name="medical_facility"
                             size="small"
+                            maxLength={20}
                             isDisabled={isAllDisable}
                             value={row.medical_facility}
                           />
