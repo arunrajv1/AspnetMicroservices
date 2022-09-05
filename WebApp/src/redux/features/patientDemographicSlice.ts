@@ -38,7 +38,7 @@ const patientDemographicSlice = createSlice({
         },
         setSinglePatientDetails(state, action: PayloadAction<any>) {
             console.log('single patient data slice', action.payload);
-            return state.data = action.payload
+            state.data = action.payload
         }
     }
 });

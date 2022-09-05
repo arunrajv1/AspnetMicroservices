@@ -128,18 +128,19 @@ const PatientDemographicComponent = (props: any) => {
   //   { recordNumber: "", facility: "" },
   // ]);
 
-  const patientDemographics = useSelector((state: RootState) => state)
+  const patientDemographics = useSelector((state: RootState) => state.patientDetails.data)
   // console.log('redux patient details', patientDemographics);
 
   useEffect(() => {
-    // if (props.formData.first_name) {
-    //   setIsSaveDisable(true);
-    //   bindPatientDetails(props.formData);
-    //   setDisableEditButton(false);
-    // }
-    console.log('redux patient details', patientDemographics);
-    getPatientDetailsById();
-  }, [])
+    console.log('redux patient details useEffect', patientDemographics, props.formData);
+    if (props.formData.first_name) {
+      setIsSaveDisable(true);
+      bindPatientDetails(props.formData);
+      setDisableEditButton(false);
+      setIsAllDisable(true);
+    }
+    // getPatientDetailsById();
+  }, [props.formData])
 
   const resetForm = () => {
     setDateOfBirth(new Date());
@@ -333,14 +334,14 @@ const PatientDemographicComponent = (props: any) => {
       middle_name: formData.middle_name,
       suffix: formData.suffix,
     };
-    props.onSavePatientData(patientNameData);
-    props.onChangeDisable(true);
-    setIsAllDisable(true);
-    console.log("incoming data", formData);
+    // props.onSavePatientData(patientNameData);
+    // props.onChangeDisable(true);
+    // setIsAllDisable(true);
+    // console.log("incoming data", formData);
   };
 
   const getPatientDetailsById = useCallback(() => {
-    console.log('redux patient details', patientDemographics);
+    console.log('redux patient details callback', patientDemographics);
   }, [patientDemographics])
 
   const handleStateChange = useCallback(
