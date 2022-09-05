@@ -34,8 +34,8 @@ const PatientSearchComponent = (props: any) => {
     const { instance, accounts, inProgress } = useMsal();
 
     const dispatch = useDispatch();
-    const patientDemographics = useSelector((state: RootState) => state.patientDetails)
-    console.log('patient search component redux patient details', patientDemographics)
+    // const patientDemographics = useSelector((state: RootState) => state.patientDetails)
+    // console.log('patient search component redux patient details', patientDemographics)
 
     const changeFieldDisable = (inputData: any) => {
         setIsDisable(inputData);
@@ -100,7 +100,7 @@ const PatientSearchComponent = (props: any) => {
     }
 
     const handlePatientDataById = (rowData: any) => {
-        dispatch(setSinglePatientDetails(rowData));
+        // dispatch(setSinglePatientDetails(rowData));
         props.onSelectedPatientData(rowData);
     }
 

@@ -12,6 +12,7 @@ import PatientEmployerComponent from "../../../patient/patientEmployerComponent"
 import PatientSearchComponent from "../../../patient/PatientSearchComponent";
 import InputBox from "../../ElementsUI/InputBox";
 import "../../../../style/CommonStyle.scss";
+import { setSinglePatientDetails } from "../../../../redux/features/patientDemographicSlice";
 
 const initialFormData: any = Object.freeze({
   middle_name: "",
@@ -71,7 +72,9 @@ const NeighbourhoodComponent = () => {
 
   const selectedPatientData = (inputData: any) =>{
     if(inputData.first_name && inputData.last_name){
+      dispatch(setSinglePatientDetails(inputData));
       updateFormData(inputData);
+      setIsDisable(true);
     }
   }
 

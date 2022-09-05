@@ -63,7 +63,7 @@ const InputBox = ({
             </span>
           </div>
         )} */}
-        {value && value.length <= 2 ? (
+        {isRequired && value && value.length <= 2 ? (
           <div>
             <span className="text-red-500 text-xs italic">
               *Please fill out this field, min 2 characters.

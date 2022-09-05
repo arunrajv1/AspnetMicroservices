@@ -155,14 +155,16 @@ const PatientDemographicComponent = (props: any) => {
   // ]);
 
   const patientDemographics = useSelector((state: RootState) => state.patientDetails)
-  console.log('redux patient details', patientDemographics);
+  // console.log('redux patient details', patientDemographics);
 
   useEffect(() => {
-    if (props.formData.first_name) {
-      setIsSaveDisable(true);
-      bindPatientDetails(props.formData);
-    }
-  }, [props.formData])
+    // if (props.formData.first_name) {
+    //   setIsSaveDisable(true);
+    //   bindPatientDetails(props.formData);
+    //   setDisableEditButton(false);
+    // }
+    console.log('redux patient details', patientDemographics);
+  }, [])
 
   const resetForm = () => {
     setDateOfBirth(new Date());
@@ -854,4 +856,4 @@ const PatientDemographicComponent = (props: any) => {
   );
 };
 
-export default memo(PatientDemographicComponent);
+export default PatientDemographicComponent;
