@@ -17,6 +17,8 @@ import { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, st
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../AuthConfig";
 import { resolveNs } from "dns";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 
 
@@ -151,6 +153,9 @@ const PatientDemographicComponent = (props: any) => {
   // const [rowAction, setRowAction] = useState<IMedicalRecordNumber[]>([
   //   { recordNumber: "", facility: "" },
   // ]);
+
+  const patientDemographics = useSelector((state: RootState) => state.patientDetails)
+  console.log('redux patient details', patientDemographics)
 
   const resetForm = () => {
     setDateOfBirth(new Date());
@@ -501,7 +506,7 @@ const PatientDemographicComponent = (props: any) => {
     <div className="p-4 bg-gray-900">
       <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 lg:grid-rows-1 sm:grid-rows-2 justify-between -space-y-px">
         <div className="grid grid-cols-3 gap-2 justify-between">
-          <div className="col-span-2 flex justify-start">
+          {/* <div className="col-span-2 flex justify-start">
             <Input
               contentBefore={<Search24Filled />}
               contentAfter={
@@ -516,7 +521,7 @@ const PatientDemographicComponent = (props: any) => {
               value={searchId}
               placeholder="Search..."
             />
-          </div>
+          </div> */}
           <div className="col-span-1 flex justify-end">
             <ButtonComponent
               handleClick={editPatientDetails}
@@ -753,7 +758,7 @@ const PatientDemographicComponent = (props: any) => {
             // description={<Caption1>5h ago · About us - Overview</Caption1>}
             />
             <div className="grid grid-cols-12">
-              <div className="col-span-10" style={{ maxHeight: "150px", overflowY: "scroll" }}>
+              <div className="col-span-10 tableStyle">
                 <Table size="smaller">
                   <TableHeader className="">
                     <TableRow>
@@ -765,40 +770,42 @@ const PatientDemographicComponent = (props: any) => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {formMRN.map((row, index) => (
-                      <TableRow key={index} className="flex grid-cols-12">
-                        <TableCell className="grid col-span-5">
-                          <InputBox
-                            handleChange={(e: any) => handleFormMRN(e, index)}
-                            id={"txtRowNo_" + index}
-                            name="med_rec_no"
-                            size="small"
-                            isDisabled={isAllDisable}
-                            value={row.med_rec_no}
-                          />
-                        </TableCell>
-                        <TableCell className="grid col-span-6">
-                          <InputBox
-                            handleChange={(e: any) => handleFormMRN(e, index)}
-                            id={"txtFacility_" + index}
-                            name="medical_facility"
-                            size="small"
-                            isDisabled={isAllDisable}
-                            value={row.medical_facility}
-                          />
-                        </TableCell>
-                        <TableCell className="grid col-span-1">
-                          <Tooltip content="delete row" relationship="label">
-                            <Button
-                              id={"btn" + index}
-                              onClick={(e) => removeRow(index)}
-                              disabled={isAllDisable}
-                              icon={<Delete16Filled />}
+                    {/* <div style={{ maxHeight: "90px", overflowY: "scroll" }}> */}
+                      {formMRN.map((row, index) => (
+                        <TableRow key={index} className="flex grid-cols-12">
+                          <TableCell className="grid col-span-5">
+                            <InputBox
+                              handleChange={(e: any) => handleFormMRN(e, index)}
+                              id={"txtRowNo_" + index}
+                              name="med_rec_no"
+                              size="small"
+                              isDisabled={isAllDisable}
+                              value={row.med_rec_no}
                             />
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          </TableCell>
+                          <TableCell className="grid col-span-6">
+                            <InputBox
+                              handleChange={(e: any) => handleFormMRN(e, index)}
+                              id={"txtFacility_" + index}
+                              name="medical_facility"
+                              size="small"
+                              isDisabled={isAllDisable}
+                              value={row.medical_facility}
+                            />
+                          </TableCell>
+                          <TableCell className="grid col-span-1" style={{maxWidth: "50px"}}>
+                            <Tooltip content="delete row" relationship="label">
+                              <Button
+                                id={"btn" + index}
+                                onClick={(e) => removeRow(index)}
+                                disabled={isAllDisable}
+                                icon={<Delete16Filled />}
+                              />
+                            </Tooltip>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    {/* </div> */}
                   </TableBody>
                 </Table>
               </div>
