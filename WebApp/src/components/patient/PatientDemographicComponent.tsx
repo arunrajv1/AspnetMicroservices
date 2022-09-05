@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, useCallback, useState } from "react";
+import { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
 import { formatDate } from "../../services/CommonServices";
 import { deletePatient, getDataById, postData, updateData, } from "../../services/PatientServices";
 import SearchIcon from "@mui/icons-material/Search";
@@ -24,7 +24,7 @@ import { RootState } from "../../redux/store";
 
 const addressFields = patientAddressFields;
 const contactFields = patientContactFields;
-var accessToken:string;
+var accessToken: string;
 const re = /^[0-9-+\b]+$/;
 const onFormatDate = (date?: Date): string => {
   return !date
@@ -149,13 +149,20 @@ const PatientDemographicComponent = (props: any) => {
   const [submitButtonName, setSubmitButtonName] = useState("Save");
   const [loading, setLoading] = useState(false);
   const [alertBoxText, setAlertBoxText] = useState("");
-  const { instance,accounts, inProgress } = useMsal();
+  const { instance, accounts, inProgress } = useMsal();
   // const [rowAction, setRowAction] = useState<IMedicalRecordNumber[]>([
   //   { recordNumber: "", facility: "" },
   // ]);
 
   const patientDemographics = useSelector((state: RootState) => state.patientDetails)
-  console.log('redux patient details', patientDemographics)
+  console.log('redux patient details', patientDemographics);
+
+  useEffect(() => {
+    if (props.formData.first_name) {
+      setIsSaveDisable(true);
+      bindPatientDetails(props.formData);
+    }
+  }, [props.formData])
 
   const resetForm = () => {
     setDateOfBirth(new Date());
@@ -178,10 +185,10 @@ const PatientDemographicComponent = (props: any) => {
     ];
     setFormMRN(updatedRows);
     const patientNameData: any = {
-      FirstName: "",
-      LastName: "",
-      MiddleName: "",
-      Suffix: "",
+      first_name: "",
+      last_name: "",
+      middle_name: "",
+      suffix: "",
       isDisabled: false,
     };
     props.onSavePatientData(patientNameData);
@@ -314,7 +321,7 @@ const PatientDemographicComponent = (props: any) => {
       date_of_birth: new Date(formData.date_of_birth).toDateString(),
       ssn: formData.ssn,
       race: formData.race,
-      marital_status: formData.marital_status.toUpperCase(),
+      marital_status: formData.marital_status ? formData.marital_status.toUpperCase() : '',
       employment_status: formData.employment_status,
       student_status: formData.student_status,
       deceased: formData.deceased,
@@ -323,16 +330,24 @@ const PatientDemographicComponent = (props: any) => {
     setDeceased(formData.deceased);
     setFormContactValues({
       ...formData.address,
+      home_city: formData.home_city,
+      home_country: formData.home_country,
+      home_phone: formData.home_phone,
+      home_postal_code: formData.home_postal_code,
+      home_state: formData.home_state,
+      home_street1: formData.home_street1,
+      home_street2: formData.home_street2,
     });
 
-    setFormMRN(formData.mrn);
+    if (formData.mrn)
+      setFormMRN(formData.mrn);
 
     handleDOBChange(new Date(formData.date_of_birth));
     const patientNameData: any = {
-      FirstName: formData.first_name,
-      LastName: formData.last_name,
-      MiddleName: formData.middle_name,
-      Suffix: formData.suffix,
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      middle_name: formData.middle_name,
+      suffix: formData.suffix,
     };
     props.onSavePatientData(patientNameData);
     props.onChangeDisable(true);
@@ -353,8 +368,8 @@ const PatientDemographicComponent = (props: any) => {
       //return;
     } else {
       setLoading(true);
-      accessToken= await RequestAccessToken();
-      await getDataById(searchId,accessToken).then((response) => {
+      accessToken = await RequestAccessToken();
+      await getDataById(searchId, accessToken).then((response) => {
         if (
           response.status == 200 &&
           response.statusText == "OK" &&
@@ -389,18 +404,18 @@ const PatientDemographicComponent = (props: any) => {
     setSubmitButtonName("Update");
   };
 
-  async function RequestAccessToken()  {
+  async function RequestAccessToken() {
     const request = {
-        ...loginRequest,
-        account: accounts[0]
+      ...loginRequest,
+      account: accounts[0]
     };
     // Silently acquires an access token which is then attached to a request for Microsoft Graph data
     await instance.acquireTokenSilent(request).then((response) => {
-      accessToken =response.accessToken;
+      accessToken = response.accessToken;
     }).catch((e) => {
-         instance.acquireTokenPopup(request).then((response) => {
-          accessToken=response.accessToken;
-        });
+      instance.acquireTokenPopup(request).then((response) => {
+        accessToken = response.accessToken;
+      });
     });
     return accessToken;
   }
@@ -418,12 +433,12 @@ const PatientDemographicComponent = (props: any) => {
       formContactValues.home_state.length === 0 ||
       formContactValues.home_postal_code.length === 0 ||
       formContactValues.home_country.length === 0 ||
-      props.formData.FirstName === undefined ||
-      props.formData.FirstName.length === 0 ||
-      props.formData.LastName === undefined ||
-      props.formData.LastName.length === 0 ||
-      props.formData.Suffix === undefined ||
-      props.formData.Suffix.length === 0
+      props.formData.first_name === undefined ||
+      props.formData.first_name.length === 0 ||
+      props.formData.last_name === undefined ||
+      props.formData.last_name.length === 0 ||
+      props.formData.suffix === undefined ||
+      props.formData.suffix.length === 0
     ) {
       setHasError(true);
       return;
@@ -440,18 +455,18 @@ const PatientDemographicComponent = (props: any) => {
         }
       });
       // formValues.address = formContactValues;
-      formValues.first_name = props.formData.FirstName;
-      formValues.last_name = props.formData.LastName;
-      formValues.middle_name = props.formData.MiddleName;
-      formValues.suffix = props.formData.Suffix;
+      formValues.first_name = props.formData.first_name;
+      formValues.last_name = props.formData.last_name;
+      formValues.middle_name = props.formData.middle_name;
+      formValues.suffix = props.formData.suffix;
       formValues.date_of_birth = formatDate(dateOfBirth);
       formValues.id = "";
       deceased ? (formValues.deceased = "Y") : (formValues.deceased = "N");
       console.log("form data before save", formValues);
 
       if (submitButtonName === "Save") {
-        accessToken=await RequestAccessToken();
-        await postData(formValues,accessToken)
+        accessToken = await RequestAccessToken();
+        await postData(formValues, accessToken)
           .then((response) => {
             if (response.status === 200 && response.statusText === "OK") {
               setAlertState(true);
@@ -467,8 +482,8 @@ const PatientDemographicComponent = (props: any) => {
           });
       } else if (submitButtonName === "Update") {
         formValues.id = searchId;
-        accessToken=await RequestAccessToken();
-        await updateData(formValues,accessToken)
+        accessToken = await RequestAccessToken();
+        await updateData(formValues, accessToken)
           .then((response) => {
             if (response.status === 200 && response.statusText === "OK") {
               setAlertState(true);
@@ -487,8 +502,8 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const deletePatientData = async () => {
-    accessToken= await RequestAccessToken();
-    await deletePatient(searchId,accessToken).then((response) => {
+    accessToken = await RequestAccessToken();
+    await deletePatient(searchId, accessToken).then((response) => {
       if (response.status === 200 && response.statusText === "OK") {
         setAlertState(true);
         setAlertBoxText("Record Deleted Successfully");
@@ -771,40 +786,40 @@ const PatientDemographicComponent = (props: any) => {
                   </TableHeader>
                   <TableBody>
                     {/* <div style={{ maxHeight: "90px", overflowY: "scroll" }}> */}
-                      {formMRN.map((row, index) => (
-                        <TableRow key={index} className="flex grid-cols-12">
-                          <TableCell className="grid col-span-5">
-                            <InputBox
-                              handleChange={(e: any) => handleFormMRN(e, index)}
-                              id={"txtRowNo_" + index}
-                              name="med_rec_no"
-                              size="small"
-                              isDisabled={isAllDisable}
-                              value={row.med_rec_no}
+                    {formMRN.map((row, index) => (
+                      <TableRow key={index} className="flex grid-cols-12">
+                        <TableCell className="grid col-span-5">
+                          <InputBox
+                            handleChange={(e: any) => handleFormMRN(e, index)}
+                            id={"txtRowNo_" + index}
+                            name="med_rec_no"
+                            size="small"
+                            isDisabled={isAllDisable}
+                            value={row.med_rec_no}
+                          />
+                        </TableCell>
+                        <TableCell className="grid col-span-6">
+                          <InputBox
+                            handleChange={(e: any) => handleFormMRN(e, index)}
+                            id={"txtFacility_" + index}
+                            name="medical_facility"
+                            size="small"
+                            isDisabled={isAllDisable}
+                            value={row.medical_facility}
+                          />
+                        </TableCell>
+                        <TableCell className="grid col-span-1" style={{ maxWidth: "50px" }}>
+                          <Tooltip content="delete row" relationship="label">
+                            <Button
+                              id={"btn" + index}
+                              onClick={(e) => removeRow(index)}
+                              disabled={isAllDisable}
+                              icon={<Delete16Filled />}
                             />
-                          </TableCell>
-                          <TableCell className="grid col-span-6">
-                            <InputBox
-                              handleChange={(e: any) => handleFormMRN(e, index)}
-                              id={"txtFacility_" + index}
-                              name="medical_facility"
-                              size="small"
-                              isDisabled={isAllDisable}
-                              value={row.medical_facility}
-                            />
-                          </TableCell>
-                          <TableCell className="grid col-span-1" style={{maxWidth: "50px"}}>
-                            <Tooltip content="delete row" relationship="label">
-                              <Button
-                                id={"btn" + index}
-                                onClick={(e) => removeRow(index)}
-                                disabled={isAllDisable}
-                                icon={<Delete16Filled />}
-                              />
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                     {/* </div> */}
                   </TableBody>
                 </Table>

@@ -71,8 +71,7 @@ const NeighbourhoodComponent = () => {
 
   const selectedPatientData = (inputData: any) =>{
     if(inputData.first_name && inputData.last_name){
-      updateFormData(inputData)
-      setIsDisable(true)
+      updateFormData(inputData);
     }
   }
 
