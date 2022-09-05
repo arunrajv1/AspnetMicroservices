@@ -193,7 +193,6 @@ const PatientEmployerComponent = (props: any) => {
   const [alertBoxText, setAlertBoxText] = useState("");
   const [empFormValues, setEmpFormValues] = useState(defaultEmployerValues);
 
-
   const resetForm = () => {
     setDateOfBirth(new Date());
     setHasError(false);
@@ -367,7 +366,7 @@ const PatientEmployerComponent = (props: any) => {
       console.log("form data before save", formValues);
 
       if (submitButtonName === "Save") {
-        await postData(formValues)
+        await postData(formValues, "")
           .then((response) => {
             if (response.status === 200 && response.statusText === "OK") {
               setAlertState(true);
@@ -383,7 +382,7 @@ const PatientEmployerComponent = (props: any) => {
           });
       } else if (submitButtonName === "Update") {
         formValues.id = searchId;
-        await updateData(formValues)
+        await updateData(formValues, "")
           .then((response) => {
             if (response.status === 200 && response.statusText === "OK") {
               setAlertState(true);
@@ -403,7 +402,7 @@ const PatientEmployerComponent = (props: any) => {
 
   return (
     <div className="p-4 bg-gray-900">
-      <div className="containerResponsiveAllignment">
+      <div className="containerCardResponsiveAllignment">
         <Card>
           <CardHeader
             className="cardHeader"
@@ -431,7 +430,6 @@ const PatientEmployerComponent = (props: any) => {
             ))}
           </div>
         </Card>
-
         <div className="grid grid-cols-1">
           <Card>
             <CardHeader
