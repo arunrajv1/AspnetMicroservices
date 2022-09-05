@@ -1,5 +1,5 @@
 import { Input, Label, makeStyles, shorthands, } from "@fluentui/react-components";
-import React from "react";
+import React, { useEffect } from "react";
 
 const useStyles = makeStyles({
   root: {
@@ -31,6 +31,13 @@ const InputBox = ({
   isDisabled
 }: any) => {
   const styles = useStyles();
+
+  useEffect(() => {
+    if (value && value.length > 2) {
+      isRequired = false
+    }
+  }, [value]);
+
   return (
     <div className="grid grid-cols-1 gap-1 px-4">
       <div className="flex grid-cols-6 justify-start">
