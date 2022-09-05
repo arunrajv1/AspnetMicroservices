@@ -53,7 +53,7 @@ export interface IMedicalRecordNumber {
   facility: string;
 }
 
-const defaultValues = {
+const defaultValues: any = {
   home_street1: "",
   home_street2: "",
   home_city: "",
@@ -112,8 +112,7 @@ const PatientDemographicComponent = (props: any) => {
   const [age, setAge] = useState("");
   const [hasError, setHasError] = useState(false);
   const [formValues, setFormValues] = useState(defaultValues);
-  const [formContactValues, setFormContactValues] =
-    useState(defaultContactValues);
+  const [formContactValues, setFormContactValues] = useState(defaultContactValues);
   const [formMRN, setFormMRN] = useState(defaultMRN);
   const [alertState, setAlertState] = useState(false);
   const [alertProps, updateAlertProps] = useState(defaultAlertProps);
@@ -146,7 +145,7 @@ const PatientDemographicComponent = (props: any) => {
     setDateOfBirth(new Date());
     setHasError(false);
     setFormValues(defaultValues);
-    setFormContactValues(defaultContactValues);
+    // setFormContactValues(defaultContactValues);
     setAlertState(false);
     updateAlertProps(defaultAlertProps);
     setSearchId("");
@@ -203,20 +202,20 @@ const PatientDemographicComponent = (props: any) => {
       let returnData = handleWorkPhoneNumber(e);
       value = returnData.toString();
     }
-    let obj = { ...formContactValues, [name]: value };
-    let mainArr = { ...formValues, address: obj };
+    // let obj = { ...formContactValues, [name]: value };
+    // let mainArr = { ...formValues, address: obj };
 
-    setFormContactValues({
-      ...formContactValues,
-      [name]: value,
-    });
+    // setFormContactValues({
+    //   ...formContactValues,
+    //   [name]: value,
+    // });
 
     setFormValues({
       ...formValues,
       [name]: value,
     });
 
-    handleStateChange(mainArr);
+    // handleStateChange(mainArr);
   };
 
   const handleFormMRN = (e: any, index: number) => {
@@ -303,6 +302,13 @@ const PatientDemographicComponent = (props: any) => {
       employment_status: formData.employment_status,
       student_status: formData.student_status,
       deceased: formData.deceased,
+      home_city: formData.home_city,
+      home_country: formData.home_country,
+      home_phone: formData.home_phone,
+      home_postal_code: formData.home_postal_code,
+      home_state: formData.home_state,
+      home_street1: formData.home_street1,
+      home_street2: formData.home_street2,
       id: formData.id,
     });
     setDeceased(formData.deceased);
@@ -374,12 +380,12 @@ const PatientDemographicComponent = (props: any) => {
       formValues.marital_status.length === 0 ||
       formValues.birth_sex.length === 0 ||
       formValues.race.length === 0 ||
-      formContactValues.home_street1.length === 0 ||
-      formContactValues.home_street2.length === 0 ||
-      formContactValues.home_city.length === 0 ||
-      formContactValues.home_state.length === 0 ||
-      formContactValues.home_postal_code.length === 0 ||
-      formContactValues.home_country.length === 0 ||
+      formValues.home_street1.length === 0 ||
+      formValues.home_street2.length === 0 ||
+      formValues.home_city.length === 0 ||
+      formValues.home_state.length === 0 ||
+      formValues.home_postal_code.length === 0 ||
+      formValues.home_country.length === 0 ||
       props.formData.first_name === undefined ||
       props.formData.first_name.length === 0 ||
       props.formData.last_name === undefined ||
@@ -526,8 +532,8 @@ const PatientDemographicComponent = (props: any) => {
             {addressFields.map((field: any, i: number) => (
               <div key={i} className="col-span-1">
                 <InputBox
-                  handleChange={handleContactInputChange}
-                  value={formContactValues[field.name]}
+                  handleChange={handleInputChange}
+                  value={formValues[field.name]}
                   labelText={field.labelText}
                   labelFor={field.labelFor}
                   id={field.id}
@@ -694,7 +700,7 @@ const PatientDemographicComponent = (props: any) => {
                 <InputBox
                   key={i}
                   handleChange={handleContactInputChange}
-                  value={formContactValues[field.name]}
+                  value={formValues[field.name]}
                   labelText={field.labelText}
                   labelFor={field.labelFor}
                   id={field.id}
