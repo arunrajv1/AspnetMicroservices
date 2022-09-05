@@ -13,6 +13,8 @@ import { useState } from "react";
 import { Col, Container, Row, Stack } from "react-bootstrap";
 import { postData } from "../../services/PatientServices";
 import "./patientEmployerComponent.css";
+import { useMsal } from "@azure/msal-react";
+import { loginRequest } from "../../AuthConfig";
 
 const defaultEmployerValues = {
   emp_name: "",
@@ -36,6 +38,8 @@ const PatientEmployerComponent = (props: any) => {
   const [formValues, setFormValues] = useState(defaultEmployerValues);
   const [alertState, setAlertState] = useState(false);
   const [alertProps, updateAlertProps] = useState(defaultAlertProps);
+  const { instance,accounts, inProgress } = useMsal();
+  var accessToken:string;
 
   const handleEmpInputChange = (e: any) => {
     let { name, value } = e.target;
@@ -54,6 +58,22 @@ const PatientEmployerComponent = (props: any) => {
     },
   });
 
+  async function RequestAccessToken()  {
+    const request = {
+        ...loginRequest,
+        account: accounts[0]
+    };
+    // Silently acquires an access token which is then attached to a request for Microsoft Graph data
+    await instance.acquireTokenSilent(request).then((response) => {
+      accessToken =response.accessToken;
+    }).catch((e) => {
+         instance.acquireTokenPopup(request).then((response) => {
+          accessToken=response.accessToken;
+        });
+    });
+    return accessToken;
+  }
+
   const CustomCardHeader = styled(CardHeader)({
     fontSize: 18,
     color: "#ededed",
@@ -71,8 +91,9 @@ const PatientEmployerComponent = (props: any) => {
     formValues.home_street2= props.formData.home_street2;   
 
     console.log("json post body", formValues);
+    accessToken=await RequestAccessToken();
 
-    await postData(formValues)
+    await postData(formValues,accessToken)
       .then((response) => {
         if (response.status === 200 && response.statusText === "OK") {
           setAlertState(true);

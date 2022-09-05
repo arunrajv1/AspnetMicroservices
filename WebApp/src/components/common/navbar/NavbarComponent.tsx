@@ -8,7 +8,7 @@ import NeighbourhoodComponent from "./tabs/NeighbourhoodComponent";
 import LogoutSharpIcon from '@mui/icons-material/LogoutSharp';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { loginRequest } from "../../../AuthConfig";
-import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
+import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";  
 
 
 interface TabPanelProps {
@@ -37,9 +37,30 @@ const iconStyle = makeStyles(iconStylePrimary)
 const NavbarComponent = () => {
   const [selectedValue, setSelectedValue] = React.useState<TabValue>('neighbourhood');
   const { instance,accounts, inProgress } = useMsal();
+  var accessToken:String;
   const onTabSelect = (event: SelectTabEvent, data: SelectTabData) => {
     setSelectedValue(data.value);
+    RequestAccessToken();
   };
+
+  async function RequestAccessToken()  {
+    const request = {
+        ...loginRequest,
+        account: accounts[0]
+    };
+    // Silently acquires an access token which is then attached to a request for Microsoft Graph data
+    await instance.acquireTokenSilent(request).then((response) => {
+      accessToken =response.accessToken;
+      console.log(accessToken);
+    }).catch((e) => {
+         instance.acquireTokenPopup(request).then((response) => {
+          accessToken=response.accessToken;
+          console.log(response);
+        });
+    });
+    return accessToken;
+  }
+
 
   const handleLogout = () => {
     instance.logoutRedirect().catch(e => {
