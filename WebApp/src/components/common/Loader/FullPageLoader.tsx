@@ -1,20 +1,12 @@
+import { Spinner } from "@fluentui/react-components";
 import { useState } from "react";
-import Spinner from "react-bootstrap/Spinner";
 
 const FullPageLoader = () => {
-  const [loading, setLoading] = useState(false);
-  // return [
-  //   loading ? (
-  //     <Spinner animation="border" role="status">
-  //       <span className="visually-hidden">Loading...</span>
-  //     </Spinner>
-  //   ) : null,
-  //   () => setLoading(true),
-  //   () => setLoading(false),
-  // ];
   return (
-    <div style={{ textAlign: 'center', width: "100%" }}>
-      <Spinner animation="grow" variant="success" />
+    <div id='container' style={{position: "absolute"}} className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
+      <div className="text-center">
+        <Spinner size="huge" label="Loading..." />
+      </div>
     </div>
   );
 };

@@ -127,92 +127,36 @@ const patientNameFields = [
   }
 ];
 
-const employerFields = [
+const patientSearchFields = [
   {
-    labelText: "Employer name",
-    labelFor: "empName",
-    id: "empName",
-    name: "emp_name",
+    labelText: "Name",
+    labelFor: "txtName",
+    id: "txtName",
+    name: "name",
     type: "text",
-    autoComplete: "emp_name",
-    isRequired: true,
-    placeholder: "Employer name",
-  },
-  {
-    labelText: "Employer ID",
-    labelFor: "empId",
-    id: "empId",
-    name: "emp_id",
-    type: "text",
-    autoComplete: "emp_id",
-    isRequired: true,
-    placeholder: "Employer ID",
-  },
-];
-
-const employerAddressFields = [
-  {
-    labelText: "Street 1",
-    labelFor: "txtStreet1",
-    id: "txtStreet1",
-    name: "home_street1",
-    type: "text",
-    autoComplete: "home_street1",
-    isRequired: true,
-    placeholder: "Street 1",
-  },
-  {
-    labelText: "Street 2",
-    labelFor: "txtStreet2",
-    id: "txtStreet2",
-    name: "home_street2",
-    type: "text",
-    autoComplete: "home_street2",
+    autoComplete: "name",
     isRequired: false,
-    placeholder: "Street 2",
+    placeholder: "Name",
   },
   {
-    labelText: "City",
-    labelFor: "txtCity",
-    id: "txtCity",
-    name: "home_city",
+    labelText: "MRN",
+    labelFor: "txtMRN",
+    id: "txtMRN",
+    name: "mrn",
     type: "text",
-    autoComplete: "home_city",
-    isRequired: true,
-    placeholder: "City",
+    autoComplete: "mrn",
+    isRequired: false,
+    placeholder: "MRN",
   },
   {
-    labelText: "State",
-    labelFor: "txtState",
-    id: "txtState",
-    name: "home_state",
+    labelText: "Id",
+    labelFor: "txtId",
+    id: "txtId",
+    name: "id",
     type: "text",
-    autoComplete: "home_state",
-    isRequired: true,
-    placeholder: "State",
-  },
-  {
-    labelText: "Postal Code",
-    labelFor: "txtPostalCode",
-    id: "txtPostalCode",
-    name: "home_postal_code",
-    type: "text",
-    autoComplete: "home_postal_code",
-    isRequired: true,
-    placeholder: "Postal Code",
-  },
-  {
-    labelText: "Country",
-    labelFor: "txtCountry",
-    id: "txtCountry",
-    name: "home_country",
-    type: "text",
-    autoComplete: "home_country",
-    isRequired: true,
-    placeholder: "Country",
-  },
-];
-
-
-
-export { patientAddressFields, patientContactFields, patientNameFields, employerFields, employerAddressFields };
+    autoComplete: "id",
+    isRequired: false,
+    placeholder: "Id",
+  }
+]
+export { patientAddressFields, patientContactFields, patientNameFields, patientSearchFields };

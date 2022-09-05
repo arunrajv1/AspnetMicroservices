@@ -14,9 +14,17 @@ import { DatePicker, defaultDatePickerStrings, IDropdownOption, Dropdown, Stack,
 import ButtonComponent from "../common/ElementsUI/ButtonComponent";
 import DropdownComponent from "../common/ElementsUI/DropdownComponent";
 import { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions } from "../../constant/optionsArray";
+import { useMsal } from "@azure/msal-react";
+import { loginRequest } from "../../AuthConfig";
+import { resolveNs } from "dns";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+
+
 
 const addressFields = patientAddressFields;
 const contactFields = patientContactFields;
+var accessToken:string;
 const re = /^[0-9-+\b]+$/;
 const onFormatDate = (date?: Date): string => {
   return !date
@@ -141,9 +149,13 @@ const PatientDemographicComponent = (props: any) => {
   const [submitButtonName, setSubmitButtonName] = useState("Save");
   const [loading, setLoading] = useState(false);
   const [alertBoxText, setAlertBoxText] = useState("");
+  const { instance,accounts, inProgress } = useMsal();
   // const [rowAction, setRowAction] = useState<IMedicalRecordNumber[]>([
   //   { recordNumber: "", facility: "" },
   // ]);
+
+  const patientDemographics = useSelector((state: RootState) => state.patientDetails)
+  console.log('redux patient details', patientDemographics)
 
   const resetForm = () => {
     setDateOfBirth(new Date());
@@ -332,6 +344,8 @@ const PatientDemographicComponent = (props: any) => {
     setSearchId(event.target.value);
   };
 
+
+
   const getPatientDetailsById = async () => {
     if (!searchId) {
       setAlertState(true);
@@ -339,7 +353,8 @@ const PatientDemographicComponent = (props: any) => {
       //return;
     } else {
       setLoading(true);
-      await getDataById(searchId).then((response) => {
+      accessToken= await RequestAccessToken();
+      await getDataById(searchId,accessToken).then((response) => {
         if (
           response.status == 200 &&
           response.statusText == "OK" &&
@@ -373,6 +388,22 @@ const PatientDemographicComponent = (props: any) => {
     setIsSaveDisable(false);
     setSubmitButtonName("Update");
   };
+
+  async function RequestAccessToken()  {
+    const request = {
+        ...loginRequest,
+        account: accounts[0]
+    };
+    // Silently acquires an access token which is then attached to a request for Microsoft Graph data
+    await instance.acquireTokenSilent(request).then((response) => {
+      accessToken =response.accessToken;
+    }).catch((e) => {
+         instance.acquireTokenPopup(request).then((response) => {
+          accessToken=response.accessToken;
+        });
+    });
+    return accessToken;
+  }
 
   const saveUpdatePatientData = async () => {
     if (
@@ -419,7 +450,8 @@ const PatientDemographicComponent = (props: any) => {
       console.log("form data before save", formValues);
 
       if (submitButtonName === "Save") {
-        await postData(formValues)
+        accessToken=await RequestAccessToken();
+        await postData(formValues,accessToken)
           .then((response) => {
             if (response.status === 200 && response.statusText === "OK") {
               setAlertState(true);
@@ -435,7 +467,8 @@ const PatientDemographicComponent = (props: any) => {
           });
       } else if (submitButtonName === "Update") {
         formValues.id = searchId;
-        await updateData(formValues)
+        accessToken=await RequestAccessToken();
+        await updateData(formValues,accessToken)
           .then((response) => {
             if (response.status === 200 && response.statusText === "OK") {
               setAlertState(true);
@@ -454,7 +487,8 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const deletePatientData = async () => {
-    await deletePatient(searchId).then((response) => {
+    accessToken= await RequestAccessToken();
+    await deletePatient(searchId,accessToken).then((response) => {
       if (response.status === 200 && response.statusText === "OK") {
         setAlertState(true);
         setAlertBoxText("Record Deleted Successfully");
@@ -472,7 +506,7 @@ const PatientDemographicComponent = (props: any) => {
     <div className="p-4 bg-gray-900">
       <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 lg:grid-rows-1 sm:grid-rows-2 justify-between -space-y-px">
         <div className="grid grid-cols-3 gap-2 justify-between">
-          <div className="col-span-2 flex justify-start">
+          {/* <div className="col-span-2 flex justify-start">
             <Input
               contentBefore={<Search24Filled />}
               contentAfter={
@@ -487,7 +521,7 @@ const PatientDemographicComponent = (props: any) => {
               value={searchId}
               placeholder="Search..."
             />
-          </div>
+          </div> */}
           <div className="col-span-1 flex justify-end">
             <ButtonComponent
               handleClick={editPatientDetails}
@@ -516,7 +550,7 @@ const PatientDemographicComponent = (props: any) => {
           </div>
         </div>
       </div>
-      <div className="containerResponsiveAllignment">
+      <div className="containerCardResponsiveAllignment">
         <Card>
           <CardHeader
             className="cardHeader"
@@ -682,8 +716,8 @@ const PatientDemographicComponent = (props: any) => {
           </Card>
         </div>
       </div>
-      <div className="containerResponsiveAllignment">
-        <div className="grid grid-cols-1">
+      <div className="containerCardResponsiveAllignment">
+        <div className="grid col-span-1 my-auto">
           <Card>
             <CardHeader
               className="cardHeader"
@@ -712,7 +746,7 @@ const PatientDemographicComponent = (props: any) => {
             </div>
           </Card>
         </div>
-        <div className="grid grid-cols-1">
+        <div className="grid col-span-1">
           <Card>
             <CardHeader
               className="cardHeader"
@@ -724,7 +758,7 @@ const PatientDemographicComponent = (props: any) => {
             // description={<Caption1>5h ago · About us - Overview</Caption1>}
             />
             <div className="grid grid-cols-12">
-              <div className="col-span-10">
+              <div className="col-span-10 tableStyle">
                 <Table size="smaller">
                   <TableHeader className="">
                     <TableRow>
@@ -736,40 +770,42 @@ const PatientDemographicComponent = (props: any) => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {formMRN.map((row, index) => (
-                      <TableRow key={index} className="flex grid-cols-12">
-                        <TableCell className="grid col-span-5">
-                          <InputBox
-                            handleChange={(e: any) => handleFormMRN(e, index)}
-                            id={"txtRowNo_" + index}
-                            name="med_rec_no"
-                            size="small"
-                            isDisabled={isAllDisable}
-                            value={row.med_rec_no}
-                          />
-                        </TableCell>
-                        <TableCell className="grid col-span-6">
-                          <InputBox
-                            handleChange={(e: any) => handleFormMRN(e, index)}
-                            id={"txtFacility_" + index}
-                            name="medical_facility"
-                            size="small"
-                            isDisabled={isAllDisable}
-                            value={row.medical_facility}
-                          />
-                        </TableCell>
-                        <TableCell className="grid col-span-1">
-                          <Tooltip content="delete row" relationship="label">
-                            <Button
-                              id={"btn" + index}
-                              onClick={(e) => removeRow(index)}
-                              disabled={isAllDisable}
-                              icon={<Delete16Filled />}
+                    {/* <div style={{ maxHeight: "90px", overflowY: "scroll" }}> */}
+                      {formMRN.map((row, index) => (
+                        <TableRow key={index} className="flex grid-cols-12">
+                          <TableCell className="grid col-span-5">
+                            <InputBox
+                              handleChange={(e: any) => handleFormMRN(e, index)}
+                              id={"txtRowNo_" + index}
+                              name="med_rec_no"
+                              size="small"
+                              isDisabled={isAllDisable}
+                              value={row.med_rec_no}
                             />
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          </TableCell>
+                          <TableCell className="grid col-span-6">
+                            <InputBox
+                              handleChange={(e: any) => handleFormMRN(e, index)}
+                              id={"txtFacility_" + index}
+                              name="medical_facility"
+                              size="small"
+                              isDisabled={isAllDisable}
+                              value={row.medical_facility}
+                            />
+                          </TableCell>
+                          <TableCell className="grid col-span-1" style={{maxWidth: "50px"}}>
+                            <Tooltip content="delete row" relationship="label">
+                              <Button
+                                id={"btn" + index}
+                                onClick={(e) => removeRow(index)}
+                                disabled={isAllDisable}
+                                icon={<Delete16Filled />}
+                              />
+                            </Tooltip>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    {/* </div> */}
                   </TableBody>
                 </Table>
               </div>

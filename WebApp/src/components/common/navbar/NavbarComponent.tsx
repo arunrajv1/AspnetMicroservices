@@ -1,10 +1,15 @@
-import { TabList, TabValue, Tab, SelectTabEvent, SelectTabData, makeStyles } from "@fluentui/react-components";
+import { TabList, TabValue, Tab, SelectTabEvent, SelectTabData, makeStyles, Tooltip, Button } from "@fluentui/react-components";
 import { OverflowItem } from "@fluentui/react-components/unstable";
 import { Desktop16Regular, Earth16Regular, DocumentSearch16Regular } from "@fluentui/react-icons";
 import React, { useState } from "react";
 import { iconStylePrimary } from "../../../constant/fluentUIStyles";
 import LandingPageComponent from "../LandingPageComponent";
 import NeighbourhoodComponent from "./tabs/NeighbourhoodComponent";
+import LogoutSharpIcon from '@mui/icons-material/LogoutSharp';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import { loginRequest } from "../../../AuthConfig";
+import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";  
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -31,14 +36,43 @@ const iconStyle = makeStyles(iconStylePrimary)
 
 const NavbarComponent = () => {
   const [selectedValue, setSelectedValue] = React.useState<TabValue>('neighbourhood');
+  const { instance,accounts, inProgress } = useMsal();
+  var accessToken:String;
   const onTabSelect = (event: SelectTabEvent, data: SelectTabData) => {
     setSelectedValue(data.value);
+    RequestAccessToken();
   };
+
+  async function RequestAccessToken()  {
+    const request = {
+        ...loginRequest,
+        account: accounts[0]
+    };
+    // Silently acquires an access token which is then attached to a request for Microsoft Graph data
+    await instance.acquireTokenSilent(request).then((response) => {
+      accessToken =response.accessToken;
+      console.log(accessToken);
+    }).catch((e) => {
+         instance.acquireTokenPopup(request).then((response) => {
+          accessToken=response.accessToken;
+          console.log(response);
+        });
+    });
+    return accessToken;
+  }
+
+
+  const handleLogout = () => {
+    instance.logoutRedirect().catch(e => {
+      console.error(e);
+  })
+  }
 
   return (
     <div>
-      <div className="flex justify-center cardHeader">
-
+      <div className="flex justify-between cardHeader grid-cols-12">
+        <div className="grid col-span-1"></div>
+        <div className="grid col-span-10">
         <TabList selectedValue={selectedValue} onTabSelect={onTabSelect}>
           {/* {tabs.map(tab => {
             <OverflowItem key={tab.id} id={tab.id}>
@@ -53,7 +87,7 @@ const NavbarComponent = () => {
             </Tab>
           </OverflowItem>
           <OverflowItem id="neighbourhood">
-            <Tab id="Neighbourhood" value="neighbourhood" icon={<span><Earth16Regular/></span>}>
+            <Tab id="Neighbourhood" value="neighbourhood" icon={<span><Earth16Regular /></span>}>
               NEIGHBOURHOOD
             </Tab>
           </OverflowItem>
@@ -63,6 +97,13 @@ const NavbarComponent = () => {
             </Tab>
           </OverflowItem>
         </TabList>
+        </div>
+
+        <div className="grid col-span-1">
+          <Tooltip content="Logout" relationship="label">
+            <Button icon={<LogoutSharpIcon />} id="btnLogout" type="button" onClick={handleLogout} >Logout </Button>
+          </Tooltip>
+        </div>
       </div>
       <div className="pt-4">
         {selectedValue === 'neighbourhood' && <NeighbourhoodComponent />}
