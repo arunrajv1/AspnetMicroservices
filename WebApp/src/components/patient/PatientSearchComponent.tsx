@@ -12,7 +12,7 @@ import AlertPopup from '../common/popup/AlertPopup';
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../AuthConfig";
 import { useDispatch, useSelector } from 'react-redux';
-import { setPatientDetails } from "../../redux/features/patientDemographicSlice";
+import { setAllPatientDetails, setSinglePatientDetails } from "../../redux/features/patientDemographicSlice";
 import { RootState } from '../../redux/store';
 
 const initialFormData: any = Object.freeze({
@@ -85,7 +85,7 @@ const PatientSearchComponent = () => {
                 setAlertBoxText("Records Found");
                 setSearchResults([]);
                 setSearchResults(response.data);
-                dispatch(setPatientDetails(response.data));
+                dispatch(setAllPatientDetails(response.data));
             } else if (response.status === 200 && response.statusText === "OK" && !response.data) {
                 setLoading(false);
                 setAlertState(true);
@@ -98,6 +98,12 @@ const PatientSearchComponent = () => {
             }
         })
     }
+
+    const handlePatientDataById = (rowData: any) => {
+        console.log(`row clicked id ${rowData.id} name ${rowData.first_name}`);
+        dispatch(setSinglePatientDetails(rowData));
+    }
+
     return (
         <>
             <div className='grid grid-rows-12 grid-flow-col justify-center pb-8'>
@@ -154,7 +160,7 @@ const PatientSearchComponent = () => {
                             <TableBody>
                                 <div style={{ maxHeight: "200px", overflowY: "scroll" }}>
                                     {searchResult.map((row: any, index: number) => (
-                                        <TableRow key={index} onDoubleClick={() => console.log(`row clicked id ${row.id} name ${row.first_name}`)}>
+                                        <TableRow key={index} onDoubleClick={() => handlePatientDataById(row)}>
                                             <TableCell style={{ maxWidth: "80px" }}>{row.id}</TableCell>
                                             <TableCell>{row.first_name}</TableCell>
                                             <TableCell>{row.last_name}</TableCell>

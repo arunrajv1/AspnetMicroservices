@@ -35,6 +35,9 @@ const NeighbourhoodComponent = () => {
   const dispatch = useDispatch();
   //const patientDemographicSelector = useAppSelector((state) => state.data.array);
   const patientDemographics = useSelector((state: RootState) => state.patientDemographics.array)
+  const singlePatientDemographics = useSelector((state: RootState) => state);
+  console.log('single PatientDemographics use selector', singlePatientDemographics);
+
   const handleFormChange = (e: any) => {
     updateFormData({
       ...formData,
@@ -56,6 +59,8 @@ const NeighbourhoodComponent = () => {
     dispatch(setPatientDemographicDetails(inputData));
     console.log("patientDemographicSelector", patientDemographics);
   }
+
+
 
   return (
     <>
