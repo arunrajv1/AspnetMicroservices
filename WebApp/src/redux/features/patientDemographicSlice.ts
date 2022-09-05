@@ -32,14 +32,18 @@ const patientDemographicSlice = createSlice({
     name: 'patientDetails',
     initialState: defaultState,
     reducers: {
-        setPatientDetails(state, action: PayloadAction<PatientDemographicInitialState>) {
+        setAllPatientDetails(state, action: PayloadAction<PatientDemographicInitialState>) {
             state = action.payload
-            console.log('patientDemographicSlice state', state);
+            console.log('all patient data state', state);
+        },
+        setSinglePatientDetails(state, action: PayloadAction<any>) {
+            state = action.payload
+            console.log('single patient data slice', state);
         }
     }
 });
 
-export const { setPatientDetails } = patientDemographicSlice.actions;
+export const { setAllPatientDetails, setSinglePatientDetails } = patientDemographicSlice.actions;
 
 export default patientDemographicSlice.reducer;
 
