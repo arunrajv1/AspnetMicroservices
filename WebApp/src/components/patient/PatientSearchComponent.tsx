@@ -11,8 +11,9 @@ import FullPageLoader from '../common/Loader/FullPageLoader';
 import AlertPopup from '../common/popup/AlertPopup';
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../AuthConfig";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setPatientDetails } from "../../redux/features/patientDemographicSlice";
+import { RootState } from '../../redux/store';
 
 const initialFormData: any = Object.freeze({
     name: "",
@@ -33,6 +34,8 @@ const PatientSearchComponent = () => {
     const { instance, accounts, inProgress } = useMsal();
 
     const dispatch = useDispatch();
+    const patientDemographics = useSelector((state: RootState) => state.patientDetails)
+    console.log('patient search component redux patient details', patientDemographics)
 
     const changeFieldDisable = (inputData: any) => {
         setIsDisable(inputData);
@@ -75,7 +78,7 @@ const PatientSearchComponent = () => {
         setLoading(true);
         accessToken = await RequestAccessToken();
         await getPatientDetails(formData, accessToken).then((response) => {
-            console.log('get the details', response);
+            //console.log('get the details', response);
             if (response.status === 200 && response.statusText === "OK" && response.data) {
                 setLoading(false);
                 setAlertState(true);
@@ -135,7 +138,7 @@ const PatientSearchComponent = () => {
             </div>
             {searchResult.length > 0 &&
                 <div className="px-8 pb-8">
-                    <div className='col-span-2 m-4' >
+                    <div className='col-span-2 m-4 tableStyle' >
                         <Table sortable={true}>
                             <TableHeader>
                                 <TableRow>

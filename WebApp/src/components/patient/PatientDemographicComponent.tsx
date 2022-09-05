@@ -753,7 +753,7 @@ const PatientDemographicComponent = (props: any) => {
             // description={<Caption1>5h ago · About us - Overview</Caption1>}
             />
             <div className="grid grid-cols-12">
-              <div className="col-span-10">
+              <div className="col-span-10 tableStyle">
                 <Table size="smaller">
                   <TableHeader className="">
                     <TableRow>
