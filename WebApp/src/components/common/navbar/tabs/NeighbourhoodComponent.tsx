@@ -1,7 +1,7 @@
 
 import { Input, makeStyles, SelectTabData, SelectTabEvent, shorthands, Tab, TabList, TabValue, tokens } from "@fluentui/react-components";
 import { Overflow, OverflowItem } from "@fluentui/react-components/unstable";
-import React, { SyntheticEvent, useState, useCallback } from "react";
+import React, { SyntheticEvent, useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { patientNameFields } from "../../../../constant/formFields";
@@ -14,10 +14,10 @@ import InputBox from "../../ElementsUI/InputBox";
 import "../../../../style/CommonStyle.scss";
 
 const initialFormData: any = Object.freeze({
-  MiddleName: "",
-  FirstName: "",
-  LastName: "",
-  Suffix: "",
+  middle_name: "",
+  first_name: "",
+  last_name: "",
+  suffix: "",
 });
 
 const NeighbourhoodComponent = () => {
@@ -36,7 +36,16 @@ const NeighbourhoodComponent = () => {
   //const patientDemographicSelector = useAppSelector((state) => state.data.array);
   const patientDemographics = useSelector((state: RootState) => state.patientDemographics.array)
   const singlePatientDemographics = useSelector((state: RootState) => state);
-  console.log('single PatientDemographics use selector', singlePatientDemographics);
+/*
+  const onCallbackFunction  = useCallback(() => {
+    console.log('single PatientDemographics use selector, callback', singlePatientDemographics);
+    // updateFormData((t: any) => [...t, "New Todo"]);
+  }, []);
+
+  useEffect(() => {
+    onCallbackFunction();
+    console.log('single PatientDemographics use selector', singlePatientDemographics);
+  }, [])*/
 
   const handleFormChange = (e: any) => {
     updateFormData({
@@ -60,11 +69,16 @@ const NeighbourhoodComponent = () => {
     console.log("patientDemographicSelector", patientDemographics);
   }
 
-
+  const selectedPatientData = (inputData: any) =>{
+    if(inputData.first_name && inputData.last_name){
+      updateFormData(inputData)
+      setIsDisable(true)
+    }
+  }
 
   return (
     <>
-      <PatientSearchComponent></PatientSearchComponent>
+      <PatientSearchComponent onSelectedPatientData={selectedPatientData}></PatientSearchComponent>
       <div className="containerResponsiveAllignment">
         {patientNameFields.map((field: any, i: number) => (
           <div className="lg:col-span-1 md:col-span-4 sm:col-span-4" key={i}>

@@ -24,7 +24,7 @@ const initialFormData: any = Object.freeze({
 
 const genderArray = genderOptions;
 
-const PatientSearchComponent = () => {
+const PatientSearchComponent = (props: any) => {
     const [formData, updateFormData] = useState(initialFormData);
     const [isDisable, setIsDisable] = useState(false);
     const [alertState, setAlertState] = useState(false);
@@ -100,8 +100,8 @@ const PatientSearchComponent = () => {
     }
 
     const handlePatientDataById = (rowData: any) => {
-        console.log(`row clicked id ${rowData.id} name ${rowData.first_name}`);
         dispatch(setSinglePatientDetails(rowData));
+        props.onSelectedPatientData(rowData);
     }
 
     return (
