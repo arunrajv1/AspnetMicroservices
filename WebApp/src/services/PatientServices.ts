@@ -3,12 +3,18 @@ import axios from "axios";
 
 const patientBaseUrl = baseUrl + "Patient";
 
-export const getAllData = async () => {
+export const getAllData = async (accessToken:string) => {
+  options.headers.Authorization='Bearer'+accessToken;
   return await axios.get(patientBaseUrl, options);
 };
 
-export const postData = async (jsonPostBody: {}) => {
-  let response = await axios.post(patientBaseUrl, jsonPostBody);
+export const postData = async (jsonPostBody: {},accessToken:string) => {
+  let response = await axios.post(patientBaseUrl, jsonPostBody,{
+    headers:{
+      'Authorization':'Bearer'+accessToken,
+    }
+  });
+  
   //let responseOK = response && response.status === 200 && response.data;
 
   return response;
@@ -20,16 +26,21 @@ export const getDataById = async (id: string,accessToken:string) => {
   return await axios.get(url, options);
 };
 
-export const updateData = async (jsonPostBody: any) => {
+export const updateData = async (jsonPostBody: any,accessToken:string) => {
   let url = patientBaseUrl + `/${jsonPostBody['id']}`;
-  let response = await axios.put(url, jsonPostBody);
+  let response = await axios.put(url, jsonPostBody,{
+    headers:{
+      'Authorization':'Bearer'+accessToken,
+    }
+  });
   //let responseOK = response && response.status === 200 && response.data;
 
   return response;
 };
 
-export const deletePatient = async (id: string) => {
+export const deletePatient = async (id: string,accessToken:string) => {
   let url = patientBaseUrl + `/${id}`;
+  options.headers.Authorization=`Bearer ${accessToken}`
   let response = await axios.delete(url, options);
   //let responseOK = response && response.status === 200 && response.data;
 

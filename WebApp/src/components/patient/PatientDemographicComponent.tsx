@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
 
+
 const addressFields = patientAddressFields;
 const contactFields = patientContactFields;
 var accessToken:string;
@@ -343,21 +344,6 @@ const PatientDemographicComponent = (props: any) => {
     setSearchId(event.target.value);
   };
 
-  async function RequestAccessToken()  {
-    const request = {
-        ...loginRequest,
-        account: accounts[0]
-    };
-    // Silently acquires an access token which is then attached to a request for Microsoft Graph data
-    await instance.acquireTokenSilent(request).then((response) => {
-      accessToken =response.accessToken;
-    }).catch((e) => {
-         instance.acquireTokenPopup(request).then((response) => {
-          accessToken=response.accessToken;
-        });
-    });
-    return accessToken;
-  }
 
 
   const getPatientDetailsById = async () => {
@@ -402,6 +388,22 @@ const PatientDemographicComponent = (props: any) => {
     setIsSaveDisable(false);
     setSubmitButtonName("Update");
   };
+
+  async function RequestAccessToken()  {
+    const request = {
+        ...loginRequest,
+        account: accounts[0]
+    };
+    // Silently acquires an access token which is then attached to a request for Microsoft Graph data
+    await instance.acquireTokenSilent(request).then((response) => {
+      accessToken =response.accessToken;
+    }).catch((e) => {
+         instance.acquireTokenPopup(request).then((response) => {
+          accessToken=response.accessToken;
+        });
+    });
+    return accessToken;
+  }
 
   const saveUpdatePatientData = async () => {
     if (
@@ -448,7 +450,8 @@ const PatientDemographicComponent = (props: any) => {
       console.log("form data before save", formValues);
 
       if (submitButtonName === "Save") {
-        await postData(formValues)
+        accessToken=await RequestAccessToken();
+        await postData(formValues,accessToken)
           .then((response) => {
             if (response.status === 200 && response.statusText === "OK") {
               setAlertState(true);
@@ -464,7 +467,8 @@ const PatientDemographicComponent = (props: any) => {
           });
       } else if (submitButtonName === "Update") {
         formValues.id = searchId;
-        await updateData(formValues)
+        accessToken=await RequestAccessToken();
+        await updateData(formValues,accessToken)
           .then((response) => {
             if (response.status === 200 && response.statusText === "OK") {
               setAlertState(true);
@@ -483,7 +487,8 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const deletePatientData = async () => {
-    await deletePatient(searchId).then((response) => {
+    accessToken= await RequestAccessToken();
+    await deletePatient(searchId,accessToken).then((response) => {
       if (response.status === 200 && response.statusText === "OK") {
         setAlertState(true);
         setAlertBoxText("Record Deleted Successfully");
