@@ -755,6 +755,7 @@ const PatientDemographicComponent = (props: any) => {
                   id={field.id}
                   name={field.name}
                   type={field.type}
+                  maxLength={field.maxLength}
                   isRequired={field.isRequired}
                   placeholder={field.placeholder}
                   isDisabled={isAllDisable}

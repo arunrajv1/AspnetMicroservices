@@ -28,7 +28,8 @@ const InputBox = ({
   isRequired = false,
   placeholder,
   customClass,
-  isDisabled
+  isDisabled,
+  maxLength = 0
 }: any) => {
   const styles = useStyles();
 
@@ -54,6 +55,7 @@ const InputBox = ({
           required={isRequired}
           //className="inputBox"
           minLength={2}
+          maxLength={maxLength}
           disabled={isDisabled}
         />
         {/* {isRequired && (
