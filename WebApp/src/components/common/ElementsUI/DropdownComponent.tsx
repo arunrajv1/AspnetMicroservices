@@ -26,12 +26,6 @@ const DropdownComponent = ({
                 onChange={(e, opt) => handleChange(e, opt)}
                 disabled={isDisabled}
                 required={isRequired}
-
-                onRenderCaretDown={() => {
-                    return (
-                        <ChevronDown16Filled />
-                    );
-                }}
             >
             </Dropdown>
         </div>

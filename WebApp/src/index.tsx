@@ -9,8 +9,10 @@ import { FluentProvider, teamsLightTheme } from "@fluentui/react-components";
 import { MsalProvider } from "@azure/msal-react";
 import { PublicClientApplication } from "@azure/msal-browser";
 import {msalConfig} from "./AuthConfig";
+import { initializeIcons } from '@fluentui/react/lib/Icons';
 
 const msalconfig = new PublicClientApplication(msalConfig);  
+initializeIcons(/* optional base url */);
 
 ReactDOM.render(
   <React.StrictMode>

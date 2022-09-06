@@ -81,15 +81,15 @@ const PatientSearchComponent = (props: any) => {
             //console.log('get the details', response);
             if (response.status === 200 && response.statusText === "OK" && response.data) {
                 setLoading(false);
-                setAlertState(true);
-                setAlertBoxText("Records Found");
+                // setAlertState(true);
+                // setAlertBoxText("Records Found");
                 setSearchResults([]);
                 setSearchResults(response.data);
                 dispatch(setAllPatientDetails(response.data));
             } else if (response.status === 200 && response.statusText === "OK" && !response.data) {
                 setLoading(false);
-                setAlertState(true);
-                setAlertBoxText("No Records Found");
+                // setAlertState(true);
+                // setAlertBoxText("No Records Found");
             }
             else {
                 setLoading(false);
@@ -119,6 +119,7 @@ const PatientSearchComponent = (props: any) => {
                                     id={field.id}
                                     name={field.name}
                                     type={field.type}
+                                    maxLength={field.maxLength}
                                     isRequired={field.isRequired}
                                     placeholder={field.placeholder}
                                     isDisabled={isDisable}

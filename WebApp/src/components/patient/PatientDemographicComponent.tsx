@@ -133,14 +133,14 @@ const PatientDemographicComponent = (props: any) => {
 
   useEffect(() => {
     console.log('redux patient details useEffect', patientDemographics, props.formData);
-    if (props.formData.first_name) {
+    if (patientDemographics.first_name) {
       setIsSaveDisable(true);
-      bindPatientDetails(props.formData);
+      bindPatientDetails(patientDemographics);
       setDisableEditButton(false);
       setIsAllDisable(true);
     }
     // getPatientDetailsById();
-  }, [props.formData])
+  }, [patientDemographics])
 
   const resetForm = () => {
     setDateOfBirth(new Date());
