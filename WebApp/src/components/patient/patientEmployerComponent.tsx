@@ -423,6 +423,7 @@ const PatientEmployerComponent = (props: any) => {
                   id={field.id}
                   name={field.name}
                   type={field.type}
+                  maxLength={30}
                   isRequired={field.isRequired}
                   placeholder={field.placeholder}
                 />
@@ -451,6 +452,7 @@ const PatientEmployerComponent = (props: any) => {
                     id={field.id}
                     name={field.name}
                     type={field.type}
+                    maxLength={30}
                     isRequired={field.isRequired}
                     placeholder={field.placeholder}
                     isDisabled={isAllDisable}

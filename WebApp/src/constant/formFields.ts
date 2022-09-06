@@ -171,14 +171,14 @@ const patientSearchFields = [
 
 const employerFields = [
   {
-    labelText: "Employer name",
+    labelText: "Employer Name",
     labelFor: "empName",
     id: "empName",
     name: "emp_name",
     type: "text",
     autoComplete: "emp_name",
     isRequired: true,
-    placeholder: "Employer name",
+    placeholder: "Employer Name",
   },
   {
     labelText: "Employer ID",
