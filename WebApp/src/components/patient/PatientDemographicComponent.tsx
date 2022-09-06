@@ -382,7 +382,7 @@ const PatientDemographicComponent = (props: any) => {
       formValues.birth_sex.length === 0 ||
       formValues.race.length === 0 ||
       formValues.home_street1.length === 0 ||
-      formValues.home_street2.length === 0 ||
+      //(formValues.home_street2 && formValues.home_street2.length === 0 ) ||
       formValues.home_city.length === 0 ||
       formValues.home_state.length === 0 ||
       formValues.home_postal_code.length === 0 ||
@@ -390,9 +390,9 @@ const PatientDemographicComponent = (props: any) => {
       props.formData.first_name === undefined ||
       props.formData.first_name.length === 0 ||
       props.formData.last_name === undefined ||
-      props.formData.last_name.length === 0 ||
-      props.formData.suffix === undefined ||
-      props.formData.suffix.length === 0
+      props.formData.last_name.length === 0 // ||
+      // props.formData.suffix === undefined ||
+      // props.formData.suffix.length === 0
     ) {
       setHasError(true);
       return;
@@ -435,11 +435,12 @@ const PatientDemographicComponent = (props: any) => {
             alert(error);
           });
       } else if (submitButtonName === "Update") {
-        formValues.id = searchId;
+        formValues.id = patientDemographics.id;
         accessToken = await RequestAccessToken();
         await updateData(formValues, accessToken)
           .then((response) => {
-            if (response.status === 200 && response.statusText === "OK") {
+            //if (response.status === 200 && response.statusText === "OK") {
+            if (response.status === 200 || response.status === 204) {
               setAlertState(true);
               setAlertBoxText("Data Updated Successfully");
               resetForm();
@@ -457,8 +458,9 @@ const PatientDemographicComponent = (props: any) => {
 
   const deletePatientData = async () => {
     accessToken = await RequestAccessToken();
-    await deletePatient(searchId, accessToken).then((response) => {
-      if (response.status === 200 && response.statusText === "OK") {
+    await deletePatient(patientDemographics.id, accessToken).then((response) => {
+      // if (response.status === 200 && response.statusText === "OK") {
+      if (response.status === 200 || response.status === 204) {
         setAlertState(true);
         setAlertBoxText("Record Deleted Successfully");
         setDisableEditButton(false);
