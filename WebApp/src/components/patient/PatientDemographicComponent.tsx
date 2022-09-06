@@ -146,7 +146,7 @@ const PatientDemographicComponent = (props: any) => {
     setDateOfBirth(new Date());
     setHasError(false);
     setFormValues(defaultValues);
-    // setFormContactValues(defaultContactValues);
+    setFormContactValues(defaultContactValues);
     setAlertState(false);
     updateAlertProps(defaultAlertProps);
     setSearchId("");
@@ -203,13 +203,13 @@ const PatientDemographicComponent = (props: any) => {
       let returnData = handleWorkPhoneNumber(e);
       value = returnData.toString();
     }
-    // let obj = { ...formContactValues, [name]: value };
-    // let mainArr = { ...formValues, address: obj };
+    let obj = { ...formContactValues, [name]: value };
+    let mainArr = { ...formValues, address: obj };
 
-    // setFormContactValues({
-    //   ...formContactValues,
-    //   [name]: value,
-    // });
+    setFormContactValues({
+      ...formContactValues,
+      [name]: value,
+    });
 
     setFormValues({
       ...formValues,
@@ -408,7 +408,7 @@ const PatientDemographicComponent = (props: any) => {
           formValues.mrn.push(obj);
         }
       });
-      // formValues.address = formContactValues;
+      formValues.address = formContactValues;
       formValues.first_name = props.formData.first_name;
       formValues.last_name = props.formData.last_name;
       formValues.middle_name = props.formData.middle_name;
