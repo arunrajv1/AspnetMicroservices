@@ -14,6 +14,7 @@ import { loginRequest } from "../../AuthConfig";
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllPatientDetails, setSinglePatientDetails } from "../../redux/features/patientDemographicSlice";
 import { RootState } from '../../redux/store';
+import { setSpinnerState } from '../../redux/features/commonUISlice';
 
 const initialFormData: any = Object.freeze({
     name: "",
@@ -29,7 +30,7 @@ const PatientSearchComponent = (props: any) => {
     const [isDisable, setIsDisable] = useState(false);
     const [alertState, setAlertState] = useState(false);
     const [alertBoxText, setAlertBoxText] = useState("");
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [searchResult, setSearchResults] = useState([]);
     const { instance, accounts, inProgress } = useMsal();
 
@@ -75,24 +76,28 @@ const PatientSearchComponent = (props: any) => {
         }
     };
     const getDetails = async () => {
-        setLoading(true);
+        // setLoading(true);
+        dispatch(setSpinnerState(true))
         accessToken = await RequestAccessToken();
         await getPatientDetails(formData, accessToken).then((response) => {
             //console.log('get the details', response);
             if (response.status === 200 && response.statusText === "OK" && response.data) {
-                setLoading(false);
+                // setLoading(false);
                 // setAlertState(true);
                 // setAlertBoxText("Records Found");
+                dispatch(setSpinnerState(false));
                 setSearchResults([]);
                 setSearchResults(response.data);
                 dispatch(setAllPatientDetails(response.data));
             } else if (response.status === 200 && response.statusText === "OK" && !response.data) {
-                setLoading(false);
+                // setLoading(false);
                 // setAlertState(true);
                 // setAlertBoxText("No Records Found");
+                dispatch(setSpinnerState(false));
             }
             else {
-                setLoading(false);
+                // setLoading(false);
+                dispatch(setSpinnerState(false));
                 setAlertState(true);
                 setAlertBoxText(`Some Error Occured, Status Code ${response.status}`);
             }
@@ -176,11 +181,11 @@ const PatientSearchComponent = (props: any) => {
                         </Table>
                     </div></div>
             }
-            {loading && (
+            {/* {loading && (
                 <div style={{ textAlign: "center", width: "100%" }}>
                     <FullPageLoader></FullPageLoader>
                 </div>
-            )}
+            )} */}
             {alertState ? (
                 <AlertPopup
                     onClose={() => setAlertState(false)}

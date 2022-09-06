@@ -128,11 +128,12 @@ const PatientDemographicComponent = (props: any) => {
   //   { recordNumber: "", facility: "" },
   // ]);
 
-  const patientDemographics = useSelector((state: RootState) => state.patientDetails.data)
+  const patientDemographics = useSelector((state: RootState) => state.patientDetails.data);
+  const spinnerSelector = useSelector((state: RootState) => state.commonUIElements.data);
   // console.log('redux patient details', patientDemographics);
 
   useEffect(() => {
-    console.log('redux patient details useEffect', patientDemographics, props.formData);
+    console.log('redux patient details useEffect', patientDemographics, spinnerSelector);
     if (patientDemographics.first_name) {
       setIsSaveDisable(true);
       bindPatientDetails(patientDemographics);
@@ -140,7 +141,7 @@ const PatientDemographicComponent = (props: any) => {
       setIsAllDisable(true);
     }
     // getPatientDetailsById();
-  }, [patientDemographics])
+  }, [patientDemographics, spinnerSelector])
 
   const resetForm = () => {
     setDateOfBirth(new Date());
@@ -796,11 +797,11 @@ const PatientDemographicComponent = (props: any) => {
           </Card>
         </div>
       </div>
-      {loading && (
+      {(loading || spinnerSelector) ? (
         <div style={{ textAlign: "center", width: "100%" }}>
           <FullPageLoader></FullPageLoader>
         </div>
-      )}
+      ) : <></>}
       {alertState ? (
         <AlertPopup
           onClose={() => setAlertState(false)}
