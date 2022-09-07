@@ -20,6 +20,7 @@ import { resolveNs } from "dns";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { setSpinnerState } from "../../redux/features/commonUISlice";
+import ConfirmationPopup from "../common/popup/ConfirmationPopup";
 
 const addressFields = patientAddressFields;
 const contactFields = patientContactFields;
@@ -66,7 +67,7 @@ const defaultValues: any = {
   home_city: "",
   home_state: "",
   home_postal_code: "",
-  home_country: "",
+  home_country: country.name,
   home_phone: "",
   work_phone: "",
   mrn: [{}],
@@ -131,6 +132,7 @@ const PatientDemographicComponent = (props: any) => {
   const [loading, setLoading] = useState(false);
   const [alertBoxText, setAlertBoxText] = useState("");
   const { instance, accounts, inProgress } = useMsal();
+  const [confirmationState, setConfirmationState] = useState(false);
   // const [rowAction, setRowAction] = useState<IMedicalRecordNumber[]>([
   //   { recordNumber: "", facility: "" },
   // ]);
@@ -197,6 +199,9 @@ const PatientDemographicComponent = (props: any) => {
         defaultCities = cities.filter((x: any) => x.stateCode == option.key);
         if (defaultCities.length > 0)
           setCityDisable(false);
+        else
+          setCityDisable(true);
+        option.key = option.name;
       }
       setFormValues({
         ...formValues,
@@ -469,6 +474,8 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const deletePatientData = async () => {
+    setConfirmationState(true);
+
     accessToken = await RequestAccessToken();
     await deletePatient(patientDemographics.id, accessToken).then((response) => {
       // if (response.status === 200 && response.statusText === "OK") {
@@ -565,7 +572,7 @@ const PatientDemographicComponent = (props: any) => {
                 id="home_state"
                 placeholder="Select State"
                 selectedKey={states.key}
-                disabled={false}
+                disabled={isAllDisable}
                 required={true}
                 // label="State"
                 options={states}
@@ -847,6 +854,9 @@ const PatientDemographicComponent = (props: any) => {
       ) : (
         <></>
       )}
+      {confirmationState ? (
+        <ConfirmationPopup text={"Do You want to delete this record?"}></ConfirmationPopup>
+      ) : (<></>)}
     </div>
   );
 };
