@@ -7,25 +7,32 @@ import AlertPopup from "../common/popup/AlertPopup";
 import { Body1, Caption1, Checkbox, Input, Label, Tooltip, Button } from "@fluentui/react-components";
 import { Add16Filled, ChevronDown12Filled, ChevronDown16Filled, Delete16Filled, Search24Filled, } from "@fluentui/react-icons";
 import { Card, CardFooter, CardHeader, CardPreview, Select, Table, TableRow, TableBody, TableHeader, TableHeaderCell, TableCell, Option, DropdownProps } from "@fluentui/react-components/unstable";
-import { patientAddressFields, patientContactFields, } from "../../constant/formFields";
+import { patientAddressFields, patientContactFields, countryStateCity } from "../../constant/formFields";
 import "../../style/CommonStyle.scss";
 import InputBox from "../common/ElementsUI/InputBox";
 import { DatePicker, defaultDatePickerStrings, IDropdownOption, Dropdown, Stack, Icon } from "@fluentui/react";
 import ButtonComponent from "../common/ElementsUI/ButtonComponent";
 import DropdownComponent from "../common/ElementsUI/DropdownComponent";
-import { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions } from "../../constant/optionsArray";
+import { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions, stateOptions, countryOptions, cityOptions } from "../../constant/optionsArray";
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../AuthConfig";
 import { resolveNs } from "dns";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-
-
+import { setSpinnerState } from "../../redux/features/commonUISlice";
 
 const addressFields = patientAddressFields;
 const contactFields = patientContactFields;
 var accessToken: string;
 const re = /^[0-9-+\b]+$/;
+const country: any = countryOptions;
+let states: any = stateOptions;
+let cities: any = cityOptions;
+
+states.map((x: any) => { x.key = x.isoCode; x.text = x.name });
+cities.map((x: any) => { x.key = x.text; x.text = x.name });
+let defaultCities: any = { text: "", key: "" };
+
 const onFormatDate = (date?: Date): string => {
   return !date
     ? ""
@@ -116,7 +123,7 @@ const PatientDemographicComponent = (props: any) => {
   const [formMRN, setFormMRN] = useState(defaultMRN);
   const [alertState, setAlertState] = useState(false);
   const [alertProps, updateAlertProps] = useState(defaultAlertProps);
-  const [searchId, setSearchId] = useState("");
+  const [isCityDisable, setCityDisable] = useState(true);
   const [isSaveDisable, setIsSaveDisable] = useState(false);
   const [isAllDisable, setIsAllDisable] = useState(false);
   const [disableEditButton, setDisableEditButton] = useState(true);
@@ -130,10 +137,10 @@ const PatientDemographicComponent = (props: any) => {
 
   const patientDemographics = useSelector((state: RootState) => state.patientDetails.data);
   const spinnerSelector = useSelector((state: RootState) => state.commonUIElements.data);
-  // console.log('redux patient details', patientDemographics);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('redux patient details useEffect', patientDemographics, spinnerSelector);
+    // console.log('redux patient details useEffect', patientDemographics, spinnerSelector);
     if (patientDemographics.first_name) {
       setIsSaveDisable(true);
       bindPatientDetails(patientDemographics);
@@ -150,7 +157,6 @@ const PatientDemographicComponent = (props: any) => {
     setFormContactValues(defaultContactValues);
     setAlertState(false);
     updateAlertProps(defaultAlertProps);
-    setSearchId("");
     setIsAllDisable(false);
     setIsSaveDisable(false);
     setDisableEditButton(true);
@@ -187,6 +193,11 @@ const PatientDemographicComponent = (props: any) => {
     }
     else if (id) {
       obj = { ...formValues, [id]: option.key };
+      if (id === "home_state") {
+        defaultCities = cities.filter((x: any) => x.stateCode == option.key);
+        if (defaultCities.length > 0)
+          setCityDisable(false);
+      }
       setFormValues({
         ...formValues,
         [id]: option.key,
@@ -478,22 +489,6 @@ const PatientDemographicComponent = (props: any) => {
     <div className="p-4 bg-gray-900">
       <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 lg:grid-rows-1 sm:grid-rows-2 justify-between -space-y-px">
         <div className="grid grid-cols-3 gap-2 justify-between">
-          {/* <div className="col-span-2 flex justify-start">
-            <Input
-              contentBefore={<Search24Filled />}
-              contentAfter={
-                <ButtonComponent
-                  handleClick={getPatientDetailsById}
-                  type="Button"
-                  text="Search"
-                />
-              }
-              id="txtSearch"
-              onChange={handleId}
-              value={searchId}
-              placeholder="Search..."
-            />
-          </div> */}
           <div className="col-span-1 flex justify-end">
             <ButtonComponent
               handleClick={editPatientDetails}
@@ -550,6 +545,48 @@ const PatientDemographicComponent = (props: any) => {
                 />
               </div>
             ))}
+            <div className="col-span-1 px-4">
+              <label htmlFor="home_country">Country</label>
+              <Dropdown
+                id="home_country"
+                placeholder={country['name']}
+                selectedKey={country['isoCode']}
+                disabled={true}
+                required={true}
+                // label="Country"
+                options={country}            >
+              </Dropdown>
+
+            </div>
+            <div className="col-span-1 px-4">
+              <label htmlFor="home_state">State</label>
+              <Dropdown
+                key={states.key}
+                id="home_state"
+                placeholder="Select State"
+                selectedKey={states.key}
+                disabled={false}
+                required={true}
+                // label="State"
+                options={states}
+                onChange={handleInputChange}>
+              </Dropdown>
+
+            </div>
+            <div className="col-span-1 px-4">
+              <label htmlFor="home_city">City</label>
+              <Dropdown
+                id="home_city"
+                placeholder="Select City"
+                selectedKey={defaultCities.key}
+                disabled={isCityDisable || isAllDisable}
+                required={false}
+                // label="City"
+                options={defaultCities}
+                onChange={handleInputChange}>
+              </Dropdown>
+
+            </div>
           </div>
         </Card>
         <div className="grid grid-cols-1">

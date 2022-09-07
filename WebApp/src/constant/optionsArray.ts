@@ -1,3 +1,6 @@
+
+import { City, Country, State } from "country-state-city";
+
 interface IDropdownOption { text: string, key: any };
 
 const genderOptions: IDropdownOption[] = [
@@ -34,4 +37,8 @@ const studentOptions: IDropdownOption[] = [
     { text: "Part Time Student", key: "P" },
 ]
 
-export { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions };
+const countryOptions = Country.getCountryByCode("US");
+const stateOptions = State.getStatesOfCountry("US");
+const cityOptions = City.getCitiesOfCountry("US");
+
+export { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions, countryOptions, stateOptions, cityOptions };

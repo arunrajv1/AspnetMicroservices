@@ -151,7 +151,7 @@ const PatientSearchComponent = (props: any) => {
             {searchResult.length > 0 &&
                 <div className="px-8 pb-8">
                     <div className='col-span-2 m-4 tableStyle' >
-                        <Table sortable={true}>
+                        <Table sortable>
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell style={{ maxWidth: "80px" }}>Id</TableHeaderCell>

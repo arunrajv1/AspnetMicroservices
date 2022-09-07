@@ -18,7 +18,7 @@ const patientAddressFields = [
     autoComplete: "home_street2",
     isRequired: false,
     placeholder: "Street 2",
-  },
+  },/*
   {
     labelText: "City",
     labelFor: "txtCity",
@@ -40,16 +40,6 @@ const patientAddressFields = [
     placeholder: "State",
   },
   {
-    labelText: "Postal Code",
-    labelFor: "txtPostalCode",
-    id: "txtPostalCode",
-    name: "home_postal_code",
-    type: "text",
-    autoComplete: "home_postal_code",
-    isRequired: true,
-    placeholder: "Postal Code",
-  },
-  {
     labelText: "Country",
     labelFor: "txtCountry",
     id: "txtCountry",
@@ -58,6 +48,16 @@ const patientAddressFields = [
     autoComplete: "home_country",
     isRequired: true,
     placeholder: "Country",
+  },*/
+  {
+    labelText: "Postal Code",
+    labelFor: "txtPostalCode",
+    id: "txtPostalCode",
+    name: "home_postal_code",
+    type: "text",
+    autoComplete: "home_postal_code",
+    isRequired: true,
+    placeholder: "Postal Code",
   },
 ];
 
@@ -234,16 +234,6 @@ const employerAddressFields = [
     placeholder: "State",
   },
   {
-    labelText: "Postal Code",
-    labelFor: "txtPostalCode",
-    id: "txtPostalCode",
-    name: "home_postal_code",
-    type: "text",
-    autoComplete: "home_postal_code",
-    isRequired: true,
-    placeholder: "Postal Code",
-  },
-  {
     labelText: "Country",
     labelFor: "txtCountry",
     id: "txtCountry",
@@ -253,6 +243,49 @@ const employerAddressFields = [
     isRequired: true,
     placeholder: "Country",
   },
+  {
+    labelText: "Postal Code",
+    labelFor: "txtPostalCode",
+    id: "txtPostalCode",
+    name: "home_postal_code",
+    type: "text",
+    autoComplete: "home_postal_code",
+    isRequired: true,
+    placeholder: "Postal Code",
+  },
 ];
 
-export { patientAddressFields, patientContactFields, patientNameFields, patientSearchFields, employerFields, employerAddressFields };
+const countryStateCity = [  
+  {
+    labelText: "State",
+    labelFor: "txtState",
+    id: "txtState",
+    name: "home_state",
+    type: "text",
+    autoComplete: "home_state",
+    isRequired: true,
+    placeholder: "State",
+  },
+  {
+    labelText: "City",
+    labelFor: "txtCity",
+    id: "txtCity",
+    name: "home_city",
+    type: "text",
+    autoComplete: "home_city",
+    isRequired: true,
+    placeholder: "City",
+  },
+  // {
+  //   labelText: "Country",
+  //   labelFor: "txtCountry",
+  //   id: "txtCountry",
+  //   name: "home_country",
+  //   type: "text",
+  //   autoComplete: "home_country",
+  //   isRequired: true,
+  //   placeholder: "Country",
+  // }
+]
+
+export { patientAddressFields, patientContactFields, patientNameFields, patientSearchFields, employerFields, employerAddressFields, countryStateCity };
