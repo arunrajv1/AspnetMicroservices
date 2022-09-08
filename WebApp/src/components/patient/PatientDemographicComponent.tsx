@@ -21,11 +21,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { setSpinnerState } from "../../redux/features/commonUISlice";
 import ConfirmationPopup from "../common/popup/ConfirmationPopup";
+import { lookup } from "zipcodes";
 
-const addressFields = patientAddressFields;
+let addressFields = patientAddressFields;
 const contactFields = patientContactFields;
 var accessToken: string;
-const re = /^[0-9-+\b]+$/;
+const re = /^[0-9\b]+$/;
 const country: any = countryOptions;
 let states: any = stateOptions;
 let cities: any = cityOptions;
@@ -33,6 +34,7 @@ let cities: any = cityOptions;
 states.map((x: any) => { x.key = x.isoCode; x.text = x.name });
 cities.map((x: any) => { x.key = x.text; x.text = x.name });
 let defaultCities: any = { text: "", key: "" };
+let defaultStates: any = states;
 
 const onFormatDate = (date?: Date): string => {
   return !date
@@ -140,6 +142,10 @@ const PatientDemographicComponent = (props: any) => {
   const patientDemographics = useSelector((state: RootState) => state.patientDetails.data);
   const spinnerSelector = useSelector((state: RootState) => state.commonUIElements.data);
   const dispatch = useDispatch();
+  // console.log('country', country);
+  // console.table('states', states);
+  // console.table('cities', cities);
+  //console.log('zip code', lookup("22222"), lookup("700079"));
 
   useEffect(() => {
     // console.log('redux patient details useEffect', patientDemographics, spinnerSelector);
@@ -184,8 +190,12 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const handleInputChange = (e: any, option?: any) => {
-    const { name, value, id } = e.target;
+    let { name, value, id } = e.target;
     let obj: any;
+    if (name === "home_postal_code") {
+      let returnData = hadlePostalCode(e);
+      value = returnData.toString();
+    }
     if (name) {
       obj = { ...formValues, [name]: value };
       setFormValues({
@@ -287,6 +297,29 @@ const PatientDemographicComponent = (props: any) => {
       }
     }
   };
+
+  const hadlePostalCode = (e: any) => {
+    const zipLookUpValue = lookup(e.target.value);
+    if (e.target.value === "" || re.test(e.target.value)) {
+      if (zipLookUpValue === undefined) {
+        console.log('address field', addressFields);
+        addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "Invalid postal code");
+      }
+      else {
+        defaultStates = states.filter((x: any) => x.isoCode === zipLookUpValue.state);
+        defaultCities = cities.filter((x: any) => x.text == zipLookUpValue.city && x.stateCode == zipLookUpValue.state);
+        setCityDisable(false);
+        addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "");
+        console.log('all states', defaultStates, defaultCities, zipLookUpValue);
+      }
+      return e.target.value;
+    } else if (e.target.value.length == 1) {
+      addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "Only numbers are allowed");
+      return "";
+    } else {
+      return e.target.value.slice(0, e.target.value.length - 1);
+    }
+  }
 
   const handleHomePhoneNumber = (e: any) => {
     if (e.target.value === "" || re.test(e.target.value)) {
@@ -545,9 +578,11 @@ const PatientDemographicComponent = (props: any) => {
                   id={field.id}
                   name={field.name}
                   type={field.type}
-                  maxLength={20}
+                  maxLength={field.maxLength}
+                  minLength={field.minLength}
                   isRequired={field.isRequired}
                   placeholder={field.placeholder}
+                  errorMessage={field.errorMessage}
                   isDisabled={isAllDisable}
                 />
               </div>
@@ -568,14 +603,14 @@ const PatientDemographicComponent = (props: any) => {
             <div className="col-span-1 px-4">
               <label htmlFor="home_state">State</label>
               <Dropdown
-                key={states.key}
+                key={defaultStates.key}
                 id="home_state"
                 placeholder="Select State"
-                selectedKey={states.key}
+                selectedKey={defaultStates.key}
                 disabled={isAllDisable}
                 required={true}
                 // label="State"
-                options={states}
+                options={defaultStates}
                 onChange={handleInputChange}>
               </Dropdown>
 

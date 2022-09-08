@@ -1,5 +1,5 @@
 import { Input, Label, makeStyles, shorthands, } from "@fluentui/react-components";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles({
   root: {
@@ -27,17 +27,22 @@ const InputBox = ({
   type,
   isRequired = false,
   placeholder,
-  customClass,
+  errorMessage,
   isDisabled,
-  maxLength = 0
+  maxLength = 0,
+  minLength = 0
 }: any) => {
   const styles = useStyles();
+  const [isShowError, setIsShowError] = useState(false);
 
   useEffect(() => {
-    if (value && value.length > 2) {
+    if (name == "home_postal_code" && errorMessage && errorMessage.length > 0) {
+      setIsShowError(true);
+    }
+    if (value && value.length > minLength) {
       isRequired = false
     }
-  }, [value]);
+  }, [value, errorMessage]);
 
   return (
     <div className="grid grid-cols-1 gap-1 px-4">
@@ -54,7 +59,7 @@ const InputBox = ({
           type={type}
           required={isRequired}
           //className="inputBox"
-          minLength={2}
+          minLength={minLength}
           maxLength={maxLength}
           disabled={isDisabled}
         />
@@ -65,10 +70,10 @@ const InputBox = ({
             </span>
           </div>
         )} */}
-        {isRequired && value && value.length <= 2 ? (
+        {isShowError ? (
           <div>
             <span className="text-red-500 text-xs italic">
-              *Please fill out this field, min 2 characters.
+              {errorMessage}
             </span>
           </div>
         ) : <></>}

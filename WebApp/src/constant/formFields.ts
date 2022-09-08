@@ -8,6 +8,9 @@ const patientAddressFields = [
     autoComplete: "home_street1",
     isRequired: true,
     placeholder: "Street 1",
+    maxLength: 30,
+    minLength: 4,
+    // errorMessage: ""
   },
   {
     labelText: "Street 2",
@@ -18,6 +21,9 @@ const patientAddressFields = [
     autoComplete: "home_street2",
     isRequired: false,
     placeholder: "Street 2",
+    maxLength: 30,
+    minLength: 4,
+    // errorMessage: ""
   },/*
   {
     labelText: "City",
@@ -57,7 +63,10 @@ const patientAddressFields = [
     type: "text",
     autoComplete: "home_postal_code",
     isRequired: true,
-    placeholder: "Postal Code",
+    placeholder: "Enter Postal Code for City and State",
+    maxLength: 5,
+    minLength: 5,
+    errorMessage: ""
   },
 ];
 
