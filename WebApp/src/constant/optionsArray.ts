@@ -37,8 +37,8 @@ const studentOptions: IDropdownOption[] = [
     { text: "Part Time Student", key: "P" },
 ]
 
-const countryOptions = Country.getCountryByCode("US");
-const stateOptions = State.getStatesOfCountry("US");
-const cityOptions = City.getCitiesOfCountry("US");
+const defaultCountryOptions = Country.getAllCountries();
+const defaultStateOptions = State.getAllStates();
+const defaultCityOptions = City.getAllCities();
 
-export { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions, countryOptions, stateOptions, cityOptions };
+export { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions, defaultCountryOptions, defaultStateOptions, defaultCityOptions };

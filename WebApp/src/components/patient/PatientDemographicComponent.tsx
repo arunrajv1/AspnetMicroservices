@@ -1,42 +1,43 @@
-import { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { formatDate } from "../../services/CommonServices";
-import { deletePatient, getDataById, postData, updateData, } from "../../services/PatientServices";
-import SearchIcon from "@mui/icons-material/Search";
+import { deletePatient, postData, updateData, } from "../../services/PatientServices";
 import FullPageLoader from "../common/Loader/FullPageLoader";
 import AlertPopup from "../common/popup/AlertPopup";
-import { Body1, Caption1, Checkbox, Input, Label, Tooltip, Button } from "@fluentui/react-components";
-import { Add16Filled, ChevronDown12Filled, ChevronDown16Filled, Delete16Filled, Search24Filled, } from "@fluentui/react-icons";
-import { Card, CardFooter, CardHeader, CardPreview, Select, Table, TableRow, TableBody, TableHeader, TableHeaderCell, TableCell, Option, DropdownProps } from "@fluentui/react-components/unstable";
-import { patientAddressFields, patientContactFields, countryStateCity } from "../../constant/formFields";
+import { Body1, Checkbox, Input, Tooltip, Button } from "@fluentui/react-components";
+import { Add16Filled, Delete16Filled, } from "@fluentui/react-icons";
+import { Card, CardHeader, Table, TableRow, TableBody, TableHeader, TableHeaderCell, TableCell } from "@fluentui/react-components/unstable";
+import { patientAddressFields, patientContactFields } from "../../constant/formFields";
 import "../../style/CommonStyle.scss";
 import InputBox from "../common/ElementsUI/InputBox";
-import { DatePicker, defaultDatePickerStrings, IDropdownOption, Dropdown, Stack, Icon } from "@fluentui/react";
+import { DatePicker, defaultDatePickerStrings, Dropdown } from "@fluentui/react";
 import ButtonComponent from "../common/ElementsUI/ButtonComponent";
 import DropdownComponent from "../common/ElementsUI/DropdownComponent";
-import { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions, stateOptions, countryOptions, cityOptions } from "../../constant/optionsArray";
+import { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions, defaultCountryOptions, defaultStateOptions, defaultCityOptions } from "../../constant/optionsArray";
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../AuthConfig";
-import { resolveNs } from "dns";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { setSpinnerState } from "../../redux/features/commonUISlice";
 import ConfirmationPopup from "../common/popup/ConfirmationPopup";
 import { lookup } from "zipcodes";
+// import {  } from "postal-codes";
 
-const country: any = countryOptions;
+let country: any = defaultCountryOptions;
 let addressFields = patientAddressFields;
 const contactFields = patientContactFields;
-contactFields.map(x => x.countryCode = "+" + country.phonecode)
+contactFields.map(x => x.countryCode = "+" + country.filter((x: any) => x.isoCode == "US")[0].phonecode)
 var accessToken: string;
 const re = /^[0-9\b]+$/;
-let states: any = stateOptions;
-let cities: any = cityOptions;
+let states: any = defaultStateOptions;
+let cities: any = defaultCityOptions;
 
 states.map((x: any) => { x.key = x.isoCode; x.text = x.name });
 cities.map((x: any) => { x.key = x.name; x.text = x.name });
-let defaultCities: any = { text: "", key: "" };
-let defaultStates: any = states;
+country.map((x: any) => { x.key = x.isoCode; x.text = x.name });
 
+let selectedCountries: any = country;
+let selectedCities: any = { text: "", key: "" };
+let selectedStates: any = { text: "", key: "" };
+// let tempState: any = selectedStates[0];
 const onFormatDate = (date?: Date): string => {
   return !date
     ? ""
@@ -128,6 +129,7 @@ const PatientDemographicComponent = (props: any) => {
   const [alertState, setAlertState] = useState(false);
   const [alertProps, updateAlertProps] = useState(defaultAlertProps);
   const [isCityDisable, setCityDisable] = useState(true);
+  const [isStateDisable, setStateDisable] = useState(true);
   const [isSaveDisable, setIsSaveDisable] = useState(false);
   const [isAllDisable, setIsAllDisable] = useState(false);
   const [disableEditButton, setDisableEditButton] = useState(true);
@@ -143,8 +145,8 @@ const PatientDemographicComponent = (props: any) => {
   const patientDemographics = useSelector((state: RootState) => state.patientDetails.data);
   const spinnerSelector = useSelector((state: RootState) => state.commonUIElements.data);
   const dispatch = useDispatch();
-  console.log('country', country, contactFields);
-  // console.table('states', states[0]);
+  console.log('country', defaultCountryOptions, country);
+  // console.log('states', states[0]);
   // console.table('cities', cities);
   //console.log('zip code', lookup("22222"), lookup("700079"));
 
@@ -208,9 +210,19 @@ const PatientDemographicComponent = (props: any) => {
     }
     else if (id) {
       obj = { ...formValues, [id]: option.key };
-      if (id === "home_state") {
-        defaultCities = cities.filter((x: any) => x.stateCode == option.key);
-        if (defaultCities.length > 0)
+      if (id === "home_country") {
+        selectedStates = states.filter((x: any) => x.countryCode == option.key);
+        if (selectedStates.length > 0) {
+          contactFields.map(x => x.countryCode = "+" + country.filter((x: any) => x.isoCode == option.key)[0].phonecode);
+          setStateDisable(false);
+        }
+        else
+          setStateDisable(true);
+        option.key = option.name;
+      }
+      else if (id === "home_state") {
+        selectedCities = cities.filter((x: any) => x.stateCode == option.key);
+        if (selectedCities.length > 0)
           setCityDisable(false);
         else
           setCityDisable(true);
@@ -307,19 +319,21 @@ const PatientDemographicComponent = (props: any) => {
     if (e.target.value === "" || re.test(e.target.value)) {
       if (zipLookUpValue === undefined) {
         //console.log('address field', addressFields);
-        defaultStates = states;
-        defaultCities = cities;
+        selectedStates = states;
+        selectedCities = cities;
         setCityDisable(true);
         obj = { ...formValues, ["home_postal_code"]: e.target.value, ["home_state"]: "", ["home_city"]: "" };
         addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "Invalid postal code");
       }
       else {
-        defaultStates = states.filter((x: any) => x.isoCode === zipLookUpValue.state);
-        defaultCities = cities.filter((x: any) => x.text == zipLookUpValue.city && x.stateCode == zipLookUpValue.state);
+        let tempSelectedStates = states.filter((x: any) => x.isoCode === zipLookUpValue.state);
+        let tempSelectedCities = cities.filter((x: any) => x.text == zipLookUpValue.city && x.stateCode == zipLookUpValue.state);
+        selectedStates = tempSelectedStates;
+        selectedCities = tempSelectedCities;
         setCityDisable(false);
-        obj = { ...formValues, ["home_postal_code"]: e.target.value, ["home_state"]: defaultStates[0].name, ["home_city"]: defaultCities[0].key };
+        obj = { ...formValues, ["home_postal_code"]: e.target.value, ["home_state"]: selectedStates[0].name, ["home_city"]: selectedCities[0].key };
         addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "");
-        //console.log('all states', defaultStates, defaultCities, zipLookUpValue);
+        //console.log('all states', selectedStates, selectedCities, zipLookUpValue);
       }
       handleStateChange(obj);
       // return obj;
@@ -603,27 +617,30 @@ const PatientDemographicComponent = (props: any) => {
             <div className="col-span-1 px-4">
               <label htmlFor="home_country">Country</label>
               <Dropdown
+                key={selectedCountries.key}
                 id="home_country"
-                placeholder={country['name']}
-                selectedKey={country['isoCode']}
-                disabled={true}
+                placeholder={"Select Country"}
+                selectedKey={selectedCountries.key}
+                defaultSelectedKey={["US"]}
+                disabled={false}
                 required={true}
                 // label="Country"
-                options={country}            >
+                options={selectedCountries}
+                onChange={handleInputChange}>
               </Dropdown>
 
             </div>
             <div className="col-span-1 px-4">
               <label htmlFor="home_state">State</label>
               <Dropdown
-                key={defaultStates.key}
+                key={selectedStates.key}
                 id="home_state"
                 placeholder="Select State"
-                selectedKey={defaultStates.key}
-                disabled={isAllDisable}
+                selectedKey={selectedStates.key}
+                disabled={isStateDisable || isAllDisable}
                 required={true}
                 // label="State"
-                options={defaultStates}
+                options={selectedStates}
                 onChange={handleInputChange}>
               </Dropdown>
 
@@ -633,11 +650,11 @@ const PatientDemographicComponent = (props: any) => {
               <Dropdown
                 id="home_city"
                 placeholder="Select City"
-                selectedKey={defaultCities.key}
+                selectedKey={selectedCities.key}
                 disabled={isCityDisable || isAllDisable}
                 required={false}
                 // label="City"
-                options={defaultCities}
+                options={selectedCities}
                 onChange={handleInputChange}>
               </Dropdown>
 
