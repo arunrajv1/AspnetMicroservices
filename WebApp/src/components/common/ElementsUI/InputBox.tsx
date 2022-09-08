@@ -30,7 +30,8 @@ const InputBox = ({
   errorMessage,
   isDisabled,
   maxLength = 0,
-  minLength = 0
+  minLength = 0,
+  contentBefore
 }: any) => {
   const styles = useStyles();
   const [isShowError, setIsShowError] = useState(false);
@@ -62,6 +63,7 @@ const InputBox = ({
           minLength={minLength}
           maxLength={maxLength}
           disabled={isDisabled}
+          contentBefore={contentBefore}
         />
         {/* {isRequired && (
           <div>

@@ -81,6 +81,7 @@ const patientContactFields = [
     autoComplete: "home_phone",
     isRequired: true,
     placeholder: "Home",
+    countryCode: ""
   },
   {
     labelText: "Work",
@@ -92,6 +93,7 @@ const patientContactFields = [
     autoComplete: "work_phone",
     isRequired: false,
     placeholder: "Work",
+    countryCode: ""
   },
 ];
 

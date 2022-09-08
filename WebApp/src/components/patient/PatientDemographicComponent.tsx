@@ -23,16 +23,17 @@ import { setSpinnerState } from "../../redux/features/commonUISlice";
 import ConfirmationPopup from "../common/popup/ConfirmationPopup";
 import { lookup } from "zipcodes";
 
+const country: any = countryOptions;
 let addressFields = patientAddressFields;
 const contactFields = patientContactFields;
+contactFields.map(x => x.countryCode = "+" + country.phonecode)
 var accessToken: string;
 const re = /^[0-9\b]+$/;
-const country: any = countryOptions;
 let states: any = stateOptions;
 let cities: any = cityOptions;
 
 states.map((x: any) => { x.key = x.isoCode; x.text = x.name });
-cities.map((x: any) => { x.key = x.text; x.text = x.name });
+cities.map((x: any) => { x.key = x.name; x.text = x.name });
 let defaultCities: any = { text: "", key: "" };
 let defaultStates: any = states;
 
@@ -142,8 +143,8 @@ const PatientDemographicComponent = (props: any) => {
   const patientDemographics = useSelector((state: RootState) => state.patientDetails.data);
   const spinnerSelector = useSelector((state: RootState) => state.commonUIElements.data);
   const dispatch = useDispatch();
-  // console.log('country', country);
-  // console.table('states', states);
+  console.log('country', country, contactFields);
+  // console.table('states', states[0]);
   // console.table('cities', cities);
   //console.log('zip code', lookup("22222"), lookup("700079"));
 
@@ -194,7 +195,9 @@ const PatientDemographicComponent = (props: any) => {
     let obj: any;
     if (name === "home_postal_code") {
       let returnData = hadlePostalCode(e);
-      value = returnData.toString();
+      // value = returnData.toString();
+      setFormValues(returnData);
+      return;
     }
     if (name) {
       obj = { ...formValues, [name]: value };
@@ -298,27 +301,37 @@ const PatientDemographicComponent = (props: any) => {
     }
   };
 
-  const hadlePostalCode = (e: any) => {
+  const hadlePostalCode = (e: any): any => {
     const zipLookUpValue = lookup(e.target.value);
+    let obj: any;
     if (e.target.value === "" || re.test(e.target.value)) {
       if (zipLookUpValue === undefined) {
-        console.log('address field', addressFields);
+        //console.log('address field', addressFields);
+        defaultStates = states;
+        defaultCities = cities;
+        setCityDisable(true);
+        obj = { ...formValues, ["home_postal_code"]: e.target.value, ["home_state"]: "", ["home_city"]: "" };
         addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "Invalid postal code");
       }
       else {
         defaultStates = states.filter((x: any) => x.isoCode === zipLookUpValue.state);
         defaultCities = cities.filter((x: any) => x.text == zipLookUpValue.city && x.stateCode == zipLookUpValue.state);
         setCityDisable(false);
+        obj = { ...formValues, ["home_postal_code"]: e.target.value, ["home_state"]: defaultStates[0].name, ["home_city"]: defaultCities[0].key };
         addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "");
-        console.log('all states', defaultStates, defaultCities, zipLookUpValue);
+        //console.log('all states', defaultStates, defaultCities, zipLookUpValue);
       }
-      return e.target.value;
+      handleStateChange(obj);
+      // return obj;
     } else if (e.target.value.length == 1) {
+      obj = { ...formValues, ["home_postal_code"]: "", ["home_state"]: "", ["home_city"]: "" };
       addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "Only numbers are allowed");
-      return "";
+      // return obj;
     } else {
-      return e.target.value.slice(0, e.target.value.length - 1);
+      obj = { ...formValues, ["home_postal_code"]: e.target.value.slice(0, e.target.value.length - 1), ["home_state"]: "", ["home_city"]: "" };
+      // return obj;
     }
+    return obj;
   }
 
   const handleHomePhoneNumber = (e: any) => {
@@ -793,6 +806,7 @@ const PatientDemographicComponent = (props: any) => {
                   isRequired={field.isRequired}
                   placeholder={field.placeholder}
                   isDisabled={isAllDisable}
+                  contentBefore={field.countryCode}
                 />
               ))}
             </div>
