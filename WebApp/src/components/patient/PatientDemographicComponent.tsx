@@ -72,7 +72,7 @@ const defaultValues: any = {
   home_city: "",
   home_state: "",
   home_postal_code: "",
-  home_country: country.name,
+  home_country: selectedCountries.filter((x: any) => x.isoCode === "US")[0].name,
   home_phone: "",
   work_phone: "",
   mrn: [{}],
@@ -342,7 +342,7 @@ const PatientDemographicComponent = (props: any) => {
         selectedCountries = country.filter((x: any) => x.isoCode === zipLookUpValue.country);
         selectedStates = states.filter((x: any) => x.isoCode === zipLookUpValue.state && x.countryCode === zipLookUpValue.country).sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
         selectedCities = cities.filter((x: any) => x.text == zipLookUpValue.city && x.stateCode == zipLookUpValue.state).sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
-        
+
         setSelectedCountryKey([zipLookUpValue.country]);
         setSelectedStateKey([zipLookUpValue.state]);
         setSelectedCityKey([zipLookUpValue.city]);
