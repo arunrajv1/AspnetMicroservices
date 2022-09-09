@@ -88,7 +88,7 @@ const defaultValues: any = {
   last_name: "",
   middle_name: "",
   suffix: "",
-  id: "",
+  id: 0,
 };
 
 const defaultContactValues: any = {
@@ -125,7 +125,7 @@ const PatientDemographicComponent = (props: any) => {
   const [age, setAge] = useState("");
   const [hasError, setHasError] = useState(false);
   const [formValues, setFormValues] = useState(defaultValues);
-  const [formContactValues, setFormContactValues] = useState(defaultContactValues);
+//  const [formContactValues, setFormContactValues] = useState(defaultContactValues);
   const [formMRN, setFormMRN] = useState(defaultMRN);
   const [alertState, setAlertState] = useState(false);
   const [alertProps, updateAlertProps] = useState(defaultAlertProps);
@@ -169,7 +169,7 @@ const PatientDemographicComponent = (props: any) => {
     setDateOfBirth(new Date());
     setHasError(false);
     setFormValues(defaultValues);
-    setFormContactValues(defaultContactValues);
+  //  setFormContactValues(defaultContactValues);
     setAlertState(false);
     updateAlertProps(defaultAlertProps);
     setIsAllDisable(false);
@@ -242,30 +242,30 @@ const PatientDemographicComponent = (props: any) => {
     handleStateChange(obj);
   };
 
-  const handleContactInputChange = (e: any) => {
-    let { name, value } = e.target;
-    if (e.target.name === "home_phone") {
-      let returnData = handleHomePhoneNumber(e);
-      value = returnData.toString();
-    } else if (e.target.name === "work_phone") {
-      let returnData = handleWorkPhoneNumber(e);
-      value = returnData.toString();
-    }
-    let obj = { ...formContactValues, [name]: value };
-    let mainArr = { ...formValues, address: obj };
+//   const handleContactInputChange = (e: any) => {
+//     let { name, value } = e.target;
+//     if (e.target.name === "home_phone") {
+//       let returnData = handleHomePhoneNumber(e);
+//       value = returnData.toString();
+//     } else if (e.target.name === "work_phone") {
+//       let returnData = handleWorkPhoneNumber(e);
+//       value = returnData.toString();
+//     }
+//     let obj = { ...formContactValues, [name]: value };
+//     let mainArr = { ...formValues, address: obj };
 
-    setFormContactValues({
-      ...formContactValues,
-      [name]: value,
-    });
+//     setFormContactValues({
+//       ...formContactValues,
+//       [name]: value,
+//     });
 
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
+//     setFormValues({
+//       ...formValues,
+//       [name]: value,
+//     });
 
-    // handleStateChange(mainArr);
-  };
+//     // handleStateChange(mainArr);
+//   };
 
   const handleFormMRN = (e: any, index: number) => {
     const { name, value } = e.target;
@@ -406,19 +406,19 @@ const PatientDemographicComponent = (props: any) => {
       home_state: formData.home_state,
       home_street1: formData.home_street1,
       home_street2: formData.home_street2,
-      id: formData.id,
+     // id: 0,
     });
     setDeceased(formData.deceased);
-    setFormContactValues({
-      ...formData.address,
-      home_city: formData.home_city,
-      home_country: formData.home_country,
-      home_phone: formData.home_phone,
-      home_postal_code: formData.home_postal_code,
-      home_state: formData.home_state,
-      home_street1: formData.home_street1,
-      home_street2: formData.home_street2,
-    });
+    // setFormContactValues({
+    //   ...formData.address,
+    //   home_city: formData.home_city,
+    //   home_country: formData.home_country,
+    //   home_phone: formData.home_phone,
+    //   home_postal_code: formData.home_postal_code,
+    //   home_state: formData.home_state,
+    //   home_street1: formData.home_street1,
+    //   home_street2: formData.home_street2,
+    // });
 
     if (formData.mrn)
       setFormMRN(formData.mrn);
@@ -504,13 +504,13 @@ const PatientDemographicComponent = (props: any) => {
           formValues.mrn.push(obj);
         }
       });
-      formValues.address = formContactValues;
+      //formValues.address = formContactValues;
       formValues.first_name = props.formData.first_name;
       formValues.last_name = props.formData.last_name;
       formValues.middle_name = props.formData.middle_name;
       formValues.suffix = props.formData.suffix;
       formValues.date_of_birth = formatDate(dateOfBirth);
-      formValues.id = "";
+      formValues.id = 0;
       deceased ? (formValues.deceased = "Y") : (formValues.deceased = "N");
       console.log("form data before save", formValues);
 
@@ -645,9 +645,8 @@ const PatientDemographicComponent = (props: any) => {
                 required={true}
                 // label="Country"
                 options={selectedCountries}
-                onChange={handleInputChange}>
-              </Dropdown>
-
+                onChange={handleInputChange}
+              ></Dropdown>
             </div>
             <div className="justify-start col-span-1 px-4">
               <label htmlFor="home_state">State</label>
@@ -661,9 +660,8 @@ const PatientDemographicComponent = (props: any) => {
                 required={true}
                 // label="State"
                 options={selectedStates}
-                onChange={handleInputChange}>
-              </Dropdown>
-
+                onChange={handleInputChange}
+              ></Dropdown>
             </div>
             <div className="col-span-1 px-4">
               <label htmlFor="home_city">City</label>
@@ -676,9 +674,8 @@ const PatientDemographicComponent = (props: any) => {
                 required={false}
                 // label="City"
                 options={selectedCities}
-                onChange={handleInputChange}>
-              </Dropdown>
-
+                onChange={handleInputChange}
+              ></Dropdown>
             </div>
           </div>
         </Card>
@@ -691,7 +688,7 @@ const PatientDemographicComponent = (props: any) => {
                   <b>General Information</b>
                 </Body1>
               }
-            // description={<Caption1>5h ago · About us - Overview</Caption1>}
+              // description={<Caption1>5h ago · About us - Overview</Caption1>}
             />
             <div className="grid grid-rows-3 grid-flow-col">
               {/*Row 1*/}
@@ -705,7 +702,8 @@ const PatientDemographicComponent = (props: any) => {
                     id="birth_sex"
                     isRequired={true}
                     placeholder="Select Gender"
-                    isDisabled={isAllDisable} />
+                    isDisabled={isAllDisable}
+                  />
                 </div>
                 <div className="lg:col-span-3 sm:col-span-1 justify-start">
                   <label htmlFor="calenderDOB">Date of birth</label>
@@ -774,7 +772,8 @@ const PatientDemographicComponent = (props: any) => {
                     id="marital_status"
                     isRequired={true}
                     placeholder="Select Marital Status"
-                    isDisabled={isAllDisable} />
+                    isDisabled={isAllDisable}
+                  />
                 </div>
                 <div className="sm:col-span-1 justify-start">
                   <DropdownComponent
@@ -785,7 +784,8 @@ const PatientDemographicComponent = (props: any) => {
                     id="race"
                     isRequired={true}
                     placeholder="Select Race"
-                    isDisabled={isAllDisable} />
+                    isDisabled={isAllDisable}
+                  />
                 </div>
               </div>
               {/*Row 3*/}
@@ -799,7 +799,8 @@ const PatientDemographicComponent = (props: any) => {
                     id="employment_status"
                     isRequired={true}
                     placeholder="Select Employment"
-                    isDisabled={isAllDisable} />
+                    isDisabled={isAllDisable}
+                  />
                 </div>
                 <div className="sm:col-span-1 justify-start">
                   <DropdownComponent
@@ -810,7 +811,8 @@ const PatientDemographicComponent = (props: any) => {
                     id="student_status"
                     isRequired={true}
                     placeholder="Select Student"
-                    isDisabled={isAllDisable} />
+                    isDisabled={isAllDisable}
+                  />
                 </div>
                 <div className="sm:col-span-1 justify-start"></div>
               </div>
@@ -833,7 +835,7 @@ const PatientDemographicComponent = (props: any) => {
               {contactFields.map((field: any, i: number) => (
                 <InputBox
                   key={i}
-                  handleChange={handleContactInputChange}
+                  handleChange={handleInputChange}
                   value={formValues[field.name]}
                   labelText={field.labelText}
                   labelFor={field.labelFor}
@@ -859,7 +861,7 @@ const PatientDemographicComponent = (props: any) => {
                   <b>Medical Record Numbers</b>
                 </Body1>
               }
-            // description={<Caption1>5h ago · About us - Overview</Caption1>}
+              // description={<Caption1>5h ago · About us - Overview</Caption1>}
             />
             <div className="grid grid-cols-12">
               <div className="col-span-10 tableStyle">
@@ -899,7 +901,10 @@ const PatientDemographicComponent = (props: any) => {
                             value={row.medical_facility}
                           />
                         </TableCell>
-                        <TableCell className="grid col-span-1" style={{ maxWidth: "50px" }}>
+                        <TableCell
+                          className="grid col-span-1"
+                          style={{ maxWidth: "50px" }}
+                        >
                           <Tooltip content="delete row" relationship="label">
                             <Button
                               id={"btn" + index}
@@ -928,11 +933,13 @@ const PatientDemographicComponent = (props: any) => {
           </Card>
         </div>
       </div>
-      {(loading || spinnerSelector) ? (
+      {loading || spinnerSelector ? (
         <div style={{ textAlign: "center", width: "100%" }}>
           <FullPageLoader></FullPageLoader>
         </div>
-      ) : <></>}
+      ) : (
+        <></>
+      )}
       {alertState ? (
         <AlertPopup
           onClose={() => setAlertState(false)}
@@ -942,8 +949,12 @@ const PatientDemographicComponent = (props: any) => {
         <></>
       )}
       {confirmationState ? (
-        <ConfirmationPopup text={"Do You want to delete this record?"}></ConfirmationPopup>
-      ) : (<></>)}
+        <ConfirmationPopup
+          text={"Do You want to delete this record?"}
+        ></ConfirmationPopup>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
