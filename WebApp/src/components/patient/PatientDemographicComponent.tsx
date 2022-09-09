@@ -29,14 +29,15 @@ var accessToken: string;
 const re = /^[0-9\b]+$/;
 let states: any = defaultStateOptions;
 let cities: any = defaultCityOptions;
+const defaultDropdownKeyValue: any = { text: "", key: "" }
 
 states.map((x: any) => { x.key = x.isoCode; x.text = x.name });
 cities.map((x: any) => { x.key = x.name; x.text = x.name });
 country.map((x: any) => { x.key = x.isoCode; x.text = x.name });
 
 let selectedCountries: any = country;
-let selectedCities: any = { text: "", key: "" };
-let selectedStates: any = { text: "", key: "" };
+let selectedCities: any = defaultDropdownKeyValue;
+let selectedStates: any = states.filter((x: any) => x.countryCode == "US").sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
 // let tempState: any = selectedStates[0];
 const onFormatDate = (date?: Date): string => {
   return !date
@@ -129,7 +130,7 @@ const PatientDemographicComponent = (props: any) => {
   const [alertState, setAlertState] = useState(false);
   const [alertProps, updateAlertProps] = useState(defaultAlertProps);
   const [isCityDisable, setCityDisable] = useState(true);
-  const [isStateDisable, setStateDisable] = useState(true);
+  const [isStateDisable, setStateDisable] = useState(false);
   const [isSaveDisable, setIsSaveDisable] = useState(false);
   const [isAllDisable, setIsAllDisable] = useState(false);
   const [disableEditButton, setDisableEditButton] = useState(true);
@@ -138,6 +139,9 @@ const PatientDemographicComponent = (props: any) => {
   const [alertBoxText, setAlertBoxText] = useState("");
   const { instance, accounts, inProgress } = useMsal();
   const [confirmationState, setConfirmationState] = useState(false);
+  const [selectedCountryKey, setSelectedCountryKey] = useState(["US"]);
+  const [selectedStateKey, setSelectedStateKey] = useState([""]);
+  const [selectedCityKey, setSelectedCityKey] = useState([""]);
   // const [rowAction, setRowAction] = useState<IMedicalRecordNumber[]>([
   //   { recordNumber: "", facility: "" },
   // ]);
@@ -145,7 +149,7 @@ const PatientDemographicComponent = (props: any) => {
   const patientDemographics = useSelector((state: RootState) => state.patientDetails.data);
   const spinnerSelector = useSelector((state: RootState) => state.commonUIElements.data);
   const dispatch = useDispatch();
-  console.log('country', defaultCountryOptions, country);
+  // console.log('country', defaultCountryOptions, country);
   // console.log('states', states[0]);
   // console.table('cities', cities);
   //console.log('zip code', lookup("22222"), lookup("700079"));
@@ -211,17 +215,19 @@ const PatientDemographicComponent = (props: any) => {
     else if (id) {
       obj = { ...formValues, [id]: option.key };
       if (id === "home_country") {
-        selectedStates = states.filter((x: any) => x.countryCode == option.key);
+        selectedStates = states.filter((x: any) => x.countryCode == option.key).sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
         if (selectedStates.length > 0) {
           contactFields.map(x => x.countryCode = "+" + country.filter((x: any) => x.isoCode == option.key)[0].phonecode);
+          selectedCities = defaultDropdownKeyValue;
           setStateDisable(false);
+          setCityDisable(true);
         }
         else
           setStateDisable(true);
         option.key = option.name;
       }
       else if (id === "home_state") {
-        selectedCities = cities.filter((x: any) => x.stateCode == option.key);
+        selectedCities = cities.filter((x: any) => x.stateCode == option.key && x.countryCode == option.countryCode).sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
         if (selectedCities.length > 0)
           setCityDisable(false);
         else
@@ -318,21 +324,32 @@ const PatientDemographicComponent = (props: any) => {
     let obj: any;
     if (e.target.value === "" || re.test(e.target.value)) {
       if (zipLookUpValue === undefined) {
-        //console.log('address field', addressFields);
+        selectedCountries = country;
         selectedStates = states;
         selectedCities = cities;
+
+        setSelectedCountryKey([""]);
+        setSelectedStateKey([""]);
+        setSelectedCityKey([""]);
+
         setCityDisable(true);
         setStateDisable(true);
+
         obj = { ...formValues, ["home_postal_code"]: e.target.value, ["home_state"]: "", ["home_city"]: "" };
         addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "Invalid postal code");
       }
       else {
-        let tempSelectedStates = states.filter((x: any) => x.isoCode === zipLookUpValue.state);
-        let tempSelectedCities = cities.filter((x: any) => x.text == zipLookUpValue.city && x.stateCode == zipLookUpValue.state);
-        selectedStates = tempSelectedStates;
-        selectedCities = tempSelectedCities;
+        selectedCountries = country.filter((x: any) => x.isoCode === zipLookUpValue.country);
+        selectedStates = states.filter((x: any) => x.isoCode === zipLookUpValue.state && x.countryCode === zipLookUpValue.country).sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
+        selectedCities = cities.filter((x: any) => x.text == zipLookUpValue.city && x.stateCode == zipLookUpValue.state).sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
+        
+        setSelectedCountryKey([zipLookUpValue.country]);
+        setSelectedStateKey([zipLookUpValue.state]);
+        setSelectedCityKey([zipLookUpValue.city]);
+
         setStateDisable(false);
         setCityDisable(false);
+
         obj = { ...formValues, ["home_postal_code"]: e.target.value, ["home_state"]: selectedStates[0].name, ["home_city"]: selectedCities[0].key };
         addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "");
         //console.log('all states', selectedStates, selectedCities, zipLookUpValue);
@@ -621,9 +638,9 @@ const PatientDemographicComponent = (props: any) => {
               <Dropdown
                 key={selectedCountries.key}
                 id="home_country"
-                placeholder={"Select Country"}
+                placeholder="Select Country"
                 selectedKey={selectedCountries.key}
-                defaultSelectedKey={["US"]}
+                defaultSelectedKey={selectedCountryKey}
                 disabled={false}
                 required={true}
                 // label="Country"
@@ -632,13 +649,14 @@ const PatientDemographicComponent = (props: any) => {
               </Dropdown>
 
             </div>
-            <div className="col-span-1 px-4">
+            <div className="justify-start col-span-1 px-4">
               <label htmlFor="home_state">State</label>
               <Dropdown
                 key={selectedStates.key}
                 id="home_state"
                 placeholder="Select State"
                 selectedKey={selectedStates.key}
+                defaultSelectedKey={selectedStateKey}
                 disabled={isStateDisable || isAllDisable}
                 required={true}
                 // label="State"
@@ -653,6 +671,7 @@ const PatientDemographicComponent = (props: any) => {
                 id="home_city"
                 placeholder="Select City"
                 selectedKey={selectedCities.key}
+                defaultSelectedKey={selectedCityKey}
                 disabled={isCityDisable || isAllDisable}
                 required={false}
                 // label="City"
