@@ -518,7 +518,7 @@ const PatientDemographicComponent = (props: any) => {
         accessToken = await RequestAccessToken();
         await postData(formValues, accessToken)
           .then((response) => {
-            if (response.status === 200 && response.statusText === "OK") {
+            if ((response.status === 200 || response.status ===204)) {
               setAlertState(true);
               setAlertBoxText("Data Inserted Successfully");
               resetForm();
