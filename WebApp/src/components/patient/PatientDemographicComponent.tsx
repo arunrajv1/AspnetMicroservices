@@ -322,6 +322,7 @@ const PatientDemographicComponent = (props: any) => {
         selectedStates = states;
         selectedCities = cities;
         setCityDisable(true);
+        setStateDisable(true);
         obj = { ...formValues, ["home_postal_code"]: e.target.value, ["home_state"]: "", ["home_city"]: "" };
         addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "Invalid postal code");
       }
@@ -330,6 +331,7 @@ const PatientDemographicComponent = (props: any) => {
         let tempSelectedCities = cities.filter((x: any) => x.text == zipLookUpValue.city && x.stateCode == zipLookUpValue.state);
         selectedStates = tempSelectedStates;
         selectedCities = tempSelectedCities;
+        setStateDisable(false);
         setCityDisable(false);
         obj = { ...formValues, ["home_postal_code"]: e.target.value, ["home_state"]: selectedStates[0].name, ["home_city"]: selectedCities[0].key };
         addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "");
