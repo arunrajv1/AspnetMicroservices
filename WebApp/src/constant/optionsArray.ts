@@ -37,8 +37,14 @@ const studentOptions: IDropdownOption[] = [
     { text: "Part Time Student", key: "P" },
 ]
 
+const languageOptions: IDropdownOption[] = [
+    { text: "English", key: "EN" },
+    { text: "Spanish", key: "ES" },
+    { text: "French", key: "FR" },
+]
+
 const defaultCountryOptions = Country.getAllCountries();
 const defaultStateOptions = State.getAllStates();
 const defaultCityOptions = City.getAllCities();
 
-export { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions, defaultCountryOptions, defaultStateOptions, defaultCityOptions };
+export { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions, defaultCountryOptions, defaultStateOptions, defaultCityOptions, languageOptions };

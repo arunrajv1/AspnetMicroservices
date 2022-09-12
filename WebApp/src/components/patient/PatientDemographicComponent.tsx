@@ -19,7 +19,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import ConfirmationPopup from "../common/popup/ConfirmationPopup";
 import { lookup } from "zipcodes";
-// import {  } from "postal-codes";
+// import { PostalCodes } from "postal-codes";
+// import { lookupPostcode, Client } from "@ideal-postcodes/core-interface";
+
+// const client = new Client({ api_key: "iddqd" });
+// const postcode = "22222";
 
 let country: any = defaultCountryOptions;
 let addressFields = patientAddressFields;
@@ -125,7 +129,7 @@ const PatientDemographicComponent = (props: any) => {
   const [age, setAge] = useState("");
   const [hasError, setHasError] = useState(false);
   const [formValues, setFormValues] = useState(defaultValues);
-//  const [formContactValues, setFormContactValues] = useState(defaultContactValues);
+  //  const [formContactValues, setFormContactValues] = useState(defaultContactValues);
   const [formMRN, setFormMRN] = useState(defaultMRN);
   const [alertState, setAlertState] = useState(false);
   const [alertProps, updateAlertProps] = useState(defaultAlertProps);
@@ -149,10 +153,12 @@ const PatientDemographicComponent = (props: any) => {
   const patientDemographics = useSelector((state: RootState) => state.patientDetails.data);
   const spinnerSelector = useSelector((state: RootState) => state.commonUIElements.data);
   const dispatch = useDispatch();
-  // console.log('country', defaultCountryOptions, country);
-  // console.log('states', states[0]);
-  // console.table('cities', cities);
-  //console.log('zip code', lookup("22222"), lookup("700079"));
+  
+  // console.log('zip code', lookup("22222"), lookup("700079"));
+  // //console.log('pincode', client);
+  // lookupPostcode({ client, postcode }).then(addresses => {
+  //   console.log('postcode address', addresses);
+  // });
 
   useEffect(() => {
     // console.log('redux patient details useEffect', patientDemographics, spinnerSelector);
@@ -169,7 +175,7 @@ const PatientDemographicComponent = (props: any) => {
     setDateOfBirth(new Date());
     setHasError(false);
     setFormValues(defaultValues);
-  //  setFormContactValues(defaultContactValues);
+    //  setFormContactValues(defaultContactValues);
     setAlertState(false);
     updateAlertProps(defaultAlertProps);
     setIsAllDisable(false);
@@ -242,30 +248,30 @@ const PatientDemographicComponent = (props: any) => {
     handleStateChange(obj);
   };
 
-//   const handleContactInputChange = (e: any) => {
-//     let { name, value } = e.target;
-//     if (e.target.name === "home_phone") {
-//       let returnData = handleHomePhoneNumber(e);
-//       value = returnData.toString();
-//     } else if (e.target.name === "work_phone") {
-//       let returnData = handleWorkPhoneNumber(e);
-//       value = returnData.toString();
-//     }
-//     let obj = { ...formContactValues, [name]: value };
-//     let mainArr = { ...formValues, address: obj };
+  //   const handleContactInputChange = (e: any) => {
+  //     let { name, value } = e.target;
+  //     if (e.target.name === "home_phone") {
+  //       let returnData = handleHomePhoneNumber(e);
+  //       value = returnData.toString();
+  //     } else if (e.target.name === "work_phone") {
+  //       let returnData = handleWorkPhoneNumber(e);
+  //       value = returnData.toString();
+  //     }
+  //     let obj = { ...formContactValues, [name]: value };
+  //     let mainArr = { ...formValues, address: obj };
 
-//     setFormContactValues({
-//       ...formContactValues,
-//       [name]: value,
-//     });
+  //     setFormContactValues({
+  //       ...formContactValues,
+  //       [name]: value,
+  //     });
 
-//     setFormValues({
-//       ...formValues,
-//       [name]: value,
-//     });
+  //     setFormValues({
+  //       ...formValues,
+  //       [name]: value,
+  //     });
 
-//     // handleStateChange(mainArr);
-//   };
+  //     // handleStateChange(mainArr);
+  //   };
 
   const handleFormMRN = (e: any, index: number) => {
     const { name, value } = e.target;
@@ -406,7 +412,7 @@ const PatientDemographicComponent = (props: any) => {
       home_state: formData.home_state,
       home_street1: formData.home_street1,
       home_street2: formData.home_street2,
-     // id: 0,
+      // id: 0,
     });
     setDeceased(formData.deceased);
     // setFormContactValues({
@@ -518,7 +524,7 @@ const PatientDemographicComponent = (props: any) => {
         accessToken = await RequestAccessToken();
         await postData(formValues, accessToken)
           .then((response) => {
-            if ((response.status === 200 || response.status ===204)) {
+            if ((response.status === 200 || response.status === 204)) {
               setAlertState(true);
               setAlertBoxText("Data Inserted Successfully");
               resetForm();
@@ -688,7 +694,7 @@ const PatientDemographicComponent = (props: any) => {
                   <b>General Information</b>
                 </Body1>
               }
-              // description={<Caption1>5h ago · About us - Overview</Caption1>}
+            // description={<Caption1>5h ago · About us - Overview</Caption1>}
             />
             <div className="grid grid-rows-3 grid-flow-col">
               {/*Row 1*/}
@@ -861,7 +867,7 @@ const PatientDemographicComponent = (props: any) => {
                   <b>Medical Record Numbers</b>
                 </Body1>
               }
-              // description={<Caption1>5h ago · About us - Overview</Caption1>}
+            // description={<Caption1>5h ago · About us - Overview</Caption1>}
             />
             <div className="grid grid-cols-12">
               <div className="col-span-10 tableStyle">

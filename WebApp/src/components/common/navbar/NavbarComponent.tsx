@@ -6,9 +6,9 @@ import { iconStylePrimary } from "../../../constant/fluentUIStyles";
 import LandingPageComponent from "../LandingPageComponent";
 import NeighbourhoodComponent from "./tabs/NeighbourhoodComponent";
 import LogoutSharpIcon from '@mui/icons-material/LogoutSharp';
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { loginRequest } from "../../../AuthConfig";
-import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";  
+import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
+import SidePanelComponent from "../ElementsUI/SidePanelComponent";
 
 
 interface TabPanelProps {
@@ -36,27 +36,27 @@ const iconStyle = makeStyles(iconStylePrimary)
 
 const NavbarComponent = () => {
   const [selectedValue, setSelectedValue] = React.useState<TabValue>('neighbourhood');
-  const { instance,accounts, inProgress } = useMsal();
-  var accessToken:String;
+  const { instance, accounts, inProgress } = useMsal();
+  var accessToken: String;
   const onTabSelect = (event: SelectTabEvent, data: SelectTabData) => {
     setSelectedValue(data.value);
     RequestAccessToken();
   };
 
-  async function RequestAccessToken()  {
+  async function RequestAccessToken() {
     const request = {
-        ...loginRequest,
-        account: accounts[0]
+      ...loginRequest,
+      account: accounts[0]
     };
     // Silently acquires an access token which is then attached to a request for Microsoft Graph data
     await instance.acquireTokenSilent(request).then((response) => {
-      accessToken =response.accessToken;
+      accessToken = response.accessToken;
       console.log(accessToken);
     }).catch((e) => {
-         instance.acquireTokenPopup(request).then((response) => {
-          accessToken=response.accessToken;
-          console.log(response);
-        });
+      instance.acquireTokenPopup(request).then((response) => {
+        accessToken = response.accessToken;
+        console.log(response);
+      });
     });
     return accessToken;
   }
@@ -65,44 +65,47 @@ const NavbarComponent = () => {
   const handleLogout = () => {
     instance.logoutRedirect().catch(e => {
       console.error(e);
-  })
+    })
   }
 
   return (
     <div>
       <div className="flex justify-between cardHeader grid-cols-12">
-        <div className="grid col-span-1"></div>
-        <div className="grid col-span-10">
-        <TabList selectedValue={selectedValue} onTabSelect={onTabSelect}>
-          {/* {tabs.map(tab => {
+        <div className="grid col-span-2"></div>
+        <div className="grid col-span-8">
+          <TabList selectedValue={selectedValue} onTabSelect={onTabSelect}>
+            {/* {tabs.map(tab => {
             <OverflowItem key={tab.id} id={tab.id}>
               <Tab id={tab.id} value={tab.id} icon={<span>{tab.icon}</span>}>
                 {tab.name}
               </Tab>
             </OverflowItem>;
           })} */}
-          <OverflowItem id="desktop">
-            <Tab id="Desktop" value="desktop" icon={<span><Desktop16Regular /></span>}>
-              DESKTOP
-            </Tab>
-          </OverflowItem>
-          <OverflowItem id="neighbourhood">
-            <Tab id="Neighbourhood" value="neighbourhood" icon={<span><Earth16Regular /></span>}>
-              NEIGHBOURHOOD
-            </Tab>
-          </OverflowItem>
-          <OverflowItem id="findcase">
-            <Tab id="FindCase" value="findcase" icon={<span><DocumentSearch16Regular /></span>}>
-              FIND CASE
-            </Tab>
-          </OverflowItem>
-        </TabList>
+            <OverflowItem id="desktop">
+              <Tab id="Desktop" value="desktop" icon={<span><Desktop16Regular /></span>}>
+                DESKTOP
+              </Tab>
+            </OverflowItem>
+            <OverflowItem id="neighbourhood">
+              <Tab id="Neighbourhood" value="neighbourhood" icon={<span><Earth16Regular /></span>}>
+                NEIGHBOURHOOD
+              </Tab>
+            </OverflowItem>
+            <OverflowItem id="findcase">
+              <Tab id="FindCase" value="findcase" icon={<span><DocumentSearch16Regular /></span>}>
+                FIND CASE
+              </Tab>
+            </OverflowItem>
+          </TabList>
         </div>
 
-        <div className="grid col-span-1">
+        {/* <div className="grid col-span-1">
           <Tooltip content="Logout" relationship="label">
             <Button icon={<LogoutSharpIcon />} id="btnLogout" type="button" onClick={handleLogout} >Logout </Button>
           </Tooltip>
+        </div> */}
+        <div className="grid col-span-2">
+          <SidePanelComponent></SidePanelComponent>
         </div>
       </div>
       <div className="pt-4">
