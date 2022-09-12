@@ -1,9 +1,8 @@
 import React from 'react';
-import { DefaultButton, IconButton } from '@fluentui/react/lib/Button';
 import { Panel } from '@fluentui/react/lib/Panel';
 import { useBoolean } from '@fluentui/react-hooks';
 import { Navigation24Regular, Power24Regular } from '@fluentui/react-icons';
-import { Dropdown, IIconProps, Tooltip } from '@fluentui/react';
+import { Dropdown } from '@fluentui/react';
 import { Button } from '@fluentui/react-components';
 import { loginRequest } from "../../../AuthConfig";
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";

@@ -1,22 +1,11 @@
-import { TabList, TabValue, Tab, SelectTabEvent, SelectTabData, makeStyles, Tooltip, Button } from "@fluentui/react-components";
+import { TabList, TabValue, Tab, SelectTabEvent, SelectTabData, } from "@fluentui/react-components";
 import { OverflowItem } from "@fluentui/react-components/unstable";
 import { Desktop16Regular, Earth16Regular, DocumentSearch16Regular } from "@fluentui/react-icons";
 import React, { useState } from "react";
-import { iconStylePrimary } from "../../../constant/fluentUIStyles";
-import LandingPageComponent from "../LandingPageComponent";
 import NeighbourhoodComponent from "./tabs/NeighbourhoodComponent";
-import LogoutSharpIcon from '@mui/icons-material/LogoutSharp';
 import { loginRequest } from "../../../AuthConfig";
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import SidePanelComponent from "../ElementsUI/SidePanelComponent";
-
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  dir?: string;
-  index: number;
-  value: number;
-}
 
 const tabs = [{
   id: 'desktop',
@@ -31,8 +20,6 @@ const tabs = [{
   name: 'FIND CASE',
   icon: <DocumentSearch16Regular />
 }];
-
-const iconStyle = makeStyles(iconStylePrimary)
 
 const NavbarComponent = () => {
   const [selectedValue, setSelectedValue] = React.useState<TabValue>('neighbourhood');
@@ -61,26 +48,19 @@ const NavbarComponent = () => {
     return accessToken;
   }
 
-
-  const handleLogout = () => {
-    instance.logoutRedirect().catch(e => {
-      console.error(e);
-    })
-  }
-
   return (
     <div>
       <div className="flex justify-between cardHeader grid-cols-12">
         <div className="grid col-span-2"></div>
         <div className="grid col-span-8">
           <TabList selectedValue={selectedValue} onTabSelect={onTabSelect}>
-            {/* {tabs.map(tab => {
-            <OverflowItem key={tab.id} id={tab.id}>
-              <Tab id={tab.id} value={tab.id} icon={<span>{tab.icon}</span>}>
-                {tab.name}
-              </Tab>
-            </OverflowItem>;
-          })} */}
+            {/* {tabs.map((tab, index) => {
+              <OverflowItem key={index} id={tab.id}>
+                <Tab id={tab.id} value={tab.id} icon={<span>{tab.icon}</span>}>
+                  {tab.name}
+                </Tab>
+              </OverflowItem>;
+            })} */}
             <OverflowItem id="desktop">
               <Tab id="Desktop" value="desktop" icon={<span><Desktop16Regular /></span>}>
                 DESKTOP
@@ -98,12 +78,6 @@ const NavbarComponent = () => {
             </OverflowItem>
           </TabList>
         </div>
-
-        {/* <div className="grid col-span-1">
-          <Tooltip content="Logout" relationship="label">
-            <Button icon={<LogoutSharpIcon />} id="btnLogout" type="button" onClick={handleLogout} >Logout </Button>
-          </Tooltip>
-        </div> */}
         <div className="grid col-span-2">
           <SidePanelComponent></SidePanelComponent>
         </div>
