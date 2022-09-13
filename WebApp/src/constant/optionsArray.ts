@@ -38,9 +38,9 @@ const studentOptions: IDropdownOption[] = [
 ]
 
 const languageOptions: IDropdownOption[] = [
-    { text: "English", key: "EN" },
-    { text: "Spanish", key: "ES" },
-    { text: "French", key: "FR" },
+    { text: "English", key: "en" },
+    { text: "Spanish", key: "es" },
+    { text: "French", key: "fr" },
 ]
 
 const defaultCountryOptions = Country.getAllCountries();

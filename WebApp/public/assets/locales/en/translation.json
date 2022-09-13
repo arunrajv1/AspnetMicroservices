@@ -1,0 +1,45 @@
+{
+    "navbar": {
+        "1stMenu": "DESKTOP",
+        "2stMenu": "NEIGHBOURHOOD",
+        "3rdMenu": "FIND CASE"
+    },
+    "neighbourhood": {
+        "lbl_search_by": "Search By: ",
+        "search_by": {
+            "name": "Name",
+            "mrn": "MRN",
+            "id": "Id",
+            "gender_placeholder": "Select Gender"
+        },
+        "first_name": "First Name",
+        "middle_name": "Middle Name",
+        "last_name": "Last Name",
+        "suffix": "Suffix",
+        "btnSearch": "Search"
+    },
+    "neighbourhood_tabs": {
+        "demographic": "DEMOGRAPHIC",
+        "billing_acc": "BILLING ACCOUNT",
+        "other_info": "OTHER INFO",
+        "employer": "EMPLOYER",
+        "names": "NAMES",
+        "history": "HISTORY"
+    },
+    "demographic": {
+        "btnEdit": "Edit",
+        "btnDelete": "Delete",
+        "address": {
+            "name": "Address",
+            "street1": "Street 1",
+            "street2": "Street 2",
+            "postal_code": "Postal Code",
+            "postal_code_placeholder": "Enter US Postal Code for State and City",
+            "country": "Country",
+            "state": "State",
+            "state_placeholder": "Select State",
+            "city": "City",
+            "city_placeholder": "Select City"
+        }
+    }
+}

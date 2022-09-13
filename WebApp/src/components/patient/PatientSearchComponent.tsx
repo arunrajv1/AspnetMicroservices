@@ -7,14 +7,13 @@ import InputBox from '../common/ElementsUI/InputBox';
 import { getPatientDetails } from "../../services/PatientServices";
 import DropdownComponent from '../common/ElementsUI/DropdownComponent';
 import { genderOptions } from '../../constant/optionsArray';
-import FullPageLoader from '../common/Loader/FullPageLoader';
 import AlertPopup from '../common/popup/AlertPopup';
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../AuthConfig";
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllPatientDetails, setSinglePatientDetails } from "../../redux/features/patientDemographicSlice";
-import { RootState } from '../../redux/store';
 import { setSpinnerState } from '../../redux/features/commonUISlice';
+import { useTranslation } from 'react-i18next';
 
 const initialFormData: any = Object.freeze({
     name: "",
@@ -33,6 +32,7 @@ const PatientSearchComponent = (props: any) => {
     // const [loading, setLoading] = useState(false);
     const [searchResult, setSearchResults] = useState([]);
     const { instance, accounts, inProgress } = useMsal();
+    const { t } = useTranslation();
 
     const dispatch = useDispatch();
     // const patientDemographics = useSelector((state: RootState) => state.patientDetails)
@@ -113,7 +113,7 @@ const PatientSearchComponent = (props: any) => {
         <>
             <div className='grid grid-rows-12 grid-flow-col justify-center pb-8'>
                 <div className='flex gap-4'>
-                    <label>Search By: </label>
+                    <label>{t('neighbourhood.lbl_search_by')}</label>
                     <div className='grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1'>
                         {patientSearchFields.map((field: any, i: number) => (
                             <div className="lg:col-span-1 md:col-span-3 sm:col-span-3" key={i}>
@@ -126,7 +126,7 @@ const PatientSearchComponent = (props: any) => {
                                     type={field.type}
                                     maxLength={field.maxLength}
                                     isRequired={field.isRequired}
-                                    placeholder={field.placeholder}
+                                    placeholder={t(`neighbourhood.search_by.${field.placeholder}`)} //{field.placeholder}
                                     isDisabled={isDisable}
                                 />
                             </div>
@@ -138,14 +138,14 @@ const PatientSearchComponent = (props: any) => {
                                 optionsArray={genderArray}
                                 id="gender"
                                 isRequired={false}
-                                placeholder="Select Gender"
+                                placeholder={t(`neighbourhood.search_by.gender_placeholder`)}
                             //isDisabled={isAllDisable} 
                             /></div>
                     </div>
                     <ButtonComponent
                         handleClick={getDetails}
                         type="Button"
-                        text="Search"></ButtonComponent>
+                        text={t(`neighbourhood.btnSearch`)}></ButtonComponent>
                 </div>
             </div>
             {searchResult.length > 0 &&

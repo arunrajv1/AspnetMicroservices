@@ -6,6 +6,7 @@ import NeighbourhoodComponent from "./tabs/NeighbourhoodComponent";
 import { loginRequest } from "../../../AuthConfig";
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import SidePanelComponent from "../ElementsUI/SidePanelComponent";
+import { useTranslation } from "react-i18next";
 
 const tabs = [{
   id: 'desktop',
@@ -29,6 +30,7 @@ const NavbarComponent = () => {
     setSelectedValue(data.value);
     RequestAccessToken();
   };
+  const { t } = useTranslation();
 
   async function RequestAccessToken() {
     const request = {
@@ -63,17 +65,17 @@ const NavbarComponent = () => {
             })} */}
             <OverflowItem id="desktop">
               <Tab id="Desktop" value="desktop" icon={<span><Desktop16Regular /></span>}>
-                DESKTOP
+                {t('navbar.1stMenu')}
               </Tab>
             </OverflowItem>
             <OverflowItem id="neighbourhood">
               <Tab id="Neighbourhood" value="neighbourhood" icon={<span><Earth16Regular /></span>}>
-                NEIGHBOURHOOD
+              {t('navbar.2stMenu')}
               </Tab>
             </OverflowItem>
             <OverflowItem id="findcase">
               <Tab id="FindCase" value="findcase" icon={<span><DocumentSearch16Regular /></span>}>
-                FIND CASE
+              {t('navbar.3rdMenu')}
               </Tab>
             </OverflowItem>
           </TabList>

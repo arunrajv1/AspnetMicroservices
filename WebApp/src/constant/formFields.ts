@@ -107,7 +107,7 @@ const patientNameFields = [
     maxLength: 20,
     autoComplete: "first_name",
     isRequired: true,
-    placeholder: "First Name",
+    placeholder: "first_name",
   },
   {
     labelText: "Middle Name",
@@ -118,7 +118,7 @@ const patientNameFields = [
     maxLength: 20,
     autoComplete: "middle_name",
     isRequired: false,
-    placeholder: "Middle Name",
+    placeholder: "middle_name",
   },
   {
     labelText: "Last Name",
@@ -129,7 +129,7 @@ const patientNameFields = [
     maxLength: 20,
     autoComplete: "last_name",
     isRequired: true,
-    placeholder: "Last Name",
+    placeholder: "last_name",
   },
   {
     labelText: "Suffix",
@@ -140,7 +140,7 @@ const patientNameFields = [
     maxLength: 10,
     autoComplete: "suffix",
     isRequired: false,
-    placeholder: "Suffix",
+    placeholder: "suffix",
   }
 ];
 
@@ -154,7 +154,7 @@ const patientSearchFields = [
     maxLength: 10,
     autoComplete: "name",
     isRequired: false,
-    placeholder: "Name",
+    placeholder: "name",
   },
   {
     labelText: "MRN",
@@ -165,7 +165,7 @@ const patientSearchFields = [
     maxLength: 20,
     autoComplete: "mrn",
     isRequired: false,
-    placeholder: "MRN",
+    placeholder: "mrn",
   },
   {
     labelText: "Id",
@@ -176,7 +176,7 @@ const patientSearchFields = [
     maxLength: 5,
     autoComplete: "id",
     isRequired: false,
-    placeholder: "Id",
+    placeholder: "id",
   }
 ]
 

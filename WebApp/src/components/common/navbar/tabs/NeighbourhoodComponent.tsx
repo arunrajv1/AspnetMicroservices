@@ -13,6 +13,7 @@ import PatientSearchComponent from "../../../patient/PatientSearchComponent";
 import InputBox from "../../ElementsUI/InputBox";
 import "../../../../style/CommonStyle.scss";
 import { setSinglePatientDetails } from "../../../../redux/features/patientDemographicSlice";
+import { useTranslation } from 'react-i18next';
 
 const initialFormData: any = Object.freeze({
   middle_name: "",
@@ -32,21 +33,22 @@ const NeighbourhoodComponent = () => {
   const [isDisable, setIsDisable] = useState(false);
   const [formData, updateFormData] = useState(initialFormData);
   const [hasError, setHasError] = useState(false);
+  const { t } = useTranslation();
 
   const dispatch = useDispatch();
   //const patientDemographicSelector = useAppSelector((state) => state.data.array);
   // const patientDemographics = useSelector((state: RootState) => state.patientDemographics.array)
   const singlePatientDemographics = useSelector((state: RootState) => state);
-/*
-  const onCallbackFunction  = useCallback(() => {
-    console.log('single PatientDemographics use selector, callback', singlePatientDemographics);
-    // updateFormData((t: any) => [...t, "New Todo"]);
-  }, []);
-
-  useEffect(() => {
-    onCallbackFunction();
-    console.log('single PatientDemographics use selector', singlePatientDemographics);
-  }, [])*/
+  /*
+    const onCallbackFunction  = useCallback(() => {
+      console.log('single PatientDemographics use selector, callback', singlePatientDemographics);
+      // updateFormData((t: any) => [...t, "New Todo"]);
+    }, []);
+  
+    useEffect(() => {
+      onCallbackFunction();
+      console.log('single PatientDemographics use selector', singlePatientDemographics);
+    }, [])*/
 
   const handleFormChange = (e: any) => {
     updateFormData({
@@ -70,8 +72,8 @@ const NeighbourhoodComponent = () => {
     //console.log("patientDemographicSelector", patientDemographics);
   }
 
-  const selectedPatientData = (inputData: any) =>{
-    if(inputData.first_name && inputData.last_name){
+  const selectedPatientData = (inputData: any) => {
+    if (inputData.first_name && inputData.last_name) {
       dispatch(setSinglePatientDetails(inputData));
       updateFormData(inputData);
       setIsDisable(true);
@@ -87,14 +89,14 @@ const NeighbourhoodComponent = () => {
             <InputBox
               handleChange={handleFormChange}
               value={formData[field.name]}
-              labelText={field.labelText}
+              labelText={t(`neighbourhood.${field.placeholder}`)} //{field.labelText}
               labelFor={field.labelFor}
               id={field.id}
               name={field.name}
               type={field.type}
               maxLength={field.maxLength}
               isRequired={field.isRequired}
-              placeholder={field.placeholder}
+              placeholder={t(`neighbourhood.${field.placeholder}`)} //{field.placeholder}
               isDisabled={isDisable}
             />
           </div>
@@ -105,29 +107,29 @@ const NeighbourhoodComponent = () => {
           <TabList selectedValue={selectedValue} onTabSelect={onTabSelect}>
             <OverflowItem id="demographic">
               <Tab id="Demographic" value="demographic" >
-                DEMOGRAPHIC
+                {t(`neighbourhood_tabs.demographic`)}
               </Tab>
             </OverflowItem>
             <OverflowItem id="billingAccounts">
               <Tab id="BillingAccounts" value="billingAccounts">
-                BILLING ACCOUNTS
+                {t(`neighbourhood_tabs.billing_acc`)}
               </Tab>
             </OverflowItem>
             <OverflowItem id="otherInfo">
               <Tab id="OtherInfo" value="otherInfo">
-                OTHER INFO
+                {t(`neighbourhood_tabs.other_info`)}
               </Tab></OverflowItem>
             <OverflowItem id="employer">
               <Tab id="Employer" value="employer">
-                EMPLOYER
+                {t(`neighbourhood_tabs.employer`)}
               </Tab></OverflowItem>
             <OverflowItem id="names">
               <Tab id="Names" value="names">
-                NAMES
+                {t(`neighbourhood_tabs.names`)}
               </Tab></OverflowItem>
             <OverflowItem id="history">
               <Tab id="History" value="history">
-                HISTORY
+                {t(`neighbourhood_tabs.history`)}
               </Tab></OverflowItem>
           </TabList>
         </Overflow>

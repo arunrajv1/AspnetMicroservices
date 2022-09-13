@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Panel } from '@fluentui/react/lib/Panel';
 import { useBoolean } from '@fluentui/react-hooks';
 import { Navigation24Regular, Power24Regular } from '@fluentui/react-icons';
@@ -7,31 +7,21 @@ import { Button } from '@fluentui/react-components';
 import { loginRequest } from "../../../AuthConfig";
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import { languageOptions } from '../../../constant/optionsArray';
+import i18next from 'i18next';
+import cookies from 'js-cookie';
 
 const languageArray: any = languageOptions;
+const currentLanguageCode = cookies.get('i18next');
 
 const SidePanelComponent = () => {
     const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] = useBoolean(false);
     const { instance, accounts, inProgress } = useMsal();
-    var accessToken: String;
+    // let currentLanguage = languageArray.find((x: any) => x.key == currentLanguageCode);
 
-    async function RequestAccessToken() {
-        const request = {
-            ...loginRequest,
-            account: accounts[0]
-        };
-        // Silently acquires an access token which is then attached to a request for Microsoft Graph data
-        await instance.acquireTokenSilent(request).then((response) => {
-            accessToken = response.accessToken;
-            console.log(accessToken);
-        }).catch((e) => {
-            instance.acquireTokenPopup(request).then((response) => {
-                accessToken = response.accessToken;
-                console.log(response);
-            });
-        });
-        return accessToken;
-    }
+    // useEffect(() => {
+    //     currentLanguage = languageArray.find((x: any) => x.key == currentLanguageCode);
+    //     console.log('current language', currentLanguage);
+    // }, [cookies.get('i18next')])
 
     const handleLogout = () => {
         instance.logoutRedirect().catch(e => {
@@ -39,8 +29,10 @@ const SidePanelComponent = () => {
         })
     }
 
-    const handleLanguageChange = () => {
-
+    const handleLanguageChange = (e: any, option?: any) => {
+        console.log('language on change to ', option.text)
+        i18next.changeLanguage(option.key);
+        dismissPanel();
     }
 
     return (
@@ -57,10 +49,11 @@ const SidePanelComponent = () => {
                     id="multiLanguage"
                     label="Language"
                     options={languageArray}
-                    defaultSelectedKey={"EN"}
+                    defaultSelectedKey={languageArray.key}
                     selectedKey={languageArray.key}
                     onChange={handleLanguageChange}
-                    style={{marginBottom: "10px"}}
+                    style={{ marginBottom: "10px" }}
+                    placeholder="Change Language"
                 >
                 </Dropdown>
                 <Button icon={<Power24Regular />} id="btnLogout" type="button" onClick={handleLogout} >Logout </Button>

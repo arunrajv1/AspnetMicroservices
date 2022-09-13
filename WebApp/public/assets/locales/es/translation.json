@@ -1,0 +1,45 @@
+{
+    "navbar": {
+        "1stMenu": "ESCRITORIO",
+        "2stMenu": "VECINDARIO",
+        "3rdMenu": "ENCONTRAR CASO"
+    },
+    "neighbourhood": {
+        "lbl_search_by": "Búsqueda por: ",
+        "search_by": {
+            "name": "Nombre",
+            "mrn": "MRN",
+            "id": "Identificación",
+            "gender_placeholder": "Seleccione género"
+        },
+        "first_name": "Primer nombre",
+        "middle_name": "Segundo nombre",
+        "last_name": "Apellido",
+        "suffix": "Sufijo",
+        "btnSearch": "Búsqueda"
+    },
+    "neighbourhood_tabs": {
+        "demographic": "DEMOGRÁFICO",
+        "billing_acc": "CUENTA DE FACTURACIÓN",
+        "other_info": "OTRA INFORMACIÓN",
+        "employer": "EMPLEADOR",
+        "names": "NOMBRES",
+        "history": "HISTORIA"
+    },
+    "demographic": {
+        "btnEdit": "Editar",
+        "btnDelete": "Borrar",
+        "address": {
+            "name": "Dirección",
+            "street1": "Calle 1",
+            "street2": "Calle 2",
+            "postal_code": "Código postal",
+            "postal_code_placeholder": "Ingrese el código postal de EE. UU. para el estado y la ciudad",
+            "country": "País",
+            "state": "Estado",
+            "state_placeholder": "Seleccione estado",
+            "city": "Ciudad",
+            "city_placeholder": "Ciudad selecta"
+        }
+    }
+}
