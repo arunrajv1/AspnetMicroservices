@@ -213,6 +213,16 @@ const PatientDemographicComponent = (props: any) => {
       setFormValues(returnData);
       return;
     }
+    if (name === "home_phone"){
+      let returnData = handleHomePhoneChange(e);
+      setFormValues(returnData);
+      return;
+    }
+    if (name === "work_phone") {
+      let returnData = handleWorkPhoneChange(e);
+      setFormValues(returnData);
+      return;
+    }
     if (name) {
       obj = { ...formValues, [name]: value };
       setFormValues({
@@ -327,6 +337,51 @@ const PatientDemographicComponent = (props: any) => {
     }
   };
 
+  const handleHomePhoneChange = (e:any): any =>{
+    let obj: any;
+    if (e.target.value === "" || re.test(e.target.value)){
+      obj = {
+        ...formValues,
+        ["home_phone"]: e.target.value,
+      };
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = "Invalid home phone"));
+    }
+    else {
+      obj = {
+        ...formValues,
+        ["home_phone"]: "",
+      };
+            contactFields
+              .filter((x) => x.name === e.target.name)
+              .map((x) => (x.errorMessage = "Only numbers are accepted"));
+    }
+    handleStateChange(obj);
+    return obj;
+  }
+  const handleWorkPhoneChange = (e:any): any =>{
+    let obj: any;
+    if (e.target.value === "" || re.test(e.target.value)) {
+      obj = {
+        ...formValues,
+        ["work_phone"]: e.target.value,
+      };
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = "Invalid home phone"));
+    } else {
+      obj = {
+        ...formValues,
+        ["work_phone"]: "",
+      };
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = "Only numbers are accepted"));
+    }
+    handleStateChange(obj);
+    return obj;
+  }
   const hadlePostalCode = (e: any): any => {
     const zipLookUpValue = lookup(e.target.value);
     let obj: any;
@@ -499,6 +554,12 @@ const PatientDemographicComponent = (props: any) => {
       // props.formData.suffix.length === 0
     ) {
       setHasError(true);
+      addressFields
+        .filter((y) => formValues[`${y.name}`] === "")
+        .map((y) => (y.errorMessage = "Required field"));
+        contactFields
+          .filter((y) => formValues[`${y.name}`] === "")
+          .map((y) => (y.errorMessage = "Required field"));
       return;
     } else {
       setHasError(false);
@@ -855,6 +916,7 @@ const PatientDemographicComponent = (props: any) => {
                   placeholder={field.placeholder}
                   isDisabled={isAllDisable}
                   contentBefore={field.countryCode}
+                  errorMessage = {field.errorMessage}
                 />
               ))}
             </div>
