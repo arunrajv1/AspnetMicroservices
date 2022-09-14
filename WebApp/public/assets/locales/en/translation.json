@@ -40,6 +40,33 @@
             "state_placeholder": "Select State",
             "city": "City",
             "city_placeholder": "Select City"
+        },
+        "general_information": {
+            "name": "General Information",
+            "birth_sex": "Birth Sex",
+            "birth_sex_placeholder": "Select Gender",
+            "dob": "Date of Birth",
+            "age": "Age",
+            "deceased": "Deceased",
+            "ssn": "Social Security No",
+            "marital_status": "Marital Status",
+            "marital_status_placeholder": "Select Marital Status",
+            "race": "Race",
+            "race_placeholder": "Select Race",
+            "employment_status": "Employment Status",
+            "employment_status_placeholder": "Select Employment",
+            "student_status": "Sudent Status",
+            "student_status_placeholder": "Select Student"
+        },
+        "phone_number": {
+            "name": "Phone Numbers",
+            "home": "Home",
+            "work": "Work"
+        },
+        "mrn": {
+            "name": "Medical Record Numbers",
+            "rec_no": "Record Number",
+            "facility": "Facility"
         }
     }
 }

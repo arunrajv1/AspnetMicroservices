@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import ConfirmationPopup from "../common/popup/ConfirmationPopup";
 import { lookup } from "zipcodes";
+import { useTranslation } from 'react-i18next';
 // import { PostalCodes } from "postal-codes";
 // import { lookupPostcode, Client } from "@ideal-postcodes/core-interface";
 
@@ -153,6 +154,7 @@ const PatientDemographicComponent = (props: any) => {
   const patientDemographics = useSelector((state: RootState) => state.patientDetails.data);
   const spinnerSelector = useSelector((state: RootState) => state.commonUIElements.data);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   
   // console.log('zip code', lookup("22222"), lookup("700079"));
   // //console.log('pincode', client);
@@ -615,7 +617,7 @@ const PatientDemographicComponent = (props: any) => {
             className="cardHeader"
             header={
               <Body1>
-                <b>Address</b>
+                <b>{t('demographic.address.name')}</b>
               </Body1>
             }
           />

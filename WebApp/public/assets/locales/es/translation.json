@@ -40,6 +40,33 @@
             "state_placeholder": "Seleccione estado",
             "city": "Ciudad",
             "city_placeholder": "Ciudad selecta"
+        },
+        "general_information": {
+            "name": "Información general",
+            "birth_sex": "Sexo al nacer",
+            "birth_sex_placeholder": "Seleccione género",
+            "dob": "Fecha de nacimiento",
+            "age": "Años",
+            "deceased": "Fallecido",
+            "ssn": "Número de seguro social",
+            "marital_status": "Estado civil",
+            "marital_status_placeholder": "Seleccionar estado civil",
+            "race": "La raza",
+            "race_placeholder": "Seleccionar carrera",
+            "employment_status": "Estado de Empleo",
+            "employment_status_placeholder": "Seleccione Empleo",
+            "student_status": "Estado del estudiante",
+            "student_status_placeholder": "Seleccionar estudiante"
+        },
+        "phone_number": {
+            "name": "Números de teléfono",
+            "home": "Hogar",
+            "work": "Trabajar"
+        },
+        "mrn": {
+            "name": "Números de registros médicos",
+            "rec_no": "Número de registro",
+            "facility": "Instalaciones"
         }
     }
 }
