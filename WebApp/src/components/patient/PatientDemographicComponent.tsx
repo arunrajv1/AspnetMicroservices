@@ -1,25 +1,62 @@
-import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { formatDate } from "../../services/CommonServices";
-import { deletePatient, postData, updateData, } from "../../services/PatientServices";
+import {
+  deletePatient,
+  postData,
+  updateData,
+} from "../../services/PatientServices";
 import FullPageLoader from "../common/Loader/FullPageLoader";
 import AlertPopup from "../common/popup/AlertPopup";
 import { Body1, Tooltip, Button } from "@fluentui/react-components";
-import { Add16Filled, Delete16Filled, } from "@fluentui/react-icons";
-import { Card, CardHeader, Table, TableRow, TableBody, TableHeader, TableHeaderCell, TableCell } from "@fluentui/react-components/unstable";
-import { patientAddressFields, patientContactFields } from "../../constant/formFields";
+import { Add16Filled, Delete16Filled } from "@fluentui/react-icons";
+import {
+  Card,
+  CardHeader,
+  Table,
+  TableRow,
+  TableBody,
+  TableHeader,
+  TableHeaderCell,
+  TableCell,
+} from "@fluentui/react-components/unstable";
+import {
+  patientAddressFields,
+  patientContactFields,
+} from "../../constant/formFields";
 import "../../style/CommonStyle.scss";
 import InputBox from "../common/ElementsUI/InputBox";
-import { DatePicker, defaultDatePickerStrings, Dropdown, Checkbox, TextField } from "@fluentui/react";
+import {
+  DatePicker,
+  defaultDatePickerStrings,
+  Dropdown,
+  Checkbox,
+  TextField,
+} from "@fluentui/react";
 import ButtonComponent from "../common/ElementsUI/ButtonComponent";
 import DropdownComponent from "../common/ElementsUI/DropdownComponent";
-import { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions, defaultCountryOptions, defaultStateOptions, defaultCityOptions } from "../../constant/optionsArray";
+import {
+  genderOptions,
+  maritalStatusOptions,
+  raceOptions,
+  employmentOptions,
+  studentOptions,
+  defaultCountryOptions,
+  defaultStateOptions,
+  defaultCityOptions,
+} from "../../constant/optionsArray";
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../AuthConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import ConfirmationPopup from "../common/popup/ConfirmationPopup";
 import { lookup } from "zipcodes";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 // import { PostalCodes } from "postal-codes";
 // import { lookupPostcode, Client } from "@ideal-postcodes/core-interface";
 
@@ -29,20 +66,35 @@ import { useTranslation } from 'react-i18next';
 let country: any = defaultCountryOptions;
 let addressFields = patientAddressFields;
 const contactFields = patientContactFields;
-contactFields.map(x => x.countryCode = "+" + country.filter((x: any) => x.isoCode == "US")[0].phonecode)
+contactFields.map(
+  (x) =>
+    (x.countryCode =
+      "+" + country.filter((x: any) => x.isoCode == "US")[0].phonecode)
+);
 var accessToken: string;
 const re = /^[0-9\b]+$/;
 let states: any = defaultStateOptions;
 let cities: any = defaultCityOptions;
-const defaultDropdownKeyValue: any = { text: "", key: "" }
+const defaultDropdownKeyValue: any = { text: "", key: "" };
 
-states.map((x: any) => { x.key = x.isoCode; x.text = x.name });
-cities.map((x: any) => { x.key = x.name; x.text = x.name });
-country.map((x: any) => { x.key = x.isoCode; x.text = x.name });
+states.map((x: any) => {
+  x.key = x.isoCode;
+  x.text = x.name;
+});
+cities.map((x: any) => {
+  x.key = x.name;
+  x.text = x.name;
+});
+country.map((x: any) => {
+  x.key = x.isoCode;
+  x.text = x.name;
+});
 
 let selectedCountries: any = country;
 let selectedCities: any = defaultDropdownKeyValue;
-let selectedStates: any = states.filter((x: any) => x.countryCode == "US").sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
+let selectedStates: any = states
+  .filter((x: any) => x.countryCode == "US")
+  .sort((a: any, b: any) => (a.text > b.text ? 1 : -1));
 // let tempState: any = selectedStates[0];
 const onFormatDate = (date?: Date): string => {
   return !date
@@ -81,7 +133,8 @@ const defaultValues: any = {
   home_city: "",
   home_state: "",
   home_postal_code: "",
-  home_country: selectedCountries.filter((x: any) => x.isoCode === "US")[0].name,
+  home_country: selectedCountries.filter((x: any) => x.isoCode === "US")[0]
+    .name,
   home_phone: "",
   work_phone: "",
   mrn: [{}],
@@ -154,8 +207,12 @@ const PatientDemographicComponent = (props: any) => {
   //   { recordNumber: "", facility: "" },
   // ]);
 
-  const patientDemographics = useSelector((state: RootState) => state.patientDetails.data);
-  const spinnerSelector = useSelector((state: RootState) => state.commonUIElements.data);
+  const patientDemographics = useSelector(
+    (state: RootState) => state.patientDetails.data
+  );
+  const spinnerSelector = useSelector(
+    (state: RootState) => state.commonUIElements.data
+  );
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -173,7 +230,7 @@ const PatientDemographicComponent = (props: any) => {
       setDisableEditButton(false);
       setIsAllDisable(true);
     }
-  }, [patientDemographics, spinnerSelector])
+  }, [patientDemographics, spinnerSelector]);
 
   const resetForm = () => {
     setDateOfBirth(new Date());
@@ -230,27 +287,34 @@ const PatientDemographicComponent = (props: any) => {
         ...formValues,
         [name]: value,
       });
-    }
-    else if (id) {
+    } else if (id) {
       obj = { ...formValues, [id]: option.key };
       if (id === "home_country") {
-        selectedStates = states.filter((x: any) => x.countryCode == option.key).sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
+        selectedStates = states
+          .filter((x: any) => x.countryCode == option.key)
+          .sort((a: any, b: any) => (a.text > b.text ? 1 : -1));
         if (selectedStates.length > 0) {
-          contactFields.map(x => x.countryCode = "+" + country.filter((x: any) => x.isoCode == option.key)[0].phonecode);
+          contactFields.map(
+            (x) =>
+              (x.countryCode =
+                "+" +
+                country.filter((x: any) => x.isoCode == option.key)[0]
+                  .phonecode)
+          );
           selectedCities = defaultDropdownKeyValue;
           setStateDisable(false);
           setCityDisable(true);
-        }
-        else
-          setStateDisable(true);
+        } else setStateDisable(true);
         option.key = option.name;
-      }
-      else if (id === "home_state") {
-        selectedCities = cities.filter((x: any) => x.stateCode == option.key && x.countryCode == option.countryCode).sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
-        if (selectedCities.length > 0)
-          setCityDisable(false);
-        else
-          setCityDisable(true);
+      } else if (id === "home_state") {
+        selectedCities = cities
+          .filter(
+            (x: any) =>
+              x.stateCode == option.key && x.countryCode == option.countryCode
+          )
+          .sort((a: any, b: any) => (a.text > b.text ? 1 : -1));
+        if (selectedCities.length > 0) setCityDisable(false);
+        else setCityDisable(true);
         option.key = option.name;
       }
       setFormValues({
@@ -276,7 +340,10 @@ const PatientDemographicComponent = (props: any) => {
     setFormMRN(updatedRows);
   };
 
-  const handleDeceased = (event?: FormEvent<HTMLElement | HTMLInputElement>, isChecked?: boolean) => {
+  const handleDeceased = (
+    event?: FormEvent<HTMLElement | HTMLInputElement>,
+    isChecked?: boolean
+  ) => {
     if (isChecked) setDeceased("Y");
     else setDeceased("N");
   };
@@ -306,11 +373,17 @@ const PatientDemographicComponent = (props: any) => {
   const removeRow = (index: number) => {
     if (formMRN.length > 1) {
       let updatedRows = [...formMRN];
-      let indexToRemove = updatedRows.findIndex((x) => x.index == index);
-      if (indexToRemove > -1) {
-        updatedRows.splice(indexToRemove, 1);
-        setFormMRN(updatedRows);
-      }
+      updatedRows.splice(index, 1);
+      setFormMRN(updatedRows);
+    }
+    if (formMRN.length == 1) {
+      setFormMRN([
+        {
+          index: 0,
+          med_rec_no: "",
+          medical_facility: "",
+        },
+      ]);
     }
   };
 
@@ -324,8 +397,7 @@ const PatientDemographicComponent = (props: any) => {
       contactFields
         .filter((x) => x.name === e.target.name)
         .map((x) => (x.errorMessage = "Invalid home phone"));
-    }
-    else {
+    } else {
       obj = {
         ...formValues,
         ["home_phone"]: "",
@@ -336,7 +408,7 @@ const PatientDemographicComponent = (props: any) => {
     }
     handleStateChange(obj);
     return obj;
-  }
+  };
   const handleWorkPhoneChange = (e: any): any => {
     let obj: any;
     if (e.target.value === "" || re.test(e.target.value)) {
@@ -358,7 +430,7 @@ const PatientDemographicComponent = (props: any) => {
     }
     handleStateChange(obj);
     return obj;
-  }
+  };
   const hadlePostalCode = (e: any): any => {
     const zipLookUpValue = lookup(e.target.value);
     let obj: any;
@@ -375,13 +447,33 @@ const PatientDemographicComponent = (props: any) => {
         setCityDisable(true);
         setStateDisable(true);
 
-        obj = { ...formValues, ["home_postal_code"]: e.target.value, ["home_state"]: "", ["home_city"]: "" };
-        addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "Invalid postal code");
-      }
-      else {
-        selectedCountries = country.filter((x: any) => x.isoCode === zipLookUpValue.country);
-        selectedStates = states.filter((x: any) => x.isoCode === zipLookUpValue.state && x.countryCode === zipLookUpValue.country).sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
-        selectedCities = cities.filter((x: any) => x.text == zipLookUpValue.city && x.stateCode == zipLookUpValue.state).sort((a: any, b: any) => (a.text > b.text) ? 1 : -1);
+        obj = {
+          ...formValues,
+          ["home_postal_code"]: e.target.value,
+          ["home_state"]: "",
+          ["home_city"]: "",
+        };
+        addressFields
+          .filter((x) => x.name == e.target.name)
+          .map((x) => (x.errorMessage = "Invalid postal code"));
+      } else {
+        selectedCountries = country.filter(
+          (x: any) => x.isoCode === zipLookUpValue.country
+        );
+        selectedStates = states
+          .filter(
+            (x: any) =>
+              x.isoCode === zipLookUpValue.state &&
+              x.countryCode === zipLookUpValue.country
+          )
+          .sort((a: any, b: any) => (a.text > b.text ? 1 : -1));
+        selectedCities = cities
+          .filter(
+            (x: any) =>
+              x.text == zipLookUpValue.city &&
+              x.stateCode == zipLookUpValue.state
+          )
+          .sort((a: any, b: any) => (a.text > b.text ? 1 : -1));
 
         setSelectedCountryKey([zipLookUpValue.country]);
         setSelectedStateKey([zipLookUpValue.state]);
@@ -390,22 +482,44 @@ const PatientDemographicComponent = (props: any) => {
         setStateDisable(false);
         setCityDisable(false);
 
-        obj = { ...formValues, ["home_postal_code"]: e.target.value, ["home_state"]: selectedStates[0].name, ["home_city"]: selectedCities[0].key };
-        addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "");
+        obj = {
+          ...formValues,
+          ["home_postal_code"]: e.target.value,
+          ["home_state"]: selectedStates[0].name,
+          ["home_city"]: selectedCities[0].key,
+        };
+        addressFields
+          .filter((x) => x.name == e.target.name)
+          .map((x) => (x.errorMessage = ""));
         //console.log('all states', selectedStates, selectedCities, zipLookUpValue);
       }
       handleStateChange(obj);
       // return obj;
     } else if (e.target.value.length == 1) {
-      obj = { ...formValues, ["home_postal_code"]: "", ["home_state"]: "", ["home_city"]: "" };
-      addressFields.filter(x => x.name == e.target.name).map(x => x.errorMessage = "Only numbers are allowed");
+      obj = {
+        ...formValues,
+        ["home_postal_code"]: "",
+        ["home_state"]: "",
+        ["home_city"]: "",
+      };
+      addressFields
+        .filter((x) => x.name == e.target.name)
+        .map((x) => (x.errorMessage = "Only numbers are allowed"));
       // return obj;
     } else {
-      obj = { ...formValues, ["home_postal_code"]: e.target.value.slice(0, e.target.value.length - 1), ["home_state"]: "", ["home_city"]: "" };
+      obj = {
+        ...formValues,
+        ["home_postal_code"]: e.target.value.slice(
+          0,
+          e.target.value.length - 1
+        ),
+        ["home_state"]: "",
+        ["home_city"]: "",
+      };
       // return obj;
     }
     return obj;
-  }
+  };
 
   const bindPatientDetails = (formData: any) => {
     setFormValues({
@@ -415,7 +529,9 @@ const PatientDemographicComponent = (props: any) => {
       date_of_birth: new Date(formData.date_of_birth).toDateString(),
       ssn: formData.ssn,
       race: formData.race,
-      marital_status: formData.marital_status ? formData.marital_status.toUpperCase() : '',
+      marital_status: formData.marital_status
+        ? formData.marital_status.toUpperCase()
+        : "",
       employment_status: formData.employment_status,
       student_status: formData.student_status,
       deceased: formData.deceased,
@@ -430,8 +546,7 @@ const PatientDemographicComponent = (props: any) => {
     });
     setDeceased(formData.deceased);
 
-    if (formData.mrn)
-      setFormMRN(formData.mrn);
+    if (formData.mrn) setFormMRN(formData.mrn);
 
     handleDOBChange(new Date(formData.date_of_birth));
     const patientNameData: any = {
@@ -447,8 +562,8 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const getPatientDetailsById = useCallback(() => {
-    console.log('redux patient details callback', patientDemographics);
-  }, [patientDemographics])
+    console.log("redux patient details callback", patientDemographics);
+  }, [patientDemographics]);
 
   const handleStateChange = useCallback(
     (formData: any) => {
@@ -467,16 +582,19 @@ const PatientDemographicComponent = (props: any) => {
   async function RequestAccessToken() {
     const request = {
       ...loginRequest,
-      account: accounts[0]
+      account: accounts[0],
     };
     // Silently acquires an access token which is then attached to a request for Microsoft Graph data
-    await instance.acquireTokenSilent(request).then((response) => {
-      accessToken = response.accessToken;
-    }).catch((e) => {
-      instance.acquireTokenPopup(request).then((response) => {
+    await instance
+      .acquireTokenSilent(request)
+      .then((response) => {
         accessToken = response.accessToken;
+      })
+      .catch((e) => {
+        instance.acquireTokenPopup(request).then((response) => {
+          accessToken = response.accessToken;
+        });
       });
-    });
     return accessToken;
   }
 
@@ -534,7 +652,7 @@ const PatientDemographicComponent = (props: any) => {
         accessToken = await RequestAccessToken();
         await postData(formValues, accessToken)
           .then((response) => {
-            if ((response.status === 200 || response.status === 204)) {
+            if (response.status === 200 || response.status === 204) {
               setAlertState(true);
               setAlertBoxText("Data Inserted Successfully");
               resetForm();
@@ -572,19 +690,21 @@ const PatientDemographicComponent = (props: any) => {
     setConfirmationState(true);
 
     accessToken = await RequestAccessToken();
-    await deletePatient(patientDemographics.id, accessToken).then((response) => {
-      // if (response.status === 200 && response.statusText === "OK") {
-      if (response.status === 200 || response.status === 204) {
-        setAlertState(true);
-        setAlertBoxText("Record Deleted Successfully");
-        setDisableEditButton(false);
-        setIsSaveDisable(true);
-        resetForm();
-      } else {
-        setAlertState(true);
-        setAlertBoxText("Delete operation failed");
+    await deletePatient(patientDemographics.id, accessToken).then(
+      (response) => {
+        // if (response.status === 200 && response.statusText === "OK") {
+        if (response.status === 200 || response.status === 204) {
+          setAlertState(true);
+          setAlertBoxText("Record Deleted Successfully");
+          setDisableEditButton(false);
+          setIsSaveDisable(true);
+          resetForm();
+        } else {
+          setAlertState(true);
+          setAlertBoxText("Delete operation failed");
+        }
       }
-    });
+    );
   };
 
   return (
@@ -625,7 +745,7 @@ const PatientDemographicComponent = (props: any) => {
             className="cardHeader"
             header={
               <Body1>
-                <b>{t('demographic.address.name')}</b>
+                <b>{t("demographic.address.name")}</b>
               </Body1>
             }
           />
@@ -661,14 +781,14 @@ const PatientDemographicComponent = (props: any) => {
                 // label="Country"
                 options={selectedCountries}
                 onChange={handleInputChange}
-                label={t('demographic.address.country')}
+                label={t("demographic.address.country")}
               ></Dropdown>
             </div>
             <div className="justify-start col-span-1 px-4">
               <Dropdown
                 key={selectedStates.key}
                 id="home_state"
-                placeholder={t('demographic.address.state_placeholder')}
+                placeholder={t("demographic.address.state_placeholder")}
                 selectedKey={selectedStates.key}
                 defaultSelectedKey={selectedStateKey}
                 disabled={isStateDisable || isAllDisable}
@@ -676,14 +796,14 @@ const PatientDemographicComponent = (props: any) => {
                 // label="State"
                 options={selectedStates}
                 onChange={handleInputChange}
-                label={t('demographic.address.state')}
-                errorMessage={t('demographic.address.state_error_message')}
+                label={t("demographic.address.state")}
+                errorMessage={t("demographic.address.state_error_message")}
               ></Dropdown>
             </div>
             <div className="col-span-1 px-4">
               <Dropdown
                 id="home_city"
-                placeholder={t('demographic.address.city_placeholder')}
+                placeholder={t("demographic.address.city_placeholder")}
                 selectedKey={selectedCities.key}
                 defaultSelectedKey={selectedCityKey}
                 disabled={isCityDisable || isAllDisable}
@@ -691,7 +811,7 @@ const PatientDemographicComponent = (props: any) => {
                 // label="City"
                 options={selectedCities}
                 onChange={handleInputChange}
-                label={t('demographic.address.city')}
+                label={t("demographic.address.city")}
               ></Dropdown>
             </div>
           </div>
@@ -702,7 +822,7 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <b>{t('demographic.general_information.name')}</b>
+                  <b>{t("demographic.general_information.name")}</b>
                 </Body1>
               }
             />
@@ -713,10 +833,12 @@ const PatientDemographicComponent = (props: any) => {
                     handleChange={handleInputChange}
                     value={formValues.birth_sex}
                     optionsArray={genderArray}
-                    labelText={t('demographic.general_information.birth_sex')}
+                    labelText={t("demographic.general_information.birth_sex")}
                     id="birth_sex"
                     isRequired={true}
-                    placeholder={t('demographic.general_information.birth_sex_placeholder')}
+                    placeholder={t(
+                      "demographic.general_information.birth_sex_placeholder"
+                    )}
                     isDisabled={isAllDisable}
                   />
                 </div>
@@ -733,7 +855,7 @@ const PatientDemographicComponent = (props: any) => {
                     disabled={isAllDisable}
                     isRequired={true}
                     showMonthPickerAsOverlay={true}
-                    label={t('demographic.general_information.dob')}
+                    label={t("demographic.general_information.dob")}
                   />
                 </div>
                 <div className="sm:col-span-1 justify-start">
@@ -744,7 +866,7 @@ const PatientDemographicComponent = (props: any) => {
                       value={age}
                       type="text"
                       readOnly
-                      label={t('demographic.general_information.age')}
+                      label={t("demographic.general_information.age")}
                       minLength={1}
                       maxLength={3}
                     />
@@ -765,7 +887,7 @@ const PatientDemographicComponent = (props: any) => {
                     maxLength={9}
                     required={true}
                     //errorMessage="Required field"
-                    label={t('demographic.general_information.ssn')}
+                    label={t("demographic.general_information.ssn")}
                   />
                 </div>
                 <div className="sm:col-span-1 justify-start">
@@ -773,10 +895,14 @@ const PatientDemographicComponent = (props: any) => {
                     handleChange={handleInputChange}
                     value={formValues.marital_status}
                     optionsArray={maritalArray}
-                    labelText={t('demographic.general_information.marital_status')}
+                    labelText={t(
+                      "demographic.general_information.marital_status"
+                    )}
                     id="marital_status"
                     isRequired={true}
-                    placeholder={t('demographic.general_information.marital_status_placeholder')}
+                    placeholder={t(
+                      "demographic.general_information.marital_status_placeholder"
+                    )}
                     isDisabled={isAllDisable}
                   />
                 </div>
@@ -785,10 +911,12 @@ const PatientDemographicComponent = (props: any) => {
                     handleChange={handleInputChange}
                     value={formValues.race}
                     optionsArray={raceArray}
-                    labelText={t('demographic.general_information.race')}
+                    labelText={t("demographic.general_information.race")}
                     id="race"
                     isRequired={true}
-                    placeholder={t('demographic.general_information.race_placeholder')}
+                    placeholder={t(
+                      "demographic.general_information.race_placeholder"
+                    )}
                     isDisabled={isAllDisable}
                   />
                 </div>
@@ -800,10 +928,14 @@ const PatientDemographicComponent = (props: any) => {
                     handleChange={handleInputChange}
                     value={formValues.employment_status}
                     optionsArray={employmentArray}
-                    labelText={t('demographic.general_information.employment_status')}
+                    labelText={t(
+                      "demographic.general_information.employment_status"
+                    )}
                     id="employment_status"
                     isRequired={true}
-                    placeholder={t('demographic.general_information.employment_status_placeholder')}
+                    placeholder={t(
+                      "demographic.general_information.employment_status_placeholder"
+                    )}
                     isDisabled={isAllDisable}
                   />
                 </div>
@@ -812,10 +944,14 @@ const PatientDemographicComponent = (props: any) => {
                     handleChange={handleInputChange}
                     value={formValues.student_status}
                     optionsArray={studentArray}
-                    labelText={t('demographic.general_information.student_status')}
+                    labelText={t(
+                      "demographic.general_information.student_status"
+                    )}
                     id="student_status"
                     isRequired={true}
-                    placeholder={t('demographic.general_information.student_status_placeholder')}
+                    placeholder={t(
+                      "demographic.general_information.student_status_placeholder"
+                    )}
                     isDisabled={isAllDisable}
                   />
                 </div>
@@ -824,7 +960,7 @@ const PatientDemographicComponent = (props: any) => {
                   <Checkbox
                     id="chkDeceased"
                     disabled={isAllDisable}
-                    label={t('demographic.general_information.deceased')}
+                    label={t("demographic.general_information.deceased")}
                     //value={deceased}
                     onChange={handleDeceased}
                   />
@@ -841,7 +977,7 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <b>{t('demographic.phone_number.name')}</b>
+                  <b>{t("demographic.phone_number.name")}</b>
                 </Body1>
               }
             />
@@ -858,7 +994,9 @@ const PatientDemographicComponent = (props: any) => {
                   type={field.type}
                   maxLength={field.maxLength}
                   isRequired={field.isRequired}
-                  placeholder={t(`demographic.phone_number.${field.placeholder}`)}
+                  placeholder={t(
+                    `demographic.phone_number.${field.placeholder}`
+                  )}
                   isDisabled={isAllDisable}
                   contentBefore={field.countryCode}
                   errorMessage={field.errorMessage}
@@ -873,7 +1011,7 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <b>{t('demographic.mrn.name')}</b>
+                  <b>{t("demographic.mrn.name")}</b>
                 </Body1>
               }
             />
