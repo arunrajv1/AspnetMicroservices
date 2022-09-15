@@ -69,7 +69,9 @@
         "mrn": {
             "name": "Números de registros médicos",
             "rec_no": "Número de registro",
-            "facility": "Instalaciones"
+            "facility": "Instalaciones",
+            "add_row": "añadir fila",
+            "delete_row": "borrar fila"
         }
     },
     "side_panel": {

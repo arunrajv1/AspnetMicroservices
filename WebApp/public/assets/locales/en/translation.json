@@ -69,7 +69,9 @@
         "mrn": {
             "name": "Medical Record Numbers",
             "rec_no": "Record Number",
-            "facility": "Facility"
+            "facility": "Facility",
+            "add_row": "add row",
+            "delete_row": "delete row"
         }
     },
     "side_panel": {

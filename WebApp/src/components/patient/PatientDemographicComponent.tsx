@@ -1064,7 +1064,7 @@ const PatientDemographicComponent = (props: any) => {
                           className="grid col-span-1"
                           style={{ maxWidth: "50px" }}
                         >
-                          <Tooltip content="delete row" relationship="label">
+                          <Tooltip content={t("demographic.mrn.delete_row")} relationship="label">
                             <Button
                               id={"btn" + index}
                               onClick={(e) => removeRow(index)}
@@ -1080,7 +1080,7 @@ const PatientDemographicComponent = (props: any) => {
                 </Table>
               </div>
               <div className="col-span-2">
-                <Tooltip content="add row" relationship="label">
+                <Tooltip content={t("demographic.mrn.add_row")} relationship="label">
                   <Button
                     disabled={isAllDisable}
                     onClick={addRow}

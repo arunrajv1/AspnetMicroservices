@@ -1,5 +1,4 @@
 import { MaskedTextField, TextField } from "@fluentui/react";
-import { Label, makeStyles, shorthands, } from "@fluentui/react-components";
 import React, { useEffect, useState } from "react";
 
 const InputBox = ({
@@ -33,7 +32,8 @@ const InputBox = ({
     <div className="grid grid-cols-1 gap-1 px-4">
       <div className="grid grid-cols-1">
         {(id === "txtHomePhone" || id === "txtWorkPhone") ? (
-          <MaskedTextField placeholder={placeholder}
+          <TextField
+            placeholder={placeholder}
             id={id}
             onChange={handleChange}
             value={value}
@@ -45,7 +45,8 @@ const InputBox = ({
             disabled={isDisabled}
             errorMessage={errorMessage}
             label={labelText}
-            mask={contentBefore + "  "} />
+            prefix={contentBefore + "  "}
+          />
 
         ) : (
           <TextField
