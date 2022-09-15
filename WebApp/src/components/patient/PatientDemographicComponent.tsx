@@ -36,7 +36,9 @@ import {
   defaultDatePickerStrings,
   Dropdown,
   Checkbox,
+  Text,
   TextField,
+  ITextProps,
 } from "@fluentui/react";
 import ButtonComponent from "../common/ElementsUI/ButtonComponent";
 import DropdownComponent from "../common/ElementsUI/DropdownComponent";
@@ -68,8 +70,8 @@ let addressFields = patientAddressFields;
 const contactFields = patientContactFields;
 contactFields.map(
   (x) =>
-    (x.countryCode =
-      "+" + country.filter((x: any) => x.isoCode == "US")[0].phonecode)
+  (x.countryCode =
+    "+" + country.filter((x: any) => x.isoCode == "US")[0].phonecode)
 );
 var accessToken: string;
 const re = /^[0-9\b]+$/;
@@ -101,16 +103,6 @@ const onFormatDate = (date?: Date): string => {
     ? ""
     : date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
 };
-const columns = [
-  {
-    columnKey: "recNo",
-    label: "Record Number",
-  },
-  {
-    columnKey: "facility",
-    label: "Facility",
-  },
-];
 
 const genderArray = genderOptions;
 const maritalArray = maritalStatusOptions;
@@ -147,17 +139,6 @@ const defaultValues: any = {
   middle_name: "",
   suffix: "",
   id: 0,
-};
-
-const defaultContactValues: any = {
-  home_street1: "",
-  home_street2: "",
-  home_city: "",
-  home_state: "",
-  home_postal_code: "",
-  home_country: "",
-  home_phone: "",
-  work_phone: "",
 };
 
 const defaultMRN = [
@@ -212,6 +193,16 @@ const PatientDemographicComponent = (props: any) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  const columns = [
+    {
+      columnKey: "recNo",
+      label: `${t("demographic.mrn.rec_no")}`,
+    },
+    {
+      columnKey: "facility",
+      label: t("demographic.mrn.facility"),
+    },
+  ];
   // console.log('zip code', lookup("22222"), lookup("700079"));
   // //console.log('pincode', client);
   // lookupPostcode({ client, postcode }).then(addresses => {
@@ -292,10 +283,10 @@ const PatientDemographicComponent = (props: any) => {
         if (selectedStates.length > 0) {
           contactFields.map(
             (x) =>
-              (x.countryCode =
-                "+" +
-                country.filter((x: any) => x.isoCode == option.key)[0]
-                  .phonecode)
+            (x.countryCode =
+              "+" +
+              country.filter((x: any) => x.isoCode == option.key)[0]
+                .phonecode)
           );
           selectedCities = defaultDropdownKeyValue;
           setStateDisable(false);
@@ -704,7 +695,7 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   return (
-    <div className="p-4 bg-gray-900">
+    <div className="p-4 bg-zinc-700">
       <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 lg:grid-rows-1 sm:grid-rows-2 justify-between -space-y-px">
         <div className="grid grid-cols-3 gap-2 justify-between">
           <div className="col-span-1 flex justify-end">
@@ -741,7 +732,9 @@ const PatientDemographicComponent = (props: any) => {
             className="cardHeader"
             header={
               <Body1>
-                <b>{t("demographic.address.name")}</b>
+                <Text key={1} style={{ color: "white" }} variant={'large'} nowrap block>
+                  {t("demographic.address.name")}
+                </Text>
               </Body1>
             }
           />
@@ -818,7 +811,9 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <b>{t("demographic.general_information.name")}</b>
+                  <Text key={1} style={{ color: "white" }} variant={'large'} nowrap block>
+                    {t("demographic.general_information.name")}
+                  </Text>
                 </Body1>
               }
             />
@@ -973,7 +968,9 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <b>{t("demographic.phone_number.name")}</b>
+                  <Text key={1} style={{ color: "white" }} variant={'large'} nowrap block>
+                    {t("demographic.phone_number.name")}
+                  </Text>
                 </Body1>
               }
             />
@@ -1007,7 +1004,9 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <b>{t("demographic.mrn.name")}</b>
+                  <Text key={1} style={{ color: "white" }} variant={'large'} nowrap block>
+                    {t("demographic.mrn.name")}
+                  </Text>
                 </Body1>
               }
             />

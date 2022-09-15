@@ -71,5 +71,9 @@
             "rec_no": "Número de registro",
             "facility": "Instalaciones"
         }
+    },
+    "side_panel": {
+        "btn_Logout": "Cerrar sesión",
+        "sel_Language": "Cambiar idioma"
     }
 }

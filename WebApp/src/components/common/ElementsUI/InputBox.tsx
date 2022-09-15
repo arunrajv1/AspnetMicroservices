@@ -48,7 +48,7 @@ const InputBox = ({
           disabled={isDisabled}
           errorMessage={errorMessage}
           label={labelText}
-          iconProps={contentBefore}
+          onBeforeInput={contentBefore}
           //contentBefore={contentBefore}
         />
         {/* {isShowError ? (

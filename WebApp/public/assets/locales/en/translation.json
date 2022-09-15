@@ -71,5 +71,9 @@
             "rec_no": "Record Number",
             "facility": "Facility"
         }
+    },
+    "side_panel": {
+        "btn_Logout": "Logout",
+        "sel_Language": "Change Language"
     }
 }

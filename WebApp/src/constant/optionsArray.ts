@@ -1,7 +1,7 @@
 
 import { City, Country, State } from "country-state-city";
 
-interface IDropdownOption { text: string, key: any };
+interface IDropdownOption { text: string, key: any, disabled?: boolean };
 
 const genderOptions: IDropdownOption[] = [
     { text: "Male", key: "M" },
@@ -38,9 +38,9 @@ const studentOptions: IDropdownOption[] = [
 ]
 
 const languageOptions: IDropdownOption[] = [
-    { text: "English", key: "en" },
-    { text: "Spanish", key: "es" },
-    { text: "French", key: "fr" },
+    { text: "English", key: "en", disabled: false },
+    { text: "Spanish", key: "es", disabled: false },
+    //{ text: "French", key: "fr", disabled: false },
 ]
 
 const defaultCountryOptions = Country.getAllCountries();
