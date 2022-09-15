@@ -1,26 +1,26 @@
 const patientAddressFields = [
   {
-    labelText: "Street 1*",
+    labelText: "street2",
     labelFor: "txtStreet1",
     id: "txtStreet1",
     name: "home_street1",
     type: "text",
     autoComplete: "home_street1",
     isRequired: true,
-    placeholder: "Street 1",
+    placeholder: "street1",
     maxLength: 30,
     minLength: 4,
-     errorMessage: ""
+    errorMessage: ""
   },
   {
-    labelText: "Street 2*",
+    labelText: "street2",
     labelFor: "txtStreet2",
     id: "txtStreet2",
     name: "home_street2",
     type: "text",
     autoComplete: "home_street2",
     isRequired: false,
-    placeholder: "Street 2",
+    placeholder: "street2",
     maxLength: 30,
     minLength: 4,
     errorMessage: ""
@@ -56,14 +56,14 @@ const patientAddressFields = [
     placeholder: "Country",
   },*/
   {
-    labelText: "Postal Code*",
+    labelText: "postal_code",
     labelFor: "txtPostalCode",
     id: "txtPostalCode",
     name: "home_postal_code",
     type: "text",
     autoComplete: "home_postal_code",
     isRequired: true,
-    placeholder: "Enter Postal Code for City and State",
+    placeholder: "postal_code_placeholder",
     maxLength: 5,
     minLength: 5,
     errorMessage: ""
@@ -72,7 +72,7 @@ const patientAddressFields = [
 
 const patientContactFields = [
   {
-    labelText: "Home*",
+    labelText: "home",
     labelFor: "txtHomePhone",
     id: "txtHomePhone",
     name: "home_phone",
@@ -80,12 +80,12 @@ const patientContactFields = [
     maxLength: 10,
     autoComplete: "home_phone",
     isRequired: true,
-    placeholder: "Home",
+    placeholder: "home",
     countryCode: "",
     errorMessage: ""
   },
   {
-    labelText: "Work*",
+    labelText: "work",
     labelFor: "txtWorkPhone",
     id: "txtWorkPhone",
     name: "work_phone",
@@ -93,9 +93,9 @@ const patientContactFields = [
     maxLength: 10,
     autoComplete: "work_phone",
     isRequired: false,
-    placeholder: "Work",
+    placeholder: "work",
     countryCode: "",
-     errorMessage: ""
+    errorMessage: ""
   },
 ];
 
@@ -268,7 +268,7 @@ const employerAddressFields = [
   },
 ];
 
-const countryStateCity = [  
+const countryStateCity = [
   {
     labelText: "State",
     labelFor: "txtState",

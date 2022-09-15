@@ -89,14 +89,14 @@ const NeighbourhoodComponent = () => {
             <InputBox
               handleChange={handleFormChange}
               value={formData[field.name]}
-              labelText={t(`neighbourhood.${field.placeholder}`)} //{field.labelText}
+              labelText={t(`neighbourhood.${field.placeholder}`)}
               labelFor={field.labelFor}
               id={field.id}
               name={field.name}
               type={field.type}
               maxLength={field.maxLength}
               isRequired={field.isRequired}
-              placeholder={t(`neighbourhood.${field.placeholder}`)} //{field.placeholder}
+              placeholder={t(`neighbourhood.${field.placeholder}`)}
               isDisabled={isDisable}
             />
           </div>

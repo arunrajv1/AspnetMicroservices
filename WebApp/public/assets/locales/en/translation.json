@@ -38,6 +38,7 @@
             "country": "Country",
             "state": "State",
             "state_placeholder": "Select State",
+            "state_error_message": "State is required",
             "city": "City",
             "city_placeholder": "Select City"
         },
@@ -61,7 +62,9 @@
         "phone_number": {
             "name": "Phone Numbers",
             "home": "Home",
-            "work": "Work"
+            "home_error_message": "Home phone number is required",
+            "work": "Work",
+            "work_error_message": ""
         },
         "mrn": {
             "name": "Medical Record Numbers",

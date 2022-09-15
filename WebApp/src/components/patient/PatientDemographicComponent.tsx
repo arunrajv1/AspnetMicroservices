@@ -1,15 +1,15 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
 import { formatDate } from "../../services/CommonServices";
 import { deletePatient, postData, updateData, } from "../../services/PatientServices";
 import FullPageLoader from "../common/Loader/FullPageLoader";
 import AlertPopup from "../common/popup/AlertPopup";
-import { Body1, Checkbox, Input, Tooltip, Button } from "@fluentui/react-components";
+import { Body1, Tooltip, Button } from "@fluentui/react-components";
 import { Add16Filled, Delete16Filled, } from "@fluentui/react-icons";
 import { Card, CardHeader, Table, TableRow, TableBody, TableHeader, TableHeaderCell, TableCell } from "@fluentui/react-components/unstable";
 import { patientAddressFields, patientContactFields } from "../../constant/formFields";
 import "../../style/CommonStyle.scss";
 import InputBox from "../common/ElementsUI/InputBox";
-import { DatePicker, defaultDatePickerStrings, Dropdown } from "@fluentui/react";
+import { DatePicker, defaultDatePickerStrings, Dropdown, Checkbox, TextField } from "@fluentui/react";
 import ButtonComponent from "../common/ElementsUI/ButtonComponent";
 import DropdownComponent from "../common/ElementsUI/DropdownComponent";
 import { genderOptions, maritalStatusOptions, raceOptions, employmentOptions, studentOptions, defaultCountryOptions, defaultStateOptions, defaultCityOptions } from "../../constant/optionsArray";
@@ -130,7 +130,6 @@ const PatientDemographicComponent = (props: any) => {
   const [age, setAge] = useState("");
   const [hasError, setHasError] = useState(false);
   const [formValues, setFormValues] = useState(defaultValues);
-  //  const [formContactValues, setFormContactValues] = useState(defaultContactValues);
   const [formMRN, setFormMRN] = useState(defaultMRN);
   const [alertState, setAlertState] = useState(false);
   const [alertProps, updateAlertProps] = useState(defaultAlertProps);
@@ -155,7 +154,7 @@ const PatientDemographicComponent = (props: any) => {
   const spinnerSelector = useSelector((state: RootState) => state.commonUIElements.data);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  
+
   // console.log('zip code', lookup("22222"), lookup("700079"));
   // //console.log('pincode', client);
   // lookupPostcode({ client, postcode }).then(addresses => {
@@ -170,14 +169,12 @@ const PatientDemographicComponent = (props: any) => {
       setDisableEditButton(false);
       setIsAllDisable(true);
     }
-    // getPatientDetailsById();
   }, [patientDemographics, spinnerSelector])
 
   const resetForm = () => {
     setDateOfBirth(new Date());
     setHasError(false);
     setFormValues(defaultValues);
-    //  setFormContactValues(defaultContactValues);
     setAlertState(false);
     updateAlertProps(defaultAlertProps);
     setIsAllDisable(false);
@@ -213,7 +210,7 @@ const PatientDemographicComponent = (props: any) => {
       setFormValues(returnData);
       return;
     }
-    if (name === "home_phone"){
+    if (name === "home_phone") {
       let returnData = handleHomePhoneChange(e);
       setFormValues(returnData);
       return;
@@ -260,31 +257,6 @@ const PatientDemographicComponent = (props: any) => {
     handleStateChange(obj);
   };
 
-  //   const handleContactInputChange = (e: any) => {
-  //     let { name, value } = e.target;
-  //     if (e.target.name === "home_phone") {
-  //       let returnData = handleHomePhoneNumber(e);
-  //       value = returnData.toString();
-  //     } else if (e.target.name === "work_phone") {
-  //       let returnData = handleWorkPhoneNumber(e);
-  //       value = returnData.toString();
-  //     }
-  //     let obj = { ...formContactValues, [name]: value };
-  //     let mainArr = { ...formValues, address: obj };
-
-  //     setFormContactValues({
-  //       ...formContactValues,
-  //       [name]: value,
-  //     });
-
-  //     setFormValues({
-  //       ...formValues,
-  //       [name]: value,
-  //     });
-
-  //     // handleStateChange(mainArr);
-  //   };
-
   const handleFormMRN = (e: any, index: number) => {
     const { name, value } = e.target;
     let updatedRows = [...formMRN];
@@ -300,10 +272,11 @@ const PatientDemographicComponent = (props: any) => {
     setFormMRN(updatedRows);
   };
 
-  const handleDeceased = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) setDeceased("Y");
+  const handleDeceased = (event?: FormEvent<HTMLElement | HTMLInputElement>, isChecked?: boolean) => {
+    if (isChecked) setDeceased("Y");
     else setDeceased("N");
   };
+
   const handleDOBChange = (newValue: any | Date) => {
     console.log("selectedDate", newValue);
     if (newValue) {
@@ -337,9 +310,9 @@ const PatientDemographicComponent = (props: any) => {
     }
   };
 
-  const handleHomePhoneChange = (e:any): any =>{
+  const handleHomePhoneChange = (e: any): any => {
     let obj: any;
-    if (e.target.value === "" || re.test(e.target.value)){
+    if (e.target.value === "" || re.test(e.target.value)) {
       obj = {
         ...formValues,
         ["home_phone"]: e.target.value,
@@ -353,14 +326,14 @@ const PatientDemographicComponent = (props: any) => {
         ...formValues,
         ["home_phone"]: "",
       };
-            contactFields
-              .filter((x) => x.name === e.target.name)
-              .map((x) => (x.errorMessage = "Only numbers are accepted"));
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = "Only numbers are accepted"));
     }
     handleStateChange(obj);
     return obj;
   }
-  const handleWorkPhoneChange = (e:any): any =>{
+  const handleWorkPhoneChange = (e: any): any => {
     let obj: any;
     if (e.target.value === "" || re.test(e.target.value)) {
       obj = {
@@ -430,26 +403,6 @@ const PatientDemographicComponent = (props: any) => {
     return obj;
   }
 
-  const handleHomePhoneNumber = (e: any) => {
-    if (e.target.value === "" || re.test(e.target.value)) {
-      return e.target.value;
-    } else if (e.target.value.length == 1) {
-      return "";
-    } else {
-      return e.target.value.slice(0, e.target.value.length - 1);
-    }
-  };
-
-  const handleWorkPhoneNumber = (e: any) => {
-    if (e.target.value === "" || re.test(e.target.value)) {
-      return e.target.value;
-    } else if (e.target.value.length == 1) {
-      return "";
-    } else {
-      return e.target.value.slice(0, e.target.value.length - 1);
-    }
-  };
-
   const bindPatientDetails = (formData: any) => {
     setFormValues({
       ...formValues,
@@ -472,16 +425,6 @@ const PatientDemographicComponent = (props: any) => {
       // id: 0,
     });
     setDeceased(formData.deceased);
-    // setFormContactValues({
-    //   ...formData.address,
-    //   home_city: formData.home_city,
-    //   home_country: formData.home_country,
-    //   home_phone: formData.home_phone,
-    //   home_postal_code: formData.home_postal_code,
-    //   home_state: formData.home_state,
-    //   home_street1: formData.home_street1,
-    //   home_street2: formData.home_street2,
-    // });
 
     if (formData.mrn)
       setFormMRN(formData.mrn);
@@ -557,9 +500,9 @@ const PatientDemographicComponent = (props: any) => {
       addressFields
         .filter((y) => formValues[`${y.name}`] === "")
         .map((y) => (y.errorMessage = "Required field"));
-        contactFields
-          .filter((y) => formValues[`${y.name}`] === "")
-          .map((y) => (y.errorMessage = "Required field"));
+      contactFields
+        .filter((y) => formValues[`${y.name}`] === "")
+        .map((y) => (y.errorMessage = "Required field"));
       return;
     } else {
       setHasError(false);
@@ -688,7 +631,7 @@ const PatientDemographicComponent = (props: any) => {
                 <InputBox
                   handleChange={handleInputChange}
                   value={formValues[field.name]}
-                  labelText={field.labelText}
+                  labelText={t(`demographic.address.${field.labelText}`)}
                   labelFor={field.labelFor}
                   id={field.id}
                   name={field.name}
@@ -696,14 +639,13 @@ const PatientDemographicComponent = (props: any) => {
                   maxLength={field.maxLength}
                   minLength={field.minLength}
                   isRequired={field.isRequired}
-                  placeholder={field.placeholder}
+                  placeholder={t(`demographic.address.${field.placeholder}`)}
                   errorMessage={field.errorMessage}
                   isDisabled={isAllDisable}
                 />
               </div>
             ))}
             <div className="col-span-1 px-4">
-              <label htmlFor="home_country">Country</label>
               <Dropdown
                 key={selectedCountries.key}
                 id="home_country"
@@ -715,14 +657,14 @@ const PatientDemographicComponent = (props: any) => {
                 // label="Country"
                 options={selectedCountries}
                 onChange={handleInputChange}
+                label={t('demographic.address.country')}
               ></Dropdown>
             </div>
             <div className="justify-start col-span-1 px-4">
-              <label htmlFor="home_state">State</label>
               <Dropdown
                 key={selectedStates.key}
                 id="home_state"
-                placeholder="Select State"
+                placeholder={t('demographic.address.state_placeholder')}
                 selectedKey={selectedStates.key}
                 defaultSelectedKey={selectedStateKey}
                 disabled={isStateDisable || isAllDisable}
@@ -730,13 +672,14 @@ const PatientDemographicComponent = (props: any) => {
                 // label="State"
                 options={selectedStates}
                 onChange={handleInputChange}
+                label={t('demographic.address.state')}
+                errorMessage={t('demographic.address.state_error_message')}
               ></Dropdown>
             </div>
             <div className="col-span-1 px-4">
-              <label htmlFor="home_city">City</label>
               <Dropdown
                 id="home_city"
-                placeholder="Select City"
+                placeholder={t('demographic.address.city_placeholder')}
                 selectedKey={selectedCities.key}
                 defaultSelectedKey={selectedCityKey}
                 disabled={isCityDisable || isAllDisable}
@@ -744,6 +687,7 @@ const PatientDemographicComponent = (props: any) => {
                 // label="City"
                 options={selectedCities}
                 onChange={handleInputChange}
+                label={t('demographic.address.city')}
               ></Dropdown>
             </div>
           </div>
@@ -754,31 +698,27 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <b>General Information</b>
+                  <b>{t('demographic.general_information.name')}</b>
                 </Body1>
               }
-            // description={<Caption1>5h ago · About us - Overview</Caption1>}
             />
             <div className="grid grid-rows-3 grid-flow-col">
-              {/*Row 1*/}
-              <div className="grid lg:grid-cols-8 md:grid-cols-1 sm:grid-cols-1 gap-3 px-4">
-                <div className="lg:col-span-2 sm:col-span-1 justify-start">
+              <div className="grid lg:grid-cols-3 md:grid-cols-1 sm:grid-cols-1 gap-3 px-4">
+                <div className="sm:col-span-1 justify-start">
                   <DropdownComponent
                     handleChange={handleInputChange}
                     value={formValues.birth_sex}
                     optionsArray={genderArray}
-                    labelText="Birth Sex"
+                    labelText={t('demographic.general_information.birth_sex')}
                     id="birth_sex"
                     isRequired={true}
-                    placeholder="Select Gender"
+                    placeholder={t('demographic.general_information.birth_sex_placeholder')}
                     isDisabled={isAllDisable}
                   />
                 </div>
-                <div className="lg:col-span-3 sm:col-span-1 justify-start">
-                  <label htmlFor="calenderDOB">Date of birth</label>
+                <div className="sm:col-span-1 justify-start">
                   <DatePicker
                     id="calenderDOB"
-                    placeholder="Select a date..."
                     maxDate={new Date()}
                     value={dateOfBirth}
                     strings={defaultDatePickerStrings}
@@ -789,38 +729,27 @@ const PatientDemographicComponent = (props: any) => {
                     disabled={isAllDisable}
                     isRequired={true}
                     showMonthPickerAsOverlay={true}
+                    label={t('demographic.general_information.dob')}
                   />
                 </div>
-                <div className="lg:col-span-1 sm:col-span-1 justify-start">
-                  <label htmlFor="txt_age">Age</label>
+                <div className="sm:col-span-1 justify-start">
                   <div className="grid grid-cols-1">
-                    <Input
+                    <TextField
                       className="flex"
                       id="txt_age"
                       value={age}
                       type="text"
-                      disabled
-                      //className="inputBox"
+                      readOnly
+                      label={t('demographic.general_information.age')}
                       minLength={1}
                       maxLength={3}
                     />
                   </div>
                 </div>
-                <div className="lg:col-span-2 sm:col-span-1 justify-start pt-4">
-                  <Checkbox
-                    id="chkDeceased"
-                    disabled={isAllDisable}
-                    label="Deceased"
-                    value={deceased}
-                    onChange={handleDeceased}
-                  />
-                </div>
               </div>
-              {/*Row 2*/}
               <div className="grid lg:grid-cols-3 md:grid-cols-1 sm:grid-cols-1 gap-3 px-4 -space-y-px ">
                 <div className="sm:col-span-1 justify-start">
-                  <label htmlFor="txt_ssn">Social security no:</label>
-                  <Input
+                  <TextField
                     className="flex"
                     id="txt_ssn"
                     name="ssn"
@@ -830,6 +759,9 @@ const PatientDemographicComponent = (props: any) => {
                     disabled={isAllDisable}
                     minLength={5}
                     maxLength={9}
+                    required={true}
+                    //errorMessage="Required field"
+                    label={t('demographic.general_information.ssn')}
                   />
                 </div>
                 <div className="sm:col-span-1 justify-start">
@@ -837,10 +769,10 @@ const PatientDemographicComponent = (props: any) => {
                     handleChange={handleInputChange}
                     value={formValues.marital_status}
                     optionsArray={maritalArray}
-                    labelText="Marital Status"
+                    labelText={t('demographic.general_information.marital_status')}
                     id="marital_status"
                     isRequired={true}
-                    placeholder="Select Marital Status"
+                    placeholder={t('demographic.general_information.marital_status_placeholder')}
                     isDisabled={isAllDisable}
                   />
                 </div>
@@ -849,10 +781,10 @@ const PatientDemographicComponent = (props: any) => {
                     handleChange={handleInputChange}
                     value={formValues.race}
                     optionsArray={raceArray}
-                    labelText="Race"
+                    labelText={t('demographic.general_information.race')}
                     id="race"
                     isRequired={true}
-                    placeholder="Select Race"
+                    placeholder={t('demographic.general_information.race_placeholder')}
                     isDisabled={isAllDisable}
                   />
                 </div>
@@ -864,10 +796,10 @@ const PatientDemographicComponent = (props: any) => {
                     handleChange={handleInputChange}
                     value={formValues.employment_status}
                     optionsArray={employmentArray}
-                    labelText="Employment Status"
+                    labelText={t('demographic.general_information.employment_status')}
                     id="employment_status"
                     isRequired={true}
-                    placeholder="Select Employment"
+                    placeholder={t('demographic.general_information.employment_status_placeholder')}
                     isDisabled={isAllDisable}
                   />
                 </div>
@@ -876,14 +808,23 @@ const PatientDemographicComponent = (props: any) => {
                     handleChange={handleInputChange}
                     value={formValues.student_status}
                     optionsArray={studentArray}
-                    labelText="Student Status"
+                    labelText={t('demographic.general_information.student_status')}
                     id="student_status"
                     isRequired={true}
-                    placeholder="Select Student"
+                    placeholder={t('demographic.general_information.student_status_placeholder')}
                     isDisabled={isAllDisable}
                   />
                 </div>
-                <div className="sm:col-span-1 justify-start"></div>
+
+                <div className="sm:col-span-1 p-4">
+                  <Checkbox
+                    id="chkDeceased"
+                    disabled={isAllDisable}
+                    label={t('demographic.general_information.deceased')}
+                    //value={deceased}
+                    onChange={handleDeceased}
+                  />
+                </div>
               </div>
             </div>
           </Card>
@@ -896,27 +837,27 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <b>Phone Numbers</b>
+                  <b>{t('demographic.phone_number.name')}</b>
                 </Body1>
               }
             />
-            <div>
+            <div className="grid lg:grid-rows-1 sm:grid-rows-2 grid-flow-col">
               {contactFields.map((field: any, i: number) => (
                 <InputBox
                   key={i}
                   handleChange={handleInputChange}
                   value={formValues[field.name]}
-                  labelText={field.labelText}
+                  labelText={t(`demographic.phone_number.${field.labelText}`)}
                   labelFor={field.labelFor}
                   id={field.id}
                   name={field.name}
                   type={field.type}
                   maxLength={field.maxLength}
                   isRequired={field.isRequired}
-                  placeholder={field.placeholder}
+                  placeholder={t(`demographic.phone_number.${field.placeholder}`)}
                   isDisabled={isAllDisable}
                   contentBefore={field.countryCode}
-                  errorMessage = {field.errorMessage}
+                  errorMessage={field.errorMessage}
                 />
               ))}
             </div>
@@ -928,10 +869,9 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <b>Medical Record Numbers</b>
+                  <b>{t('demographic.mrn.name')}</b>
                 </Body1>
               }
-            // description={<Caption1>5h ago · About us - Overview</Caption1>}
             />
             <div className="grid grid-cols-12">
               <div className="col-span-10 tableStyle">
