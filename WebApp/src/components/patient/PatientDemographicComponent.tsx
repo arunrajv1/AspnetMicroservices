@@ -47,7 +47,11 @@ let selectedStates: any = states.filter((x: any) => x.countryCode == "US").sort(
 const onFormatDate = (date?: Date): string => {
   return !date
     ? ""
-    : date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    : (date.getMonth() + 1 )+
+        "/" +
+        date.getDate() +
+        "/" +
+        date.getFullYear();
 };
 const columns = [
   {
