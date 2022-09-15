@@ -1,6 +1,6 @@
 const patientAddressFields = [
   {
-    labelText: "Street 1",
+    labelText: "Street 1*",
     labelFor: "txtStreet1",
     id: "txtStreet1",
     name: "home_street1",
@@ -10,10 +10,10 @@ const patientAddressFields = [
     placeholder: "Street 1",
     maxLength: 30,
     minLength: 4,
-    // errorMessage: ""
+     errorMessage: ""
   },
   {
-    labelText: "Street 2",
+    labelText: "Street 2*",
     labelFor: "txtStreet2",
     id: "txtStreet2",
     name: "home_street2",
@@ -23,7 +23,7 @@ const patientAddressFields = [
     placeholder: "Street 2",
     maxLength: 30,
     minLength: 4,
-    // errorMessage: ""
+    errorMessage: ""
   },/*
   {
     labelText: "City",
@@ -56,7 +56,7 @@ const patientAddressFields = [
     placeholder: "Country",
   },*/
   {
-    labelText: "Postal Code",
+    labelText: "Postal Code*",
     labelFor: "txtPostalCode",
     id: "txtPostalCode",
     name: "home_postal_code",
@@ -72,7 +72,7 @@ const patientAddressFields = [
 
 const patientContactFields = [
   {
-    labelText: "Home",
+    labelText: "Home*",
     labelFor: "txtHomePhone",
     id: "txtHomePhone",
     name: "home_phone",
@@ -81,10 +81,11 @@ const patientContactFields = [
     autoComplete: "home_phone",
     isRequired: true,
     placeholder: "Home",
-    countryCode: ""
+    countryCode: "",
+    errorMessage: ""
   },
   {
-    labelText: "Work",
+    labelText: "Work*",
     labelFor: "txtWorkPhone",
     id: "txtWorkPhone",
     name: "work_phone",
@@ -93,7 +94,8 @@ const patientContactFields = [
     autoComplete: "work_phone",
     isRequired: false,
     placeholder: "Work",
-    countryCode: ""
+    countryCode: "",
+     errorMessage: ""
   },
 ];
 

@@ -37,7 +37,7 @@ const InputBox = ({
   const [isShowError, setIsShowError] = useState(false);
 
   useEffect(() => {
-    if (name == "home_postal_code" && errorMessage && errorMessage.length > 0) {
+    if (( name == "home_postal_code" || "home_phone" ) && errorMessage && errorMessage.length > 0) {
       setIsShowError(true);
     }
     if (value && value.length > minLength) {
