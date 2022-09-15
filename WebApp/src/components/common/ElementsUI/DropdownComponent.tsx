@@ -17,7 +17,7 @@ const DropdownComponent = ({
     // console.table('from parent optionsArray', optionsArray)
     return (
         <div>
-            <label htmlFor={id}>{labelText}</label>
+            {/* <label htmlFor={id}>{labelText}</label> */}
             <Dropdown
                 id={id}
                 placeholder={placeholder}
@@ -26,6 +26,7 @@ const DropdownComponent = ({
                 onChange={(e, opt) => handleChange(e, opt)}
                 disabled={isDisabled}
                 required={isRequired}
+                label={labelText}
             >
             </Dropdown>
         </div>

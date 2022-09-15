@@ -1,21 +1,6 @@
-import { Input, Label, makeStyles, shorthands, } from "@fluentui/react-components";
+import { TextField } from "@fluentui/react";
+import { Label, makeStyles, shorthands, } from "@fluentui/react-components";
 import React, { useEffect, useState } from "react";
-
-const useStyles = makeStyles({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    ...shorthands.gap("20px"),
-    // Prevent the example from taking the full width of the page (optional)
-    // maxWidth: '400px',
-    // Stack the label above the field (with 2px gap per the design system)
-    "> div": {
-      display: "flex",
-      flexDirection: "column",
-      ...shorthands.gap("2px"),
-    },
-  },
-});
 
 const InputBox = ({
   handleChange,
@@ -33,7 +18,6 @@ const InputBox = ({
   minLength = 0,
   contentBefore
 }: any) => {
-  const styles = useStyles();
   const [isShowError, setIsShowError] = useState(false);
 
   useEffect(() => {
@@ -47,11 +31,11 @@ const InputBox = ({
 
   return (
     <div className="grid grid-cols-1 gap-1 px-4">
-      <div className="flex grid-cols-6 justify-start">
+      {/* <div className="flex grid-cols-6 justify-start">
         <Label htmlFor={labelFor}>{labelText}</Label>
-      </div>
+      </div> */}
       <div className="grid grid-cols-1">
-        <Input
+        <TextField
           placeholder={placeholder}
           id={id}
           onChange={handleChange}
@@ -59,26 +43,21 @@ const InputBox = ({
           name={name}
           type={type}
           required={isRequired}
-          //className="inputBox"
           minLength={minLength}
           maxLength={maxLength}
           disabled={isDisabled}
-          contentBefore={contentBefore}
+          errorMessage={errorMessage}
+          label={labelText}
+          iconProps={contentBefore}
+          //contentBefore={contentBefore}
         />
-        {/* {isRequired && (
-          <div>
-            <span className="text-red-500 text-xs italic">
-              *Please fill out this field, min 2 characters.
-            </span>
-          </div>
-        )} */}
-        {isShowError ? (
+        {/* {isShowError ? (
           <div>
             <span className="text-red-500 text-xs italic">
               {errorMessage}
             </span>
           </div>
-        ) : <></>}
+        ) : <></>} */}
       </div>
     </div>
   );

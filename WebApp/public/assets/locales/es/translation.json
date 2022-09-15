@@ -38,6 +38,7 @@
             "country": "País",
             "state": "Estado",
             "state_placeholder": "Seleccione estado",
+            "state_error_message": "Se requiere estado",
             "city": "Ciudad",
             "city_placeholder": "Ciudad selecta"
         },
@@ -61,7 +62,9 @@
         "phone_number": {
             "name": "Números de teléfono",
             "home": "Hogar",
-            "work": "Trabajar"
+            "home_error_message": "Se requiere el número de teléfono de casa",
+            "work": "Trabajar",
+            "work_error_message": ""
         },
         "mrn": {
             "name": "Números de registros médicos",
