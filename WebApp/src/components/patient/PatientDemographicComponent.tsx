@@ -31,15 +31,7 @@ import {
 } from "../../constant/formFields";
 import "../../style/CommonStyle.scss";
 import InputBox from "../common/ElementsUI/InputBox";
-import {
-  DatePicker,
-  defaultDatePickerStrings,
-  Dropdown,
-  Checkbox,
-  Text,
-  TextField,
-  ITextProps,
-} from "@fluentui/react";
+import { DatePicker, defaultDatePickerStrings, Dropdown, Checkbox, Text, TextField, ITextProps, ActionButton, IIconProps } from "@fluentui/react";
 import ButtonComponent from "../common/ElementsUI/ButtonComponent";
 import DropdownComponent from "../common/ElementsUI/DropdownComponent";
 import {
@@ -101,11 +93,11 @@ let selectedStates: any = states
 const onFormatDate = (date?: Date): string => {
   return !date
     ? ""
-    : (date.getMonth() + 1 )+
-        "/" +
-        date.getDate() +
-        "/" +
-        date.getFullYear();
+    : (date.getMonth() + 1) +
+    "/" +
+    date.getDate() +
+    "/" +
+    date.getFullYear();
 };
 
 const genderArray = genderOptions;
@@ -113,6 +105,8 @@ const maritalArray = maritalStatusOptions;
 const raceArray = raceOptions;
 const employmentArray = employmentOptions;
 const studentArray = studentOptions;
+
+const addFriendIcon: IIconProps = { iconName: 'AddFriend' };
 
 export interface IMedicalRecordNumber {
   recordNumber: string;
@@ -251,6 +245,17 @@ const PatientDemographicComponent = (props: any) => {
     props.onSavePatientData(patientNameData);
     props.onChangeDisable(false);
     props.onTabChange(defaultValues);
+
+    selectedCountries = country;
+    selectedStates = states;
+    selectedCities = cities;
+
+    setSelectedCountryKey(["US"]);
+    setSelectedStateKey([""]);
+    setSelectedCityKey([""]);
+
+    setCityDisable(true);
+    setStateDisable(true);
   };
 
   const handleInputChange = (e: any, option?: any) => {
@@ -699,7 +704,7 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   return (
-    <div className="p-4 bg-zinc-700">
+    <div className="p-4 bg-zinc-300">
       <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 lg:grid-rows-1 sm:grid-rows-2 justify-between -space-y-px">
         <div className="grid grid-cols-3 gap-2 justify-between">
           <div className="col-span-1 flex justify-end">
@@ -709,6 +714,9 @@ const PatientDemographicComponent = (props: any) => {
               text="Edit"
               isDisabled={disableEditButton}
             />
+            <ActionButton iconProps={addFriendIcon} allowDisabledFocus disabled={false} checked={false} onClick={resetForm}>
+              New Patient
+            </ActionButton>
           </div>
         </div>
         <div className="flex gap-4 grid-cols-2 justify-center">
@@ -769,7 +777,7 @@ const PatientDemographicComponent = (props: any) => {
                 placeholder="Select Country"
                 selectedKey={selectedCountries.key}
                 defaultSelectedKey={selectedCountryKey}
-                disabled={false}
+                disabled={isAllDisable}
                 required={true}
                 // label="Country"
                 options={selectedCountries}
@@ -860,7 +868,7 @@ const PatientDemographicComponent = (props: any) => {
                       id="txt_age"
                       value={age}
                       type="text"
-                      readOnly
+                      disabled
                       label={t("demographic.general_information.age")}
                       minLength={1}
                       maxLength={3}
@@ -1029,7 +1037,7 @@ const PatientDemographicComponent = (props: any) => {
                   <TableBody>
                     {/* <div style={{ maxHeight: "90px", overflowY: "scroll" }}> */}
                     {formMRN.map((row, index) => (
-                      <TableRow key={index} className="flex grid-cols-12">
+                      <TableRow key={index} className="flex grid-cols-12 pb-2">
                         <TableCell className="grid col-span-5">
                           <InputBox
                             handleChange={(e: any) => handleFormMRN(e, index)}
