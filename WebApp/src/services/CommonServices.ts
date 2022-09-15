@@ -1,7 +1,7 @@
 export const formatDate = (date: Date) => {
   return [
-    padTo2Digits(date.getDate()),
     padTo2Digits(date.getMonth() + 1),
+    padTo2Digits(date.getDate()),
     date.getFullYear(),
   ].join("-");
 };

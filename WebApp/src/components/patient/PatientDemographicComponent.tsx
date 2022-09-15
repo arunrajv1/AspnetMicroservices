@@ -101,7 +101,11 @@ let selectedStates: any = states
 const onFormatDate = (date?: Date): string => {
   return !date
     ? ""
-    : date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    : (date.getMonth() + 1 )+
+        "/" +
+        date.getDate() +
+        "/" +
+        date.getFullYear();
 };
 
 const genderArray = genderOptions;
