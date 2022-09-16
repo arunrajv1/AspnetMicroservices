@@ -340,8 +340,20 @@ const PatientDemographicComponent = (props: any) => {
     event?: FormEvent<HTMLElement | HTMLInputElement>,
     isChecked?: boolean
   ) => {
-    if (isChecked) setDeceased("Y");
-    else setDeceased("N");
+    if (isChecked) {
+      setDeceased("Y");
+      setFormValues({
+        ...formValues,
+        deceased: "Y"
+      })
+    }
+    else {
+      setDeceased("N");
+      setFormValues({
+        ...formValues,
+        deceased: "N"
+      })
+    }
   };
 
   const handleDOBChange = (newValue: any | Date) => {
@@ -713,7 +725,7 @@ const PatientDemographicComponent = (props: any) => {
               handleClick={deletePatientData}
               type="Cancel"
               text="Delete"
-              //isDisabled={disableEditButton}
+            //isDisabled={disableEditButton}
             />
           </div>
         </div>

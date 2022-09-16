@@ -1,6 +1,8 @@
 import CryptoJS from 'crypto-js';
 import key from "../src/secretKey";
 
+let encKey = CryptoJS.enc.Utf8.parse(key);
+
 const Encrypt = word => {
     return CryptoJS.AES.encrypt(word, key).toString();
 }
