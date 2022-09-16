@@ -51,6 +51,7 @@ import { RootState } from "../../redux/store";
 import ConfirmationPopup from "../common/popup/ConfirmationPopup";
 import { lookup } from "zipcodes";
 import { useTranslation } from "react-i18next";
+import { Encrypt, Decrypt } from "../../aes"
 // import { PostalCodes } from "postal-codes";
 // import { lookupPostcode, Client } from "@ideal-postcodes/core-interface";
 
@@ -119,8 +120,7 @@ const defaultValues: any = {
   home_city: "",
   home_state: "",
   home_postal_code: "",
-  home_country: selectedCountries.filter((x: any) => x.isoCode === "US")[0]
-    .name,
+  home_country: selectedCountries.filter((x: any) => x.isoCode === "US")[0].name,
   home_phone: "",
   work_phone: "",
   mrn: [{}],
@@ -683,24 +683,9 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const deletePatientData = async () => {
-    setConfirmationState(true);
-
-    accessToken = await RequestAccessToken();
-    await deletePatient(patientDemographics.id, accessToken).then(
-      (response) => {
-        // if (response.status === 200 && response.statusText === "OK") {
-        if (response.status === 200 || response.status === 204) {
-          setAlertState(true);
-          setAlertBoxText("Record Deleted Successfully");
-          setDisableEditButton(false);
-          setIsSaveDisable(true);
-          resetForm();
-        } else {
-          setAlertState(true);
-          setAlertBoxText("Delete operation failed");
-        }
-      }
-    );
+    let jsonString = JSON.stringify(formValues);
+    let response = Encrypt(jsonString);
+    console.log(response);
   };
 
   return (
@@ -733,7 +718,7 @@ const PatientDemographicComponent = (props: any) => {
               handleClick={deletePatientData}
               type="Cancel"
               text="Delete"
-              isDisabled={disableEditButton}
+              //isDisabled={disableEditButton}
             />
           </div>
         </div>
