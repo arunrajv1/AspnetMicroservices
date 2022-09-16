@@ -388,15 +388,12 @@ const PatientDemographicComponent = (props: any) => {
     if (e.target.value === "" || re.test(e.target.value)) {
       obj = {
         ...formValues,
-        ["home_phone"]: e.target.value,
+        "home_phone": e.target.value,
       };
-      contactFields
-        .filter((x) => x.name === e.target.name)
-        .map((x) => (x.errorMessage = "Invalid home phone"));
     } else {
       obj = {
         ...formValues,
-        ["home_phone"]: "",
+        "home_phone": "",
       };
       contactFields
         .filter((x) => x.name === e.target.name)
@@ -410,15 +407,12 @@ const PatientDemographicComponent = (props: any) => {
     if (e.target.value === "" || re.test(e.target.value)) {
       obj = {
         ...formValues,
-        ["work_phone"]: e.target.value,
+        "work_phone": e.target.value,
       };
-      contactFields
-        .filter((x) => x.name === e.target.name)
-        .map((x) => (x.errorMessage = "Invalid home phone"));
     } else {
       obj = {
         ...formValues,
-        ["work_phone"]: "",
+        "work_phone": "",
       };
       contactFields
         .filter((x) => x.name === e.target.name)
