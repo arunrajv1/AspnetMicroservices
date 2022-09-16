@@ -783,7 +783,7 @@ const PatientDemographicComponent = (props: any) => {
                 options={selectedStates}
                 onChange={handleInputChange}
                 label={t("demographic.address.state")}
-                errorMessage={t("demographic.address.state_error_message")}
+                errorMessage={formValues.home_state.length == 0 ? t("demographic.address.state_error_message") : ""}
               ></Dropdown>
             </div>
             <div className="col-span-1 px-4">
