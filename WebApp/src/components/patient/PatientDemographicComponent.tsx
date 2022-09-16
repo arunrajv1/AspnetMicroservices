@@ -683,9 +683,10 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const deletePatientData = async () => {
+    console.log('before encryption', formValues);
     let jsonString = JSON.stringify(formValues);
     let response = Encrypt(jsonString);
-    console.log(response);
+    console.log('after encryption', response);
   };
 
   return (
