@@ -39,4 +39,17 @@ $white: #ededed;
     @include buttonShadow();
 }
 
+.iconStyle {
+    color: #242424;
+    &:hover {
+        color: #97d700;
+    }
+}
+
+.tabItems {
+    &:hover {
+        color: #e3e3e3
+    }
+}
+
 // border border-transparent text-sm font-medium rounded-md text-white bg-lime-500 hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500;

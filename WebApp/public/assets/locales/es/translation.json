@@ -1,7 +1,7 @@
 {
     "navbar": {
         "1stMenu": "ESCRITORIO",
-        "2stMenu": "VECINDARIO",
+        "2ndMenu": "VECINDARIO",
         "3rdMenu": "ENCONTRAR CASO"
     },
     "neighbourhood": {

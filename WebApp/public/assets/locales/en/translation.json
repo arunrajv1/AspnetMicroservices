@@ -1,7 +1,7 @@
 {
     "navbar": {
         "1stMenu": "DESKTOP",
-        "2stMenu": "NEIGHBOURHOOD",
+        "2ndMenu": "NEIGHBOURHOOD",
         "3rdMenu": "FIND CASE"
     },
     "neighbourhood": {

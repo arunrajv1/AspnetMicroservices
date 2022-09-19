@@ -7,6 +7,7 @@ import { loginRequest } from "../../../AuthConfig";
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import SidePanelComponent from "../ElementsUI/SidePanelComponent";
 import { useTranslation } from "react-i18next";
+import "../../../style/CommonStyle.scss"
 
 const tabs = [{
   id: 'desktop',
@@ -64,18 +65,18 @@ const NavbarComponent = () => {
               </OverflowItem>;
             })} */}
             <OverflowItem id="desktop">
-              <Tab id="Desktop" value="desktop" icon={<span><Desktop16Regular /></span>}>
-                {t('navbar.1stMenu')}
+              <Tab id="Desktop" value="desktop" icon={<span><Desktop16Regular className="iconStyle" /></span>}>
+                <span className="tabItems" >{t('navbar.1stMenu')}</span>
               </Tab>
             </OverflowItem>
             <OverflowItem id="neighbourhood">
-              <Tab id="Neighbourhood" value="neighbourhood" icon={<span><Earth16Regular /></span>}>
-              {t('navbar.2stMenu')}
+              <Tab id="Neighbourhood" value="neighbourhood" icon={<span><Earth16Regular className="iconStyle" /></span>}>
+                <span className="tabItems" >{t('navbar.2ndMenu')}</span>
               </Tab>
             </OverflowItem>
             <OverflowItem id="findcase">
-              <Tab id="FindCase" value="findcase" icon={<span><DocumentSearch16Regular /></span>}>
-              {t('navbar.3rdMenu')}
+              <Tab id="FindCase" value="findcase" icon={<span><DocumentSearch16Regular className="iconStyle" /></span>}>
+                <span className="tabItems" >{t('navbar.3rdMenu')}</span>
               </Tab>
             </OverflowItem>
           </TabList>

@@ -399,56 +399,56 @@ const PatientDemographicComponent = (props: any) => {
 
   const handleHomePhoneChange = (e: any): any => {
     let obj: any;
-     if (e.target.value === "" || (e.target.value !== "" && re.test(e.target.value))) {
-       obj = {
-         ...formValues,
-         home_phone: e.target.value,
-       };
-       contactFields
-         .filter((x) => x.name === e.target.name)
-         .map((x) => (x.errorMessage = ""));
-     } else if ( !re.test(e.target.value)) {
-       obj = {
-         ...formValues,
-         home_phone: "",
-       };
-       contactFields
-         .filter((x) => x.name === e.target.name)
-         .map((x) => (x.errorMessage = "Only numbers are accepted"));
-     } else {
-       obj = {
-         ...formValues,
-         home_phone: e.target.value.slice(0, e.target.value.length - 1),
-       };
-     }
-     handleStateChange(obj);
-     return obj;
+    if (e.target.value === "" || (e.target.value !== "" && re.test(e.target.value))) {
+      obj = {
+        ...formValues,
+        home_phone: e.target.value,
+      };
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = ""));
+    } else if (!re.test(e.target.value)) {
+      obj = {
+        ...formValues,
+        home_phone: "",
+      };
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = "Only numbers are accepted"));
+    } else {
+      obj = {
+        ...formValues,
+        home_phone: e.target.value.slice(0, e.target.value.length - 1),
+      };
+    }
+    handleStateChange(obj);
+    return obj;
   };
   const handleWorkPhoneChange = (e: any): any => {
-   let obj: any;
-   if (
-     e.target.value === "" || (e.target.value !== "" && re.test(e.target.value))) {
-     obj = {
-       ...formValues,
-       work_phone: e.target.value,
-     };
-     contactFields
-       .filter((x) => x.name === e.target.name)
-       .map((x) => (x.errorMessage = ""));
-   } else if (!re.test(e.target.value)) {
-     obj = {
-       ...formValues,
-       work_phone: "",
-     };
-     contactFields
-       .filter((x) => x.name === e.target.name)
-       .map((x) => (x.errorMessage = "Only numbers are accepted"));
-   } else {
-     obj = {
-       ...formValues,
-       work_phone: e.target.value.slice(0, e.target.value.length - 1),
-     };
-   }
+    let obj: any;
+    if (
+      e.target.value === "" || (e.target.value !== "" && re.test(e.target.value))) {
+      obj = {
+        ...formValues,
+        work_phone: e.target.value,
+      };
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = ""));
+    } else if (!re.test(e.target.value)) {
+      obj = {
+        ...formValues,
+        work_phone: "",
+      };
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = "Only numbers are accepted"));
+    } else {
+      obj = {
+        ...formValues,
+        work_phone: e.target.value.slice(0, e.target.value.length - 1),
+      };
+    }
     handleStateChange(obj);
     return obj;
   };
@@ -641,17 +641,17 @@ const PatientDemographicComponent = (props: any) => {
     ) {
       setHasError(true);
       addressFields
-        .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true )
+        .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true)
         .map((y) => (y.errorMessage = "Required field"));
       contactFields
-        .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true )
+        .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true)
         .map((y) => (y.errorMessage = "Required field"));
       nameFields
         .filter(
           (y) => props.formData[`${y.name}`] === "" && y.isRequired === true
         )
         .map((y) => (y.errorMessage = "Required field"));
-        console.log("Error messages");
+      console.log("Error messages");
 
       return;
     } else {
@@ -724,34 +724,24 @@ const PatientDemographicComponent = (props: any) => {
   return (
     <div className="p-4 bg-zinc-300">
       <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 lg:grid-rows-1 sm:grid-rows-2 justify-between -space-y-px">
-        <div className="grid grid-cols-3 gap-2 justify-between">
-          <div className="col-span-1 flex justify-end">
-            <ButtonComponent
-              handleClick={editPatientDetails}
-              type="Button"
-              text="Edit"
-              isDisabled={disableEditButton}
-            />
-            <ActionButton iconProps={addFriendIcon} allowDisabledFocus disabled={false} checked={false} onClick={resetForm}>
-              New Patient
-            </ActionButton>
-          </div>
+        <div className="flex grid-cols-3 gap-2 justify-start">
+          <ButtonComponent
+            handleClick={editPatientDetails}
+            type="Button"
+            text="Edit"
+            isDisabled={disableEditButton}
+          />
+          <ActionButton iconProps={addFriendIcon} allowDisabledFocus disabled={false} checked={false} onClick={resetForm}>
+            New Patient
+          </ActionButton>
         </div>
-        <div className="flex gap-4 grid-cols-2 justify-center">
+        <div className="flex gap-4 grid-cols-2 justify-end pr-4">
           <div className="">
             <ButtonComponent
               handleClick={saveUpdatePatientData}
               type="Button"
               text={submitButtonName}
               isDisabled={isSaveDisable}
-            />
-          </div>
-          <div className="">
-            <ButtonComponent
-              handleClick={deletePatientData}
-              type="Cancel"
-              text="Delete"
-            //isDisabled={disableEditButton}
             />
           </div>
         </div>
