@@ -938,7 +938,6 @@ const PatientDemographicComponent = (props: any) => {
               <div className="grid lg:grid-cols-3 md:grid-cols-1 sm:grid-cols-1 gap-3 px-4 -space-y-px ">
                 <div className="sm:col-span-1 justify-start">
                   <TextField
-                    className="flex"
                     id="txt_ssn"
                     name="ssn"
                     value={formValues.ssn}
@@ -950,7 +949,7 @@ const PatientDemographicComponent = (props: any) => {
                     required={true}
                     errorMessage={
                       hasError && formValues.ssn.length <= 0
-                        ? "Required field"
+                        ? "SSN is required"
                         : ""
                     }
                     label={t("demographic.general_information.ssn")}
