@@ -898,7 +898,7 @@ const PatientDemographicComponent = (props: any) => {
                     minLength={5}
                     maxLength={9}
                     required={true}
-                    //errorMessage="Required field"
+                    errorMessage={(hasError && formValues.ssn.length <= 0) ? "Required field" : ""}
                     label={t("demographic.general_information.ssn")}
                   />
                 </div>
