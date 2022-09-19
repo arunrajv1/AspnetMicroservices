@@ -1,7 +1,7 @@
 {
     "navbar": {
         "1stMenu": "DESKTOP",
-        "2stMenu": "NEIGHBOURHOOD",
+        "2ndMenu": "NEIGHBOURHOOD",
         "3rdMenu": "FIND CASE"
     },
     "neighbourhood": {
@@ -46,18 +46,23 @@
             "name": "General Information",
             "birth_sex": "Birth Sex",
             "birth_sex_placeholder": "Select Gender",
+            "birth_sex_error_message": "Gender is required",
             "dob": "Date of Birth",
             "age": "Age",
             "deceased": "Deceased",
             "ssn": "Social Security No",
             "marital_status": "Marital Status",
             "marital_status_placeholder": "Select Marital Status",
+            "marital_status_error_message": "Marital status is required",
             "race": "Race",
             "race_placeholder": "Select Race",
+            "race_error_message": "Race is required",
             "employment_status": "Employment Status",
             "employment_status_placeholder": "Select Employment",
+            "employment_status_error_message": "Employment is required",
             "student_status": "Sudent Status",
-            "student_status_placeholder": "Select Student"
+            "student_status_placeholder": "Select Student",
+            "student_status_error_message": "Student status is required"
         },
         "phone_number": {
             "name": "Phone Numbers",

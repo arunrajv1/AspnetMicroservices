@@ -21,14 +21,12 @@ const SidePanelComponent = () => {
     const { instance, accounts, inProgress } = useMsal();
     const [userName, setUserName] = useState("");
     const { t } = useTranslation();
-
-    // console.log('use mal account: ', accounts[0].idTokenClaims, loggedInUser);
     // let currentLanguage = languageArray.find((x: any) => x.key == currentLanguageCode);
 
     useEffect(() => {
         userArray = accounts[0].idTokenClaims;
         setUserName(userArray.family_name + ', ' + userArray.given_name);
-        console.log('use mal account: ', userArray);
+        //console.log('use mal account: ', userArray);
     })
 
     const handleLogout = () => {
