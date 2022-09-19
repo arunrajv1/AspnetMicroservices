@@ -161,7 +161,7 @@ let tableRowIndex: number = 0;
 const PatientDemographicComponent = (props: any) => {
   const [deceased, setDeceased] = useState("N");
   const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
-  const [age, setAge] = useState("");
+  const [age, setAge] = useState("0");
   const [hasError, setHasError] = useState(false);
   const [formValues, setFormValues] = useState(defaultValues);
   const [formMRN, setFormMRN] = useState(defaultMRN);
@@ -257,7 +257,7 @@ const PatientDemographicComponent = (props: any) => {
     setSelectedCityKey([""]);
 
     setCityDisable(true);
-    setStateDisable(true);
+    //setStateDisable(true);
   };
 
   const handleInputChange = (e: any, option?: any) => {
@@ -806,7 +806,7 @@ const PatientDemographicComponent = (props: any) => {
                 options={selectedStates}
                 onChange={handleInputChange}
                 label={t("demographic.address.state")}
-                errorMessage={formValues.home_state.length == 0 ? t("demographic.address.state_error_message") : ""}
+                errorMessage={(formValues.home_state.length == 0 && hasError) ? t("demographic.address.state_error_message") : ""}
               ></Dropdown>
             </div>
             <div className="col-span-1 px-4">
@@ -851,6 +851,7 @@ const PatientDemographicComponent = (props: any) => {
                       "demographic.general_information.birth_sex_placeholder"
                     )}
                     isDisabled={isAllDisable}
+                    errorMessage={hasError ? t("demographic.general_information.birth_sex_error_message") : ""}
                   />
                 </div>
                 <div className="sm:col-span-1 justify-start">
@@ -915,6 +916,7 @@ const PatientDemographicComponent = (props: any) => {
                       "demographic.general_information.marital_status_placeholder"
                     )}
                     isDisabled={isAllDisable}
+                    errorMessage={hasError ? t("demographic.general_information.marital_status_error_message") : ""}
                   />
                 </div>
                 <div className="sm:col-span-1 justify-start">
@@ -929,6 +931,7 @@ const PatientDemographicComponent = (props: any) => {
                       "demographic.general_information.race_placeholder"
                     )}
                     isDisabled={isAllDisable}
+                    errorMessage={hasError ? t("demographic.general_information.race_error_message") : ""}
                   />
                 </div>
               </div>
@@ -948,6 +951,7 @@ const PatientDemographicComponent = (props: any) => {
                       "demographic.general_information.employment_status_placeholder"
                     )}
                     isDisabled={isAllDisable}
+                    errorMessage={hasError ? t("demographic.general_information.employment_status_error_message") : ""}
                   />
                 </div>
                 <div className="sm:col-span-1 justify-start">
@@ -964,6 +968,7 @@ const PatientDemographicComponent = (props: any) => {
                       "demographic.general_information.student_status_placeholder"
                     )}
                     isDisabled={isAllDisable}
+                    errorMessage={hasError ? t("demographic.general_information.student_status_error_message") : ""}
                   />
                 </div>
 
