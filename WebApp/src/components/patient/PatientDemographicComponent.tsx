@@ -169,7 +169,7 @@ let tableRowIndex: number = 0;
 const PatientDemographicComponent = (props: any) => {
   const [deceased, setDeceased] = useState("N");
   const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
-  const [age, setAge] = useState("");
+  const [age, setAge] = useState("0");
   const [hasError, setHasError] = useState(false);
   const [formValues, setFormValues] = useState(defaultValues);
   const [formMRN, setFormMRN] = useState(defaultMRN);
@@ -265,7 +265,7 @@ const PatientDemographicComponent = (props: any) => {
     setSelectedCityKey([""]);
 
     setCityDisable(true);
-    setStateDisable(true);
+    //setStateDisable(true);
   };
 
   const handleInputChange = (e: any, option?: any) => {
@@ -289,6 +289,15 @@ const PatientDemographicComponent = (props: any) => {
     }
     if (name) {
       obj = { ...formValues, [name]: value };
+      if (e.target.value !== "") {
+        addressFields
+          .filter((x) => x.name === e.target.name)
+          .map((x) => (x.errorMessage = ""));
+      } else {
+        addressFields
+          .filter((x) => x.name === e.target.name)
+          .map((x) => (x.errorMessage = "Required Field"));
+      }
       setFormValues({
         ...formValues,
         [name]: value,
@@ -651,6 +660,7 @@ const PatientDemographicComponent = (props: any) => {
       // props.formData.suffix === undefined ||
       // props.formData.suffix.length === 0
     ) {
+      console.log("Required field error messages");
       setHasError(true);
       addressFields
         .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true)
@@ -736,40 +746,30 @@ const PatientDemographicComponent = (props: any) => {
   return (
     <div className="p-4 bg-zinc-300">
       <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 lg:grid-rows-1 sm:grid-rows-2 justify-between -space-y-px">
-        <div className="grid grid-cols-3 gap-2 justify-between">
-          <div className="col-span-1 flex justify-end">
-            <ButtonComponent
-              handleClick={editPatientDetails}
-              type="Button"
-              text="Edit"
-              isDisabled={disableEditButton}
-            />
-            <ActionButton
-              iconProps={addFriendIcon}
-              allowDisabledFocus
-              disabled={false}
-              checked={false}
-              onClick={resetForm}
-            >
-              New Patient
-            </ActionButton>
-          </div>
+        <div className="flex grid-cols-3 gap-2 justify-start">
+          <ButtonComponent
+            handleClick={editPatientDetails}
+            type="Button"
+            text="Edit"
+            isDisabled={disableEditButton}
+          />
+          <ActionButton
+            iconProps={addFriendIcon}
+            allowDisabledFocus
+            disabled={false}
+            checked={false}
+            onClick={resetForm}
+          >
+            New Patient
+          </ActionButton>
         </div>
-        <div className="flex gap-4 grid-cols-2 justify-center">
+        <div className="flex gap-4 grid-cols-2 justify-end pr-4">
           <div className="">
             <ButtonComponent
               handleClick={saveUpdatePatientData}
               type="Button"
               text={submitButtonName}
               isDisabled={isSaveDisable}
-            />
-          </div>
-          <div className="">
-            <ButtonComponent
-              handleClick={deletePatientData}
-              type="Cancel"
-              text="Delete"
-              //isDisabled={disableEditButton}
             />
           </div>
         </div>
@@ -841,7 +841,7 @@ const PatientDemographicComponent = (props: any) => {
                 onChange={handleInputChange}
                 label={t("demographic.address.state")}
                 errorMessage={
-                  formValues.home_state.length == 0
+                  formValues.home_state.length == 0 && hasError
                     ? t("demographic.address.state_error_message")
                     : ""
                 }
@@ -895,6 +895,13 @@ const PatientDemographicComponent = (props: any) => {
                       "demographic.general_information.birth_sex_placeholder"
                     )}
                     isDisabled={isAllDisable}
+                    errorMessage={
+                      hasError
+                        ? t(
+                            "demographic.general_information.birth_sex_error_message"
+                          )
+                        : ""
+                    }
                   />
                 </div>
                 <div className="sm:col-span-1 justify-start">
@@ -941,7 +948,11 @@ const PatientDemographicComponent = (props: any) => {
                     minLength={5}
                     maxLength={9}
                     required={true}
-                    //errorMessage="Required field"
+                    errorMessage={
+                      hasError && formValues.ssn.length <= 0
+                        ? "Required field"
+                        : ""
+                    }
                     label={t("demographic.general_information.ssn")}
                   />
                 </div>
@@ -959,6 +970,13 @@ const PatientDemographicComponent = (props: any) => {
                       "demographic.general_information.marital_status_placeholder"
                     )}
                     isDisabled={isAllDisable}
+                    errorMessage={
+                      hasError
+                        ? t(
+                            "demographic.general_information.marital_status_error_message"
+                          )
+                        : ""
+                    }
                   />
                 </div>
                 <div className="sm:col-span-1 justify-start">
@@ -973,6 +991,13 @@ const PatientDemographicComponent = (props: any) => {
                       "demographic.general_information.race_placeholder"
                     )}
                     isDisabled={isAllDisable}
+                    errorMessage={
+                      hasError
+                        ? t(
+                            "demographic.general_information.race_error_message"
+                          )
+                        : ""
+                    }
                   />
                 </div>
               </div>
@@ -992,6 +1017,13 @@ const PatientDemographicComponent = (props: any) => {
                       "demographic.general_information.employment_status_placeholder"
                     )}
                     isDisabled={isAllDisable}
+                    errorMessage={
+                      hasError
+                        ? t(
+                            "demographic.general_information.employment_status_error_message"
+                          )
+                        : ""
+                    }
                   />
                 </div>
                 <div className="sm:col-span-1 justify-start">
@@ -1008,6 +1040,13 @@ const PatientDemographicComponent = (props: any) => {
                       "demographic.general_information.student_status_placeholder"
                     )}
                     isDisabled={isAllDisable}
+                    errorMessage={
+                      hasError
+                        ? t(
+                            "demographic.general_information.student_status_error_message"
+                          )
+                        : ""
+                    }
                   />
                 </div>
 

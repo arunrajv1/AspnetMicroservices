@@ -42,7 +42,7 @@ export const deletePatient = async (id: string, accessToken: string) => {
 };
 
 export const getPatientDetails = async (inputParams: any, accessToken: String) => {
-  let url = patientBaseUrl + `?name=${inputParams.name}&mrn=${inputParams.mrn}&gender=${inputParams.gender}&id=${inputParams.id}`
+  let url = patientBaseUrl + `?PatientName=${inputParams.name}&PatientMRN=${inputParams.mrn}&PatientGender=${inputParams.gender}&PatientId=${inputParams.id}`
   option.headers.Authorization = `Bearer ${accessToken}`
   let response = await axios.get(url, option);
   return response;
