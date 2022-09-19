@@ -281,6 +281,16 @@ const PatientDemographicComponent = (props: any) => {
     }
     if (name) {
       obj = { ...formValues, [name]: value };
+      if(e.target.value !== ""){
+        addressFields
+          .filter((x) => x.name === e.target.name)
+          .map((x) => (x.errorMessage = ""));
+      }
+      else {
+        addressFields
+          .filter((x) => x.name === e.target.name)
+          .map((x) => (x.errorMessage = "Required Field"));
+      }
       setFormValues({
         ...formValues,
         [name]: value,
