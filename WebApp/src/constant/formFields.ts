@@ -1,6 +1,6 @@
 const patientAddressFields = [
   {
-    labelText: "street2",
+    labelText: "street1",
     labelFor: "txtStreet1",
     id: "txtStreet1",
     name: "home_street1",
@@ -110,6 +110,7 @@ const patientNameFields = [
     autoComplete: "first_name",
     isRequired: true,
     placeholder: "first_name",
+    errorMessage: ""
   },
   {
     labelText: "Middle Name",
@@ -132,6 +133,7 @@ const patientNameFields = [
     autoComplete: "last_name",
     isRequired: true,
     placeholder: "last_name",
+    errorMessage: ""
   },
   {
     labelText: "Suffix",
@@ -143,6 +145,7 @@ const patientNameFields = [
     autoComplete: "suffix",
     isRequired: false,
     placeholder: "suffix",
+    errorMessage: ""
   }
 ];
 

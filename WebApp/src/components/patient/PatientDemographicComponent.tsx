@@ -28,6 +28,7 @@ import {
 import {
   patientAddressFields,
   patientContactFields,
+  patientNameFields,
 } from "../../constant/formFields";
 import "../../style/CommonStyle.scss";
 import InputBox from "../common/ElementsUI/InputBox";
@@ -60,6 +61,7 @@ import { Encrypt, Decrypt } from "../../aes"
 
 let country: any = defaultCountryOptions;
 let addressFields = patientAddressFields;
+let nameFields = patientNameFields;
 const contactFields = patientContactFields;
 contactFields.map(
   (x) =>
@@ -397,39 +399,56 @@ const PatientDemographicComponent = (props: any) => {
 
   const handleHomePhoneChange = (e: any): any => {
     let obj: any;
-    if (e.target.value === "" || re.test(e.target.value)) {
-      obj = {
-        ...formValues,
-        "home_phone": e.target.value,
-      };
-    } else {
-      obj = {
-        ...formValues,
-        "home_phone": "",
-      };
-      contactFields
-        .filter((x) => x.name === e.target.name)
-        .map((x) => (x.errorMessage = "Only numbers are accepted"));
-    }
-    handleStateChange(obj);
-    return obj;
+     if (e.target.value === "" || (e.target.value !== "" && re.test(e.target.value))) {
+       obj = {
+         ...formValues,
+         home_phone: e.target.value,
+       };
+       contactFields
+         .filter((x) => x.name === e.target.name)
+         .map((x) => (x.errorMessage = ""));
+     } else if ( !re.test(e.target.value)) {
+       obj = {
+         ...formValues,
+         home_phone: "",
+       };
+       contactFields
+         .filter((x) => x.name === e.target.name)
+         .map((x) => (x.errorMessage = "Only numbers are accepted"));
+     } else {
+       obj = {
+         ...formValues,
+         home_phone: e.target.value.slice(0, e.target.value.length - 1),
+       };
+     }
+     handleStateChange(obj);
+     return obj;
   };
   const handleWorkPhoneChange = (e: any): any => {
-    let obj: any;
-    if (e.target.value === "" || re.test(e.target.value)) {
-      obj = {
-        ...formValues,
-        "work_phone": e.target.value,
-      };
-    } else {
-      obj = {
-        ...formValues,
-        "work_phone": "",
-      };
-      contactFields
-        .filter((x) => x.name === e.target.name)
-        .map((x) => (x.errorMessage = "Only numbers are accepted"));
-    }
+   let obj: any;
+   if (
+     e.target.value === "" || (e.target.value !== "" && re.test(e.target.value))) {
+     obj = {
+       ...formValues,
+       work_phone: e.target.value,
+     };
+     contactFields
+       .filter((x) => x.name === e.target.name)
+       .map((x) => (x.errorMessage = ""));
+   } else if (!re.test(e.target.value)) {
+     obj = {
+       ...formValues,
+       work_phone: "",
+     };
+     contactFields
+       .filter((x) => x.name === e.target.name)
+       .map((x) => (x.errorMessage = "Only numbers are accepted"));
+   } else {
+     obj = {
+       ...formValues,
+       work_phone: e.target.value.slice(0, e.target.value.length - 1),
+     };
+   }
     handleStateChange(obj);
     return obj;
   };
@@ -622,11 +641,18 @@ const PatientDemographicComponent = (props: any) => {
     ) {
       setHasError(true);
       addressFields
-        .filter((y) => formValues[`${y.name}`] === "")
+        .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true )
         .map((y) => (y.errorMessage = "Required field"));
       contactFields
-        .filter((y) => formValues[`${y.name}`] === "")
+        .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true )
         .map((y) => (y.errorMessage = "Required field"));
+      nameFields
+        .filter(
+          (y) => props.formData[`${y.name}`] === "" && y.isRequired === true
+        )
+        .map((y) => (y.errorMessage = "Required field"));
+        console.log("Error messages");
+
       return;
     } else {
       setHasError(false);

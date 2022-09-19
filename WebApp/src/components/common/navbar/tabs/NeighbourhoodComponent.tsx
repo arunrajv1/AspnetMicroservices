@@ -98,6 +98,7 @@ const NeighbourhoodComponent = () => {
               isRequired={field.isRequired}
               placeholder={t(`neighbourhood.${field.placeholder}`)}
               isDisabled={isDisable}
+              errorMessage = {field.errorMessage}
             />
           </div>
         ))}
