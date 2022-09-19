@@ -639,6 +639,7 @@ const PatientDemographicComponent = (props: any) => {
       // props.formData.suffix === undefined ||
       // props.formData.suffix.length === 0
     ) {
+      console.log("Required field error messages");
       setHasError(true);
       addressFields
         .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true)
@@ -651,7 +652,6 @@ const PatientDemographicComponent = (props: any) => {
           (y) => props.formData[`${y.name}`] === "" && y.isRequired === true
         )
         .map((y) => (y.errorMessage = "Required field"));
-      console.log("Error messages");
 
       return;
     } else {
