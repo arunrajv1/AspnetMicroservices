@@ -14,7 +14,6 @@ const DropdownComponent = ({
     placeholder,
     isDisabled,
     errorMessage }: any) => {
-    // console.log(`from parent value: ${value}`);
     return (
         <div>
             {/* <label htmlFor={id}>{labelText}</label> */}
@@ -27,7 +26,7 @@ const DropdownComponent = ({
                 disabled={isDisabled}
                 required={isRequired}
                 label={labelText}
-                errorMessage={value.length == 0 ? errorMessage : ""}
+                errorMessage={value.length === 0 ? errorMessage : ""}
             >
             </Dropdown>
         </div>

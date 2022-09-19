@@ -25,7 +25,9 @@ const MessageBar = ({ onClose, type, message }: any) => {
             zIndex: 1,
             position: "fixed",
             maxWidth: "100hw",
-            width: "100%",
+            width: "40%",
+            right: 0,
+            borderRadius: 15,
           }}
           intent={type}
           action={{

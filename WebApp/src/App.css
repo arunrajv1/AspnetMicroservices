@@ -17,6 +17,23 @@
   display: flex;
   flex-direction: column;
 }
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px;
+  border-radius: 60px;
+}
+::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: gray;
+}
+
 /* 
 
 .App-logo {

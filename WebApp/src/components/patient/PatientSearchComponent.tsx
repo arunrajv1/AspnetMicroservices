@@ -55,8 +55,6 @@ const PatientSearchComponent = (props: any) => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
-  // const patientDemographics = useSelector((state: RootState) => state.patientDetails)
-  // console.log('patient search component redux patient details', patientDemographics)
 
   const changeFieldDisable = (inputData: any) => {
     setIsDisable(inputData);
@@ -134,7 +132,6 @@ const PatientSearchComponent = (props: any) => {
     dispatch(setSpinnerState(true));
     accessToken = await RequestAccessToken();
     await getPatientDetails(formData, accessToken).then((response) => {
-      //console.log('get the details', response);
       if (
         response.status === 200 &&
         response.statusText === "OK" &&

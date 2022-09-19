@@ -211,11 +211,6 @@ const PatientDemographicComponent = (props: any) => {
       label: t("demographic.mrn.facility"),
     },
   ];
-  // console.log('zip code', lookup("22222"), lookup("700079"));
-  // //console.log('pincode', client);
-  // lookupPostcode({ client, postcode }).then(addresses => {
-  //   console.log('postcode address', addresses);
-  // });
 
   useEffect(() => {
     // console.log('redux patient details useEffect', patientDemographics, spinnerSelector);
@@ -376,7 +371,6 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const handleDOBChange = (newValue: any | Date) => {
-    console.log("selectedDate", newValue);
     if (newValue) {
       var diff_ms = Date.now() - newValue.getTime();
       var age_dt = new Date(diff_ms);
@@ -492,9 +486,9 @@ const PatientDemographicComponent = (props: any) => {
 
         obj = {
           ...formValues,
-          ["home_postal_code"]: e.target.value,
-          ["home_state"]: "",
-          ["home_city"]: "",
+          "home_postal_code": e.target.value,
+          "home_state": "",
+          "home_city": "",
         };
         addressFields
           .filter((x) => x.name == e.target.name)
@@ -527,9 +521,9 @@ const PatientDemographicComponent = (props: any) => {
 
         obj = {
           ...formValues,
-          ["home_postal_code"]: e.target.value,
-          ["home_state"]: selectedStates[0].name,
-          ["home_city"]: selectedCities[0].key,
+          "home_postal_code": e.target.value,
+          "home_state": selectedStates[0].name,
+          "home_city": selectedCities[0].key,
         };
         addressFields
           .filter((x) => x.name == e.target.name)
@@ -541,9 +535,9 @@ const PatientDemographicComponent = (props: any) => {
     } else if (e.target.value.length == 1) {
       obj = {
         ...formValues,
-        ["home_postal_code"]: "",
-        ["home_state"]: "",
-        ["home_city"]: "",
+        "home_postal_code": "",
+        "home_state": "",
+        "home_city": "",
       };
       addressFields
         .filter((x) => x.name == e.target.name)
@@ -552,12 +546,12 @@ const PatientDemographicComponent = (props: any) => {
     } else {
       obj = {
         ...formValues,
-        ["home_postal_code"]: e.target.value.slice(
+        "home_postal_code": e.target.value.slice(
           0,
           e.target.value.length - 1
         ),
-        ["home_state"]: "",
-        ["home_city"]: "",
+        "home_state": "",
+        "home_city": "",
       };
       // return obj;
     }
@@ -598,10 +592,6 @@ const PatientDemographicComponent = (props: any) => {
       middle_name: formData.middle_name,
       suffix: formData.suffix,
     };
-    // props.onSavePatientData(patientNameData);
-    // props.onChangeDisable(true);
-    // setIsAllDisable(true);
-    // console.log("incoming data", formData);
   };
 
   const getPatientDetailsById = useCallback(() => {
@@ -650,7 +640,6 @@ const PatientDemographicComponent = (props: any) => {
       formValues.birth_sex.length === 0 ||
       formValues.race.length === 0 ||
       formValues.home_street1.length === 0 ||
-      //(formValues.home_street2 && formValues.home_street2.length === 0 ) ||
       formValues.home_city.length === 0 ||
       formValues.home_state.length === 0 ||
       formValues.home_postal_code.length === 0 ||
@@ -658,11 +647,8 @@ const PatientDemographicComponent = (props: any) => {
       props.formData.first_name === undefined ||
       props.formData.first_name.length === 0 ||
       props.formData.last_name === undefined ||
-      props.formData.last_name.length === 0 // ||
-      // props.formData.suffix === undefined ||
-      // props.formData.suffix.length === 0
+      props.formData.last_name.length === 0 
     ) {
-      console.log("Required field error messages");
       setHasError(true);
       addressFields
         .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true)
@@ -690,7 +676,6 @@ const PatientDemographicComponent = (props: any) => {
           formValues.mrn.push(obj);
         }
       });
-      //formValues.address = formContactValues;
       formValues.first_name = props.formData.first_name;
       formValues.last_name = props.formData.last_name;
       formValues.middle_name = props.formData.middle_name;
@@ -698,8 +683,7 @@ const PatientDemographicComponent = (props: any) => {
       formValues.date_of_birth = formatDate(dateOfBirth);
       formValues.id = 0;
       deceased ? (formValues.deceased = "Y") : (formValues.deceased = "N");
-      console.log("form data before save", formValues);
-
+      
       if (submitButtonName === "Save") {
         accessToken = await RequestAccessToken();
         await postData(formValues, accessToken)

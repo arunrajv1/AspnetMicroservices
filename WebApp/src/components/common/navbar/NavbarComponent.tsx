@@ -41,11 +41,9 @@ const NavbarComponent = () => {
     // Silently acquires an access token which is then attached to a request for Microsoft Graph data
     await instance.acquireTokenSilent(request).then((response) => {
       accessToken = response.accessToken;
-      console.log(accessToken);
     }).catch((e) => {
       instance.acquireTokenPopup(request).then((response) => {
         accessToken = response.accessToken;
-        console.log(response);
       });
     });
     return accessToken;
