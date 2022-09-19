@@ -103,7 +103,7 @@ const NeighbourhoodComponent = () => {
               isRequired={field.isRequired}
               placeholder={t(`neighbourhood.${field.placeholder}`)}
               isDisabled={isDisable}
-              errorMessage={(hasError && formData[field.name].length <= 0) ? field.errorMessage : ""}
+              errorMessage={(hasError && formData[field.name] && formData[field.name].length <= 0) ? field.errorMessage : ""}
             />
           </div>
         ))}

@@ -27,7 +27,7 @@ const DropdownComponent = ({
                 disabled={isDisabled}
                 required={isRequired}
                 label={labelText}
-                errorMessage={value.length == 0 ? errorMessage : ""}
+                errorMessage={(value && value.length == 0) ? errorMessage : ""}
             >
             </Dropdown>
         </div>

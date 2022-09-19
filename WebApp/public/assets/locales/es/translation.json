@@ -29,6 +29,9 @@
     "demographic": {
         "btnEdit": "Editar",
         "btnDelete": "Borrar",
+        "btnNewPatient": "Nuevo paciente",
+        "btnSave": "Ahorrar",
+        "btnUpdate": "Actualizar",
         "address": {
             "name": "Dirección",
             "street1": "Calle 1",
