@@ -47,8 +47,6 @@ const PatientSearchComponent = (props: any) => {
   const [isDisable, setIsDisable] = useState(false);
   const [alertState, setAlertState] = useState(false);
   const [alertBoxText, setAlertBoxText] = useState("");
-  // const [loading, setLoading] = useState(false);
-  const [isConfirmDelete, setConfirmDelete] = useState(false);
   const [deletePopup, setDeletePopup] = useState(false);
   const [searchResult, setSearchResults] = useState([]);
   const { instance, accounts, inProgress } = useMsal();
@@ -128,18 +126,14 @@ const PatientSearchComponent = (props: any) => {
     }
   };
   const getDetails = async () => {
-    // setLoading(true);
     dispatch(setSpinnerState(true));
     accessToken = await RequestAccessToken();
     await getPatientDetails(formData, accessToken).then((response) => {
       if (
         response.status === 200 &&
         response.statusText === "OK" &&
-        response.data
+        response.data.length > 0
       ) {
-        // setLoading(false);
-        // setAlertState(true);
-        // setAlertBoxText("Records Found");
         dispatch(setSpinnerState(false));
         setSearchResults([]);
         setSearchResults(response.data);
@@ -147,14 +141,12 @@ const PatientSearchComponent = (props: any) => {
       } else if (
         response.status === 200 &&
         response.statusText === "OK" &&
-        !response.data
+        response.data.length === 0
       ) {
-        // setLoading(false);
-        // setAlertState(true);
-        // setAlertBoxText("No Records Found");
         dispatch(setSpinnerState(false));
+        setAlertState(true);
+        setAlertBoxText("No data found");
       } else {
-        // setLoading(false);
         dispatch(setSpinnerState(false));
         setAlertState(true);
         setAlertBoxText(`Some Error Occured, Status Code ${response.status}`);

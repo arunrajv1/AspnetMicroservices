@@ -29,6 +29,9 @@
     "demographic": {
         "btnEdit": "Edit",
         "btnDelete": "Delete",
+        "btnNewPatient": "New Patient",
+        "btnSave": "Save",
+        "btnUpdate": "Update",
         "address": {
             "name": "Address",
             "street1": "Street 1",
