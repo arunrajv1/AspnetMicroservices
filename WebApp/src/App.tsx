@@ -3,7 +3,11 @@ import "./App.css";
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavbarComponent from "./components/common/navbar/NavbarComponent";
-import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
+import {
+  AuthenticatedTemplate,
+  UnauthenticatedTemplate,
+  useMsal,
+} from "@azure/msal-react";
 import LoginComponent from "./components/LoginComponent";
 
 const LandingPageComponent = lazy(
@@ -20,6 +24,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
+      <div id="overlay-root" />
       <UnauthenticatedTemplate>
         <LoginComponent />
       </UnauthenticatedTemplate>
@@ -36,7 +41,6 @@ const App: React.FC = () => {
           {/* </Suspense> */}
         </BrowserRouter>
       </AuthenticatedTemplate>
-
     </div>
   );
 };

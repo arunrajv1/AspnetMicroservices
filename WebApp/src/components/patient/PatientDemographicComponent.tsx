@@ -12,7 +12,8 @@ import {
   updateData,
 } from "../../services/PatientServices";
 import FullPageLoader from "../common/Loader/FullPageLoader";
-import AlertPopup from "../common/popup/AlertPopup";
+import DialogPopup from "../common/popup/DialogPopup";
+import MessageBar from "../common/popup/MessageBar";
 import { Body1, Tooltip, Button } from "@fluentui/react-components";
 import { Add16Filled, Delete16Filled } from "@fluentui/react-icons";
 import {
@@ -32,7 +33,17 @@ import {
 } from "../../constant/formFields";
 import "../../style/CommonStyle.scss";
 import InputBox from "../common/ElementsUI/InputBox";
-import { DatePicker, defaultDatePickerStrings, Dropdown, Checkbox, Text, TextField, ITextProps, ActionButton, IIconProps } from "@fluentui/react";
+import {
+  DatePicker,
+  defaultDatePickerStrings,
+  Dropdown,
+  Checkbox,
+  Text,
+  TextField,
+  ITextProps,
+  ActionButton,
+  IIconProps,
+} from "@fluentui/react";
 import ButtonComponent from "../common/ElementsUI/ButtonComponent";
 import DropdownComponent from "../common/ElementsUI/DropdownComponent";
 import {
@@ -49,10 +60,10 @@ import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../AuthConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import ConfirmationPopup from "../common/popup/ConfirmationPopup";
+
 import { lookup } from "zipcodes";
 import { useTranslation } from "react-i18next";
-import { Encrypt, Decrypt } from "../../aes"
+import { Encrypt, Decrypt } from "../../aes";
 // import { PostalCodes } from "postal-codes";
 // import { lookupPostcode, Client } from "@ideal-postcodes/core-interface";
 
@@ -65,8 +76,8 @@ let nameFields = patientNameFields;
 const contactFields = patientContactFields;
 contactFields.map(
   (x) =>
-  (x.countryCode =
-    "+" + country.filter((x: any) => x.isoCode == "US")[0].phonecode)
+    (x.countryCode =
+      "+" + country.filter((x: any) => x.isoCode == "US")[0].phonecode)
 );
 var accessToken: string;
 const re = /^[0-9\b]+$/;
@@ -96,11 +107,7 @@ let selectedStates: any = states
 const onFormatDate = (date?: Date): string => {
   return !date
     ? ""
-    : (date.getMonth() + 1) +
-    "/" +
-    date.getDate() +
-    "/" +
-    date.getFullYear();
+    : date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
 };
 
 const genderArray = genderOptions;
@@ -109,7 +116,7 @@ const raceArray = raceOptions;
 const employmentArray = employmentOptions;
 const studentArray = studentOptions;
 
-const addFriendIcon: IIconProps = { iconName: 'AddFriend' };
+const addFriendIcon: IIconProps = { iconName: "AddFriend" };
 
 export interface IMedicalRecordNumber {
   recordNumber: string;
@@ -122,7 +129,8 @@ const defaultValues: any = {
   home_city: "",
   home_state: "",
   home_postal_code: "",
-  home_country: selectedCountries.filter((x: any) => x.isoCode === "US")[0].name,
+  home_country: selectedCountries.filter((x: any) => x.isoCode === "US")[0]
+    .name,
   home_phone: "",
   work_phone: "",
   mrn: [{}],
@@ -176,7 +184,7 @@ const PatientDemographicComponent = (props: any) => {
   const [loading, setLoading] = useState(false);
   const [alertBoxText, setAlertBoxText] = useState("");
   const { instance, accounts, inProgress } = useMsal();
-  const [confirmationState, setConfirmationState] = useState(false);
+  // const [confirmationState, setConfirmationState] = useState(false);
   const [selectedCountryKey, setSelectedCountryKey] = useState(["US"]);
   const [selectedStateKey, setSelectedStateKey] = useState([""]);
   const [selectedCityKey, setSelectedCityKey] = useState([""]);
@@ -294,10 +302,10 @@ const PatientDemographicComponent = (props: any) => {
         if (selectedStates.length > 0) {
           contactFields.map(
             (x) =>
-            (x.countryCode =
-              "+" +
-              country.filter((x: any) => x.isoCode == option.key)[0]
-                .phonecode)
+              (x.countryCode =
+                "+" +
+                country.filter((x: any) => x.isoCode == option.key)[0]
+                  .phonecode)
           );
           selectedCities = defaultDropdownKeyValue;
           setStateDisable(false);
@@ -346,15 +354,14 @@ const PatientDemographicComponent = (props: any) => {
       setDeceased("Y");
       setFormValues({
         ...formValues,
-        deceased: "Y"
-      })
-    }
-    else {
+        deceased: "Y",
+      });
+    } else {
       setDeceased("N");
       setFormValues({
         ...formValues,
-        deceased: "N"
-      })
+        deceased: "N",
+      });
     }
   };
 
@@ -399,56 +406,61 @@ const PatientDemographicComponent = (props: any) => {
 
   const handleHomePhoneChange = (e: any): any => {
     let obj: any;
-     if (e.target.value === "" || (e.target.value !== "" && re.test(e.target.value))) {
-       obj = {
-         ...formValues,
-         home_phone: e.target.value,
-       };
-       contactFields
-         .filter((x) => x.name === e.target.name)
-         .map((x) => (x.errorMessage = ""));
-     } else if ( !re.test(e.target.value)) {
-       obj = {
-         ...formValues,
-         home_phone: "",
-       };
-       contactFields
-         .filter((x) => x.name === e.target.name)
-         .map((x) => (x.errorMessage = "Only numbers are accepted"));
-     } else {
-       obj = {
-         ...formValues,
-         home_phone: e.target.value.slice(0, e.target.value.length - 1),
-       };
-     }
-     handleStateChange(obj);
-     return obj;
+    if (
+      e.target.value === "" ||
+      (e.target.value !== "" && re.test(e.target.value))
+    ) {
+      obj = {
+        ...formValues,
+        home_phone: e.target.value,
+      };
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = ""));
+    } else if (!re.test(e.target.value)) {
+      obj = {
+        ...formValues,
+        home_phone: "",
+      };
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = "Only numbers are accepted"));
+    } else {
+      obj = {
+        ...formValues,
+        home_phone: e.target.value.slice(0, e.target.value.length - 1),
+      };
+    }
+    handleStateChange(obj);
+    return obj;
   };
   const handleWorkPhoneChange = (e: any): any => {
-   let obj: any;
-   if (
-     e.target.value === "" || (e.target.value !== "" && re.test(e.target.value))) {
-     obj = {
-       ...formValues,
-       work_phone: e.target.value,
-     };
-     contactFields
-       .filter((x) => x.name === e.target.name)
-       .map((x) => (x.errorMessage = ""));
-   } else if (!re.test(e.target.value)) {
-     obj = {
-       ...formValues,
-       work_phone: "",
-     };
-     contactFields
-       .filter((x) => x.name === e.target.name)
-       .map((x) => (x.errorMessage = "Only numbers are accepted"));
-   } else {
-     obj = {
-       ...formValues,
-       work_phone: e.target.value.slice(0, e.target.value.length - 1),
-     };
-   }
+    let obj: any;
+    if (
+      e.target.value === "" ||
+      (e.target.value !== "" && re.test(e.target.value))
+    ) {
+      obj = {
+        ...formValues,
+        work_phone: e.target.value,
+      };
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = ""));
+    } else if (!re.test(e.target.value)) {
+      obj = {
+        ...formValues,
+        work_phone: "",
+      };
+      contactFields
+        .filter((x) => x.name === e.target.name)
+        .map((x) => (x.errorMessage = "Only numbers are accepted"));
+    } else {
+      obj = {
+        ...formValues,
+        work_phone: e.target.value.slice(0, e.target.value.length - 1),
+      };
+    }
     handleStateChange(obj);
     return obj;
   };
@@ -641,18 +653,18 @@ const PatientDemographicComponent = (props: any) => {
     ) {
       setHasError(true);
       addressFields
-        .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true )
+        .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true)
         .map((y) => (y.errorMessage = "Required field"));
       contactFields
-        .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true )
+        .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true)
         .map((y) => (y.errorMessage = "Required field"));
       nameFields
         .filter(
           (y) => props.formData[`${y.name}`] === "" && y.isRequired === true
         )
         .map((y) => (y.errorMessage = "Required field"));
-        console.log("Error messages");
-
+      setAlertBoxText("Please enter all the mandatory fields");
+      setAlertState(true);
       return;
     } else {
       setHasError(false);
@@ -681,12 +693,12 @@ const PatientDemographicComponent = (props: any) => {
         await postData(formValues, accessToken)
           .then((response) => {
             if (response.status === 200 || response.status === 204) {
-              setAlertState(true);
-              setAlertBoxText("Data Inserted Successfully");
               resetForm();
-            } else {
+              setAlertBoxText("Patient information saved Successfully");
               setAlertState(true);
+            } else {
               setAlertBoxText("Error occured while saving data");
+              setAlertState(true);
             }
           })
           .catch((error) => {
@@ -699,12 +711,12 @@ const PatientDemographicComponent = (props: any) => {
           .then((response) => {
             //if (response.status === 200 && response.statusText === "OK") {
             if (response.status === 200 || response.status === 204) {
-              setAlertState(true);
-              setAlertBoxText("Data Updated Successfully");
               resetForm();
-            } else {
+              setAlertBoxText("Patient data Updated Successfully");
               setAlertState(true);
+            } else {
               setAlertBoxText("Error occured while updating record");
+              setAlertState(true);
             }
           })
           .catch((error) => {
@@ -715,10 +727,10 @@ const PatientDemographicComponent = (props: any) => {
   };
 
   const deletePatientData = async () => {
-    console.log('before encryption', formValues);
+    console.log("before encryption", formValues);
     let jsonString = JSON.stringify(formValues);
     let response = Encrypt(jsonString);
-    console.log('after encryption', response);
+    console.log("after encryption", response);
   };
 
   return (
@@ -732,7 +744,13 @@ const PatientDemographicComponent = (props: any) => {
               text="Edit"
               isDisabled={disableEditButton}
             />
-            <ActionButton iconProps={addFriendIcon} allowDisabledFocus disabled={false} checked={false} onClick={resetForm}>
+            <ActionButton
+              iconProps={addFriendIcon}
+              allowDisabledFocus
+              disabled={false}
+              checked={false}
+              onClick={resetForm}
+            >
               New Patient
             </ActionButton>
           </div>
@@ -751,7 +769,7 @@ const PatientDemographicComponent = (props: any) => {
               handleClick={deletePatientData}
               type="Cancel"
               text="Delete"
-            //isDisabled={disableEditButton}
+              //isDisabled={disableEditButton}
             />
           </div>
         </div>
@@ -762,7 +780,13 @@ const PatientDemographicComponent = (props: any) => {
             className="cardHeader"
             header={
               <Body1>
-                <Text key={1} style={{ color: "white" }} variant={'large'} nowrap block>
+                <Text
+                  key={1}
+                  style={{ color: "white" }}
+                  variant={"large"}
+                  nowrap
+                  block
+                >
                   {t("demographic.address.name")}
                 </Text>
               </Body1>
@@ -816,7 +840,11 @@ const PatientDemographicComponent = (props: any) => {
                 options={selectedStates}
                 onChange={handleInputChange}
                 label={t("demographic.address.state")}
-                errorMessage={formValues.home_state.length == 0 ? t("demographic.address.state_error_message") : ""}
+                errorMessage={
+                  formValues.home_state.length == 0
+                    ? t("demographic.address.state_error_message")
+                    : ""
+                }
               ></Dropdown>
             </div>
             <div className="col-span-1 px-4">
@@ -841,7 +869,13 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <Text key={1} style={{ color: "white" }} variant={'large'} nowrap block>
+                  <Text
+                    key={1}
+                    style={{ color: "white" }}
+                    variant={"large"}
+                    nowrap
+                    block
+                  >
                     {t("demographic.general_information.name")}
                   </Text>
                 </Body1>
@@ -998,7 +1032,13 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <Text key={1} style={{ color: "white" }} variant={'large'} nowrap block>
+                  <Text
+                    key={1}
+                    style={{ color: "white" }}
+                    variant={"large"}
+                    nowrap
+                    block
+                  >
                     {t("demographic.phone_number.name")}
                   </Text>
                 </Body1>
@@ -1034,7 +1074,13 @@ const PatientDemographicComponent = (props: any) => {
               className="cardHeader"
               header={
                 <Body1>
-                  <Text key={1} style={{ color: "white" }} variant={'large'} nowrap block>
+                  <Text
+                    key={1}
+                    style={{ color: "white" }}
+                    variant={"large"}
+                    nowrap
+                    block
+                  >
                     {t("demographic.mrn.name")}
                   </Text>
                 </Body1>
@@ -1082,7 +1128,10 @@ const PatientDemographicComponent = (props: any) => {
                           className="grid col-span-1"
                           style={{ maxWidth: "50px" }}
                         >
-                          <Tooltip content={t("demographic.mrn.delete_row")} relationship="label">
+                          <Tooltip
+                            content={t("demographic.mrn.delete_row")}
+                            relationship="label"
+                          >
                             <Button
                               id={"btn" + index}
                               onClick={(e) => removeRow(index)}
@@ -1098,7 +1147,10 @@ const PatientDemographicComponent = (props: any) => {
                 </Table>
               </div>
               <div className="col-span-2">
-                <Tooltip content={t("demographic.mrn.add_row")} relationship="label">
+                <Tooltip
+                  content={t("demographic.mrn.add_row")}
+                  relationship="label"
+                >
                   <Button
                     disabled={isAllDisable}
                     onClick={addRow}
@@ -1118,17 +1170,11 @@ const PatientDemographicComponent = (props: any) => {
         <></>
       )}
       {alertState ? (
-        <AlertPopup
+        <MessageBar
           onClose={() => setAlertState(false)}
-          text={alertBoxText}
-        ></AlertPopup>
-      ) : (
-        <></>
-      )}
-      {confirmationState ? (
-        <ConfirmationPopup
-          text={"Do You want to delete this record?"}
-        ></ConfirmationPopup>
+          type="error"
+          message={alertBoxText}
+        ></MessageBar>
       ) : (
         <></>
       )}

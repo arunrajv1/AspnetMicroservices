@@ -18,7 +18,7 @@ import {
 } from "../../services/PatientServices";
 import DropdownComponent from "../common/ElementsUI/DropdownComponent";
 import { genderOptions } from "../../constant/optionsArray";
-import AlertPopup from "../common/popup/AlertPopup";
+
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../../AuthConfig";
 import { useDispatch, useSelector } from "react-redux";

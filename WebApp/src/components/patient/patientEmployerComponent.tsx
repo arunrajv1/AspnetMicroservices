@@ -7,7 +7,7 @@ import {
   updateData,
 } from "../../services/PatientServices";
 import FullPageLoader from "../common/Loader/FullPageLoader";
-import AlertPopup from "../common/popup/AlertPopup";
+import MessageBar from "../common/popup/MessageBar";
 import {
   Body1,
   Caption1,
@@ -469,10 +469,11 @@ const PatientEmployerComponent = (props: any) => {
         </div>
       )}
       {alertState ? (
-        <AlertPopup
+        <MessageBar
           onClose={() => setAlertState(false)}
-          text={alertBoxText}
-        ></AlertPopup>
+          type="error"
+          message={alertBoxText}
+        ></MessageBar>
       ) : (
         <></>
       )}

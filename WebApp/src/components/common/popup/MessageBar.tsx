@@ -8,7 +8,7 @@ const MessageBar = ({ onClose, type, message }: any) => {
   useEffect(() => {
     setTimeout(() => {
       onClose(false);
-    }, 5000);
+    }, 4000);
   }, []);
 
   const onCloseMessageBar = () => {
@@ -20,7 +20,13 @@ const MessageBar = ({ onClose, type, message }: any) => {
       {ReactDOM.createPortal(
         <Alert
           className="msgBar"
-          style={{ backgroundColor: "#99CC00" }}
+          style={{
+            backgroundColor: "#99CC00",
+            zIndex: 1,
+            position: "fixed",
+            maxWidth: "100hw",
+            width: "100%",
+          }}
           intent={type}
           action={{
             icon: <DismissCircleRegular onClick={onCloseMessageBar} />,
