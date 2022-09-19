@@ -255,6 +255,7 @@ const PatientDemographicComponent = (props: any) => {
     props.onSavePatientData(patientNameData);
     props.onChangeDisable(false);
     props.onTabChange(defaultValues);
+    props.handleSetError(false);
 
     selectedCountries = country;
     selectedStates = states;
@@ -641,6 +642,7 @@ const PatientDemographicComponent = (props: any) => {
   }
 
   const saveUpdatePatientData = async () => {
+    props.onCheckParentError(true);
     if (
       formValues.student_status.length === 0 ||
       formValues.employment_status.length === 0 ||

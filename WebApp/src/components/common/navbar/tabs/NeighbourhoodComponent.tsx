@@ -51,6 +51,7 @@ const NeighbourhoodComponent = () => {
     }, [])*/
 
   const handleFormChange = (e: any) => {
+    setHasError(true);
     updateFormData({
       ...formData,
       // Trimming any whitespace
@@ -80,6 +81,10 @@ const NeighbourhoodComponent = () => {
     }
   }
 
+  const handleSetError = (isError: boolean) => {
+    setHasError(isError);
+  }
+
   return (
     <>
       <PatientSearchComponent onSelectedPatientData={selectedPatientData}></PatientSearchComponent>
@@ -98,7 +103,7 @@ const NeighbourhoodComponent = () => {
               isRequired={field.isRequired}
               placeholder={t(`neighbourhood.${field.placeholder}`)}
               isDisabled={isDisable}
-              errorMessage = {field.errorMessage}
+              errorMessage={(hasError && formData[field.name].length <= 0) ? field.errorMessage : ""}
             />
           </div>
         ))}
@@ -136,10 +141,12 @@ const NeighbourhoodComponent = () => {
         </Overflow>
       </div>
       <div className="">
-        {selectedValue === 'demographic' && <PatientDemographicComponent formData={formData}
-          onSavePatientData={getPatientData}
-          onChangeDisable={changeFieldDisable}
-          onTabChange={setDataOnTabChange} />}
+        {selectedValue === 'demographic' &&
+          <PatientDemographicComponent formData={formData}
+            onSavePatientData={getPatientData}
+            onChangeDisable={changeFieldDisable}
+            onTabChange={setDataOnTabChange} 
+            onCheckParentError={handleSetError}/>}
 
         {selectedValue === 'employer' && <PatientEmployerComponent />}
       </div>
