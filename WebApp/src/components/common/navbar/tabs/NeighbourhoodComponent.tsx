@@ -21,6 +21,7 @@ const initialFormData: any = Object.freeze({
   last_name: "",
   suffix: "",
 });
+let nameFields = patientNameFields;
 
 const NeighbourhoodComponent = () => {
 
@@ -81,15 +82,24 @@ const NeighbourhoodComponent = () => {
     }
   }
 
-  const handleSetError = (isError: boolean) => {
-    setHasError(isError);
-  }
+  const handleSetError = useCallback(
+    (isError: boolean) => {
+      nameFields.filter((y) => formData[`${y.name}`] === "" && y.isRequired === true).map((y) => (y.errorMessage = t(`demographic.genericErrorMessage`)));
+      setHasError(isError);
+    },
+    []
+  );
+
+  // const handleSetError = (isError: boolean) => {
+  //   nameFields.filter((y) => formData[`${y.name}`] === "" && y.isRequired === true).map((y) => (y.errorMessage = t(`demographic.genericErrorMessage`)));
+  //   setHasError(isError);
+  // }
 
   return (
     <>
       <PatientSearchComponent onSelectedPatientData={selectedPatientData}></PatientSearchComponent>
       <div className="containerResponsiveAllignment">
-        {patientNameFields.map((field: any, i: number) => (
+        {nameFields.map((field: any, i: number) => (
           <div className="lg:col-span-1 md:col-span-4 sm:col-span-4" key={i}>
             <InputBox
               handleChange={handleFormChange}
@@ -103,7 +113,8 @@ const NeighbourhoodComponent = () => {
               isRequired={field.isRequired}
               placeholder={t(`neighbourhood.${field.placeholder}`)}
               isDisabled={isDisable}
-              errorMessage={(hasError && formData[field.name] && formData[field.name].length <= 0) ? field.errorMessage : ""}
+              errorMessage={hasError && field.isRequired && formData[field.name].length == 0 ? t("demographic.genericErrorMessage") : ""}
+              //errorMessage={(hasError && formData[field.name] && formData[field.name].length == 0) ? field.errorMessage : ""}
             />
           </div>
         ))}
@@ -145,8 +156,8 @@ const NeighbourhoodComponent = () => {
           <PatientDemographicComponent formData={formData}
             onSavePatientData={getPatientData}
             onChangeDisable={changeFieldDisable}
-            onTabChange={setDataOnTabChange} 
-            onCheckParentError={handleSetError}/>}
+            onTabChange={setDataOnTabChange}
+            onCheckParentError={handleSetError} />}
 
         {selectedValue === 'employer' && <PatientEmployerComponent />}
       </div>

@@ -229,7 +229,7 @@ const PatientDemographicComponent = (props: any) => {
   const resetForm = () => {
     setDateOfBirth(new Date());
     setAge("0");
-    setHasError(true);
+    setHasError(false);
     setFormValues(defaultValues);
     setAlertState(false);
     updateAlertProps(defaultAlertProps);
@@ -297,7 +297,7 @@ const PatientDemographicComponent = (props: any) => {
       } else {
         addressFields
           .filter((x) => x.name === e.target.name)
-          .map((x) => (x.errorMessage = "Required Field"));
+          .map((x) => (x.errorMessage = t(`demographic.genericErrorMessage`)));
       }
       setFormValues({
         ...formValues,
@@ -666,15 +666,15 @@ const PatientDemographicComponent = (props: any) => {
       setHasError(true);
       addressFields
         .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true)
-        .map((y) => (y.errorMessage = "Required field"));
+        .map((y) => (y.errorMessage = t(`demographic.genericErrorMessage`)));
       contactFields
         .filter((y) => formValues[`${y.name}`] === "" && y.isRequired === true)
-        .map((y) => (y.errorMessage = "Required field"));
+        .map((y) => (y.errorMessage = t(`demographic.genericErrorMessage`)));
       nameFields
         .filter(
           (y) => props.formData[`${y.name}`] === "" && y.isRequired === true
         )
-        .map((y) => (y.errorMessage = "Required field"));
+        .map((y) => (y.errorMessage = t(`demographic.genericErrorMessage`)));
       setAlertBoxText("Please enter all the mandatory fields");
       setAlertState(true);
       return;
@@ -957,7 +957,7 @@ const PatientDemographicComponent = (props: any) => {
                     required={true}
                     errorMessage={
                       hasError && formValues.ssn.length <= 0
-                        ? "SSN is required"
+                        ? t("demographic.genericErrorMessage")
                         : ""
                     }
                     label={t("demographic.general_information.ssn")}

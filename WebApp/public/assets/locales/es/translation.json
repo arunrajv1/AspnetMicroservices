@@ -13,8 +13,10 @@
             "gender_placeholder": "Seleccione género"
         },
         "first_name": "Primer nombre",
+        "first_name_error_message": "Se requiere el primer nombre",
         "middle_name": "Segundo nombre",
         "last_name": "Apellido",
+        "last_name_error_message": "Se requiere apellido",
         "suffix": "Sufijo",
         "btnSearch": "Búsqueda"
     },
@@ -27,6 +29,7 @@
         "history": "HISTORIA"
     },
     "demographic": {
+        "genericErrorMessage": "Campo requerido",
         "btnEdit": "Editar",
         "btnDelete": "Borrar",
         "btnNewPatient": "Nuevo paciente",

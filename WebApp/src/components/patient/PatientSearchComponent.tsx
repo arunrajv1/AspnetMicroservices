@@ -186,7 +186,7 @@ const PatientSearchComponent = (props: any) => {
                 />
               </div>
             ))}
-            <div>
+            <div className="lg:pl-3">
               <DropdownComponent
                 handleChange={handleFormChange}
                 value={formData.gender}

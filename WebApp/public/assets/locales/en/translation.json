@@ -13,8 +13,10 @@
             "gender_placeholder": "Select Gender"
         },
         "first_name": "First Name",
+        "first_name_error_message": "First name is required",
         "middle_name": "Middle Name",
         "last_name": "Last Name",
+        "last_name_error_message": "Last name is required",
         "suffix": "Suffix",
         "btnSearch": "Search"
     },
@@ -27,6 +29,7 @@
         "history": "HISTORY"
     },
     "demographic": {
+        "genericErrorMessage": "Required field",
         "btnEdit": "Edit",
         "btnDelete": "Delete",
         "btnNewPatient": "New Patient",
