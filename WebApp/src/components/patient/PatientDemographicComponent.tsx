@@ -65,6 +65,7 @@ import { RootState } from "../../redux/store";
 import { lookup } from "zipcodes";
 import { useTranslation } from "react-i18next";
 import { Encrypt, Decrypt } from "../../aes";
+import { setSpinnerState } from "../../redux/features/commonUISlice";
 // import { PostalCodes } from "postal-codes";
 // import { lookupPostcode, Client } from "@ideal-postcodes/core-interface";
 
@@ -142,7 +143,7 @@ const defaultValues: any = {
   marital_status: "",
   employment_status: "",
   student_status: "",
-  deceased: "",
+  deceased: "N",
   first_name: "",
   last_name: "",
   middle_name: "",
@@ -227,7 +228,8 @@ const PatientDemographicComponent = (props: any) => {
 
   const resetForm = () => {
     setDateOfBirth(new Date());
-    setHasError(false);
+    setAge("0");
+    setHasError(true);
     setFormValues(defaultValues);
     setAlertState(false);
     updateAlertProps(defaultAlertProps);
@@ -256,8 +258,8 @@ const PatientDemographicComponent = (props: any) => {
     props.onCheckParentError(false);
 
     selectedCountries = country;
-    selectedStates = states;
-    selectedCities = cities;
+    selectedStates = states.filter((x: any) => x.countryCode == "US").sort((a: any, b: any) => (a.text > b.text ? 1 : -1));;
+    selectedCities = defaultDropdownKeyValue;
 
     setSelectedCountryKey(["US"]);
     setSelectedStateKey([""]);
@@ -525,7 +527,7 @@ const PatientDemographicComponent = (props: any) => {
 
         obj = {
           ...formValues,
-          "home_postal_code": e.target.value,
+          "home_postal_code": tempPostalCode,
           "home_state": selectedStates[0].name,
           "home_city": selectedCities[0].key,
         };
@@ -543,20 +545,19 @@ const PatientDemographicComponent = (props: any) => {
         "home_state": "",
         "home_city": "",
       };
-      addressFields
-        .filter((x) => x.name == "home_postal_code")
-        .map((x) => (x.errorMessage = "Only numbers are allowed"));
-      // return obj;
     } else {
       obj = {
         ...formValues,
-        "home_postal_code": e.target.value.slice(
+        "home_postal_code": tempPostalCode.slice(
           0,
           tempPostalCode.length - 1
         ),
         "home_state": "",
         "home_city": "",
       };
+      addressFields
+        .filter((x) => x.name == "home_postal_code")
+        .map((x) => (x.errorMessage = "Only numbers are allowed"));
       // return obj;
     }
     return obj;
@@ -587,7 +588,9 @@ const PatientDemographicComponent = (props: any) => {
     });
     setDeceased(formData.deceased);
 
-    if (formData.mrn) setFormMRN(formData.mrn);
+    if (formData.mrn && formData.mrn.length > 0) {
+      setFormMRN(formData.mrn);
+    }
 
     handleDOBChange(new Date(formData.date_of_birth));
     const patientNameData: any = {
@@ -620,6 +623,7 @@ const PatientDemographicComponent = (props: any) => {
     setIsAllDisable(false);
     setIsSaveDisable(false);
     setSubmitButtonName("Update");
+    setHasError(true);
   };
 
   async function RequestAccessToken() {
@@ -657,7 +661,7 @@ const PatientDemographicComponent = (props: any) => {
       props.formData.first_name === undefined ||
       props.formData.first_name.length === 0 ||
       props.formData.last_name === undefined ||
-      props.formData.last_name.length === 0 
+      props.formData.last_name.length === 0
     ) {
       setHasError(true);
       addressFields
@@ -675,6 +679,7 @@ const PatientDemographicComponent = (props: any) => {
       setAlertState(true);
       return;
     } else {
+      dispatch(setSpinnerState(true));
       setHasError(false);
       formValues.mrn = [];
       formMRN.forEach((e) => {
@@ -692,22 +697,26 @@ const PatientDemographicComponent = (props: any) => {
       formValues.suffix = props.formData.suffix;
       formValues.date_of_birth = formatDate(dateOfBirth);
       formValues.id = 0;
-      deceased ? (formValues.deceased = "Y") : (formValues.deceased = "N");
-      
+      // deceased ? (formValues.deceased = "Y") : (formValues.deceased = "N");
+      formValues.deceased = deceased;
+
       if (submitButtonName === "Save") {
         accessToken = await RequestAccessToken();
         await postData(formValues, accessToken)
           .then((response) => {
             if (response.status === 204 && response.statusText === "No Content") {
+              dispatch(setSpinnerState(false));
               resetForm();
               setAlertBoxText("Patient information saved Successfully");
               setAlertState(true);
             } else {
+              dispatch(setSpinnerState(false));
               setAlertBoxText("Error occured while saving data");
               setAlertState(true);
             }
           })
           .catch((error) => {
+            dispatch(setSpinnerState(false));
             alert(error);
           });
       } else if (submitButtonName === "Update") {
@@ -717,15 +726,18 @@ const PatientDemographicComponent = (props: any) => {
           .then((response) => {
             //if (response.status === 200 && response.statusText === "OK") {
             if (response.status === 200 || response.status === 204) {
+              dispatch(setSpinnerState(false));
               resetForm();
               setAlertBoxText("Patient data Updated Successfully");
               setAlertState(true);
             } else {
+              dispatch(setSpinnerState(false));
               setAlertBoxText("Error occured while updating record");
               setAlertState(true);
             }
           })
           .catch((error) => {
+            dispatch(setSpinnerState(false));
             alert(error);
           });
       }
@@ -803,7 +815,7 @@ const PatientDemographicComponent = (props: any) => {
                   minLength={field.minLength}
                   isRequired={field.isRequired}
                   placeholder={t(`demographic.address.${field.placeholder}`)}
-                  errorMessage={(hasError && formValues[field.name] && formValues[field.name].length <= 0) ? field.errorMessage : ""}
+                  errorMessage={(hasError && formValues[field.name].length <= 0) ? field.errorMessage : ""}
                   isDisabled={isAllDisable}
                 />
               </div>
@@ -837,7 +849,7 @@ const PatientDemographicComponent = (props: any) => {
                 onChange={handleInputChange}
                 label={t("demographic.address.state")}
                 errorMessage={
-                  formValues.home_state.length == 0 && hasError
+                  (formValues.home_state.length == 0 && hasError)
                     ? t("demographic.address.state_error_message")
                     : ""
                 }
@@ -1096,7 +1108,7 @@ const PatientDemographicComponent = (props: any) => {
                   )}
                   isDisabled={isAllDisable}
                   contentBefore={field.countryCode}
-                  errorMessage={(hasError && formValues[field.name] && formValues[field.name].length <= 0) ? field.errorMessage : ""}
+                  errorMessage={(hasError && formValues[field.name].length <= 0) ? field.errorMessage : ""}
                 />
               ))}
             </div>

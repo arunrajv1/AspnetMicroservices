@@ -219,7 +219,7 @@ const PatientSearchComponent = (props: any) => {
                   <TableHeaderCell>Country</TableHeaderCell>
                   <TableHeaderCell>State</TableHeaderCell>
                   <TableHeaderCell>City</TableHeaderCell>
-                  <TableHeaderCell>Contact Number</TableHeaderCell>
+                  <TableHeaderCell>Postal Code</TableHeaderCell>
                   <TableHeaderCell>Remove Patient</TableHeaderCell>
                 </TableRow>
               </TableHeader>
