@@ -603,7 +603,7 @@ const PatientDemographicComponent = (props: any) => {
     handlePostalCode();
     // props.onSavePatientData(patientNameData);
     props.onChangeDisable(true);
-    // setIsAllDisable(true);
+    setIsAllDisable(true);
     // console.log("incoming data", formData);
   };
 
