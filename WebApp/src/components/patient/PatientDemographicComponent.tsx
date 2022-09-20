@@ -253,7 +253,7 @@ const PatientDemographicComponent = (props: any) => {
     props.onSavePatientData(patientNameData);
     props.onChangeDisable(false);
     props.onTabChange(defaultValues);
-    props.handleSetError(false);
+    props.onCheckParentError(false);
 
     selectedCountries = country;
     selectedStates = states;
@@ -698,7 +698,7 @@ const PatientDemographicComponent = (props: any) => {
         accessToken = await RequestAccessToken();
         await postData(formValues, accessToken)
           .then((response) => {
-            if (response.status === 200 || response.status === 204) {
+            if (response.status === 204 && response.statusText === "No Content") {
               resetForm();
               setAlertBoxText("Patient information saved Successfully");
               setAlertState(true);
