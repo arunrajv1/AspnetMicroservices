@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@fluentui/react-components/unstable";
 import { Button } from "@fluentui/react-components";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { patientSearchFields } from "../../constant/formFields";
 import "../../style/CommonStyle.scss";
 import ButtonComponent from "../common/ElementsUI/ButtonComponent";
@@ -31,7 +31,8 @@ import { useTranslation } from "react-i18next";
 import { Delete16Filled } from "@fluentui/react-icons";
 import MessageBar from "../common/popup/MessageBar";
 import DialogPopup from "../common/popup/DialogPopup";
-
+import { RootState } from "../../redux/store";
+import { setIsPatientDataUpdated } from "../../redux/features/patientDemographicSlice";
 const initialFormData: any = Object.freeze({
   name: "",
   mrn: "",
@@ -42,22 +43,43 @@ const initialFormData: any = Object.freeze({
 const genderArray = genderOptions;
 let DeletePatientIds: any = [];
 
+const initialSearchData: any = [];
+
 const PatientSearchComponent = (props: any) => {
   const [formData, updateFormData] = useState(initialFormData);
   const [isDisable, setIsDisable] = useState(false);
   const [alertState, setAlertState] = useState(false);
   const [alertBoxText, setAlertBoxText] = useState("");
   const [deletePopup, setDeletePopup] = useState(false);
-  const [searchResult, setSearchResults] = useState([]);
+  const [searchResult, setSearchResults] = useState(initialSearchData);
   const { instance, accounts, inProgress } = useMsal();
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
 
+  const patientDetails = useSelector(
+    (state: RootState) => state.patientDetails.data
+  );
+  const isPatientDetailsUpdated = useSelector(
+    (state: RootState) => state.patientDetails.key
+  );
+
   const changeFieldDisable = (inputData: any) => {
     setIsDisable(inputData);
   };
   var accessToken: string;
+
+  useEffect(() => {
+    if (isPatientDetailsUpdated) {
+      const ids = patientDetails.id;
+      let tempSearch = [...searchResult];
+      const arr: any = tempSearch.find((p: any) => p.id === ids);
+      const searchIndex = tempSearch.indexOf(arr);
+      tempSearch.splice(searchIndex, 1, patientDetails);
+      setSearchResults(tempSearch);
+      dispatch(setIsPatientDataUpdated(false));
+    }
+  }, [isPatientDetailsUpdated]);
 
   async function RequestAccessToken() {
     const request = {
