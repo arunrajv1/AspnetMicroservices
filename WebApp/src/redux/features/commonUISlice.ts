@@ -7,8 +7,11 @@ const commonUISlice = createSlice({
     reducers: {
         setSpinnerState(state, action: PayloadAction<boolean>) {
             state.data = action.payload
+        },
+        setFormDisable(state, action: PayloadAction<boolean>) {
+            state.data = action.payload
         }
     }
 });
-export const { setSpinnerState } = commonUISlice.actions;
+export const { setSpinnerState, setFormDisable } = commonUISlice.actions;
 export default commonUISlice.reducer;

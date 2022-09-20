@@ -26,7 +26,7 @@ import {
   setAllPatientDetails,
   setSinglePatientDetails,
 } from "../../redux/features/patientDemographicSlice";
-import { setSpinnerState } from "../../redux/features/commonUISlice";
+import { setSpinnerState, setFormDisable } from "../../redux/features/commonUISlice";
 import { useTranslation } from "react-i18next";
 import { Delete16Filled } from "@fluentui/react-icons";
 import MessageBar from "../common/popup/MessageBar";
@@ -125,6 +125,7 @@ const PatientSearchComponent = (props: any) => {
       });
     }
   };
+
   const getDetails = async () => {
     dispatch(setSpinnerState(true));
     accessToken = await RequestAccessToken();
@@ -135,6 +136,7 @@ const PatientSearchComponent = (props: any) => {
         response.data.length > 0
       ) {
         dispatch(setSpinnerState(false));
+        dispatch(setFormDisable(false));
         setSearchResults([]);
         setSearchResults(response.data);
         dispatch(setAllPatientDetails(response.data));

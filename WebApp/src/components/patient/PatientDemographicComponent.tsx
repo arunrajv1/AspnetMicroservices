@@ -154,6 +154,7 @@ const defaultValues: any = {
 const defaultMRN = [
   {
     index: 0,
+    id: 0,
     med_rec_no: "",
     medical_facility: "",
   },
@@ -202,6 +203,9 @@ const PatientDemographicComponent = (props: any) => {
   const spinnerSelector = useSelector(
     (state: RootState) => state.commonUIElements.data
   );
+  const isFormDisable = useSelector(
+    (state: RootState) => state.commonUIElements.data
+  );
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -240,6 +244,7 @@ const PatientDemographicComponent = (props: any) => {
     let updatedRows = [
       {
         index: 0,
+        id: 0,
         med_rec_no: "",
         medical_facility: "",
       },
@@ -311,11 +316,7 @@ const PatientDemographicComponent = (props: any) => {
           .sort((a: any, b: any) => (a.text > b.text ? 1 : -1));
         if (selectedStates.length > 0) {
           contactFields.map(
-            (x) =>
-            (x.countryCode =
-              "+" +
-              country.filter((x: any) => x.isoCode == option.key)[0]
-                .phonecode)
+            (x) => (x.countryCode = "+" + country.filter((x: any) => x.isoCode == option.key)[0].phonecode)
           );
           selectedCities = defaultDropdownKeyValue;
           setStateDisable(false);
@@ -390,6 +391,7 @@ const PatientDemographicComponent = (props: any) => {
     let updatedRows = [...formMRN];
     updatedRows[tableRowIndex] = {
       index: tableRowIndex,
+      id: 0,
       med_rec_no: "",
       medical_facility: "",
     };
@@ -406,6 +408,7 @@ const PatientDemographicComponent = (props: any) => {
       setFormMRN([
         {
           index: 0,
+          id: 0,
           med_rec_no: "",
           medical_facility: "",
         },
@@ -502,6 +505,11 @@ const PatientDemographicComponent = (props: any) => {
       } else {
         selectedCountries = country.filter(
           (x: any) => x.isoCode === zipLookUpValue.country
+        );
+        contactFields.map(
+          (x) =>
+          (x.countryCode =
+            "+" + selectedCountries[0].phonecode)
         );
         selectedStates = states
           .filter(
@@ -685,6 +693,7 @@ const PatientDemographicComponent = (props: any) => {
       formMRN.forEach((e) => {
         if (e.med_rec_no.length > 0 && e.medical_facility.length > 0) {
           let obj = {
+            id: e.id,
             med_rec_no: e.med_rec_no,
             medical_facility: e.medical_facility,
           };
@@ -815,7 +824,7 @@ const PatientDemographicComponent = (props: any) => {
                   minLength={field.minLength}
                   isRequired={field.isRequired}
                   placeholder={t(`demographic.address.${field.placeholder}`)}
-                  errorMessage={(hasError && formValues[field.name].length <= 0) ? field.errorMessage : ""}
+                  errorMessage={(hasError ) ? field.errorMessage : ""}
                   isDisabled={isAllDisable}
                 />
               </div>

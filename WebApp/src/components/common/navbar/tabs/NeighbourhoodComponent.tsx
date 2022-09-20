@@ -90,6 +90,15 @@ const NeighbourhoodComponent = () => {
     []
   );
 
+  const resetData = () => {
+    updateFormData(initialFormData);
+  }
+
+  const handleFormReset = () => {
+    resetData();
+    setIsDisable(false);
+  }
+
   // const handleSetError = (isError: boolean) => {
   //   nameFields.filter((y) => formData[`${y.name}`] === "" && y.isRequired === true).map((y) => (y.errorMessage = t(`demographic.genericErrorMessage`)));
   //   setHasError(isError);
@@ -114,7 +123,7 @@ const NeighbourhoodComponent = () => {
               placeholder={t(`neighbourhood.${field.placeholder}`)}
               isDisabled={isDisable}
               errorMessage={hasError && field.isRequired && formData[field.name].length == 0 ? t("demographic.genericErrorMessage") : ""}
-              //errorMessage={(hasError && formData[field.name] && formData[field.name].length == 0) ? field.errorMessage : ""}
+            //errorMessage={(hasError && formData[field.name] && formData[field.name].length == 0) ? field.errorMessage : ""}
             />
           </div>
         ))}
