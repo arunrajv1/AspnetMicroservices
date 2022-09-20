@@ -34,6 +34,10 @@
   background: gray;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 /* 
 
 .App-logo {
